@@ -1,0 +1,29 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Словарь - Clayler SEO</title>
+<link rel="icon" href="/page/icon.ico" sizes="16x16 32x32 48x48"><link rel="icon" href="/page/icon.png" type="image/png" sizes="192x192"><link rel="stylesheet" href="/page/style.css"><link rel="stylesheet" href="/page/notify.css"><link rel="stylesheet" href="/page/dictionary.css"></head><body>
+<div class="app"><aside class="side" id="side" data-here="dict"></aside>
+<main class="main dc">
+
+<header class="sub-head">
+<div><h1>Словарь</h1>
+<p class="mut">Синонимы, бренды, омонимы и мусорные слова по темам. Правила темы действуют и во всех темах под ней: из «Общего» - везде, из ниши - в её подтемах. Сайт берёт правила своей темы.</p></div>
+<div class="dc-file"><a class="btn" id="dcExport" href="/api/dict/export" title="Резервная копия и перенос на другой компьютер">Сохранить в файл</a>
+<label class="btn">Загрузить из файла<input type="file" id="dcImport" accept=".json" hidden></label></div>
+</header>
+<p class="dc-msg" id="dcMsg" hidden></p>
+
+<input type="search" id="dcQ" placeholder="Найти слово во всех темах…" aria-label="Найти слово">
+
+<div class="dc-grid">
+<nav class="card dc-tree" aria-label="Темы">
+<div id="dcTree"></div>
+<div class="dc-tree-foot"><button class="btn small" id="dcAddNiche">+ Своя ниша</button></div>
+<div class="dc-sep"></div>
+<button class="dc-node dc-q" id="dcQueue" data-node="#queue"><span>Ждут подтверждения</span><small class="dc-n" id="dcQueueN"></small></button>
+<button class="dc-node dc-q" id="dcSites" data-node="#sites"><span>Сайты и их темы</span><small class="dc-n" id="dcSitesN"></small></button>
+</nav>
+
+<section class="card dc-main" id="dcMain"></section>
+</div>
+</main></div>
+<script src="/page/side.js"></script><script src="/page/keys.js"></script><script src="/page/dictionary.js"></script><script src="/page/notify.js"></script></body></html>

@@ -1,0 +1,30 @@
+/* «Очередь сайтов» (page/queue.js) */
+.q-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 14px;border:1px solid var(--bd);border-radius:10px;background:var(--tile);margin:4px 0 16px}
+.q-top .st-btns{margin-top:0}
+.q-state{font-size:15px;line-height:1.5}
+.q-add{display:grid;grid-template-columns:1fr 240px;gap:16px;align-items:start}
+.q-add textarea{width:100%}
+.q-side input{width:100%}
+.q-side>button{width:100%;margin-top:12px}
+.q-side .q-list{width:100%;margin-top:8px;min-height:34px;font-size:13px;border:1px dashed var(--bd2);background:transparent;color:var(--link)}
+.q-filter{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 8px}
+.q-filter button.on{border-color:var(--acc);color:var(--acc)}
+#qCard button.ghost{background:transparent}#qCard button.ghost:hover{background:var(--hov)}
+.q-t{width:100%}
+.q-t td{vertical-align:top;padding-top:8px;padding-bottom:8px}
+.q-t td.num{text-align:right;white-space:nowrap}
+.q-t td.q-btns{text-align:right;white-space:nowrap}
+.q-t td.q-btns>*{margin-left:4px}
+.q-t tr.done,.q-t tr.fail{opacity:.85}
+.q-note{font-size:13px;margin-top:2px;line-height:1.35}
+.q-st{font-size:13px;border-radius:999px;padding:1px 9px;border:1px solid var(--bd2);color:var(--mut);white-space:nowrap}
+.q-st.run{border-color:var(--acc-line);color:var(--link)}
+.q-st.done{border-color:color-mix(in srgb,var(--good) 50%,transparent);color:var(--good)}
+.q-st.fail{border-color:var(--crit-line);color:var(--crit)}
+.q-clear{justify-content:flex-end}
+@media (max-width:760px){.q-add{grid-template-columns:1fr}}
+.q-chk{display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px;cursor:pointer}.q-chk input{width:auto;margin:0}
+.q-sem{display:block;font-size:13px;margin-top:3px;color:var(--mut2)}.q-sem.done{color:var(--good)}.q-sem.fail{color:var(--crit)}.q-sem.run{color:var(--link)}
+.q-kind{font-size:12px;border-radius:999px;padding:0 7px;border:1px solid var(--bd2);color:var(--mut2);margin-left:6px}
+.q-hist{margin-top:18px}.q-hist summary{cursor:pointer;font-size:15px}.q-hist .q-run{margin:12px 0 4px;font-size:14px}
+.q-hist table{width:100%;font-size:13px}.q-hist td{padding:4px 8px}.q-hist td.num{text-align:right;white-space:nowrap}

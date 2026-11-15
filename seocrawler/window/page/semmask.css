@@ -1,0 +1,26 @@
+/* Маски семантики и стоп-слова клиента (semmask.js) */
+.mk-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.mk-tools input[type=search]{max-width:220px}
+.mk-tools input[type=text]{flex:1;min-width:220px}
+.mk-tools select,.mk-row select{width:auto}
+details.mk-lv{border:1px solid var(--bd);border-radius:10px;padding:8px 12px}
+details.mk-lv>summary{cursor:pointer;font-size:14px;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+details.mk-lv>summary .mut{font-size:13px}
+.mk-all{display:inline-flex;gap:6px;align-items:center;font-size:13px;color:var(--mut);margin:8px 0 4px;cursor:pointer}
+.mk-list{display:flex;flex-direction:column;gap:4px;margin:6px 0}
+.mk-row{display:grid;grid-template-columns:20px minmax(160px,1fr) 52px minmax(120px,auto) 34px;gap:8px;align-items:center}
+.mk-row input[type=text]{padding:4px 8px;font-size:14px}
+.mk-row.off input[type=text]{color:var(--mut2);text-decoration:line-through}
+.mk-src{font-size:12px;color:var(--mut2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk-src a{text-decoration:none}
+.mk-new{color:var(--acc);font-weight:500}
+.mk-note{color:var(--warn)}
+.mk-stale{padding:8px 12px;border:1px solid var(--warn-line);border-radius:10px;background:var(--warn-soft);font-size:14px}
+.mk-stop textarea{width:100%;max-width:640px}
+.mk-cand{margin-top:6px;font-size:13px;line-height:2}
+.rchip-b{border:1px solid var(--bd);background:none;color:var(--tx);border-radius:999px;padding:2px 10px;font-size:13px;cursor:pointer}
+.rchip-b:hover{border-color:var(--acc);color:var(--acc)}
+.mk-cw{display:inline-flex;align-items:center;gap:4px;margin:0 8px 6px 0;padding:2px 4px 2px 10px;white-space:nowrap;border:1px solid var(--bd);border-radius:999px;background:rgba(255,255,255,.03)}.mk-cw .rchip-b{padding:1px 8px}.mk-cw b{color:var(--tx);font-weight:600}
+.mk-go{display:flex;gap:8px;flex-wrap:wrap}
+.sem-run-l{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-top:6px}
+@media (max-width:700px){.mk-row{grid-template-columns:20px 1fr 52px 30px}.mk-src{display:none}}

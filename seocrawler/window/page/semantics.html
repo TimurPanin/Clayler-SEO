@@ -1,0 +1,342 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Семантика - Clayler SEO</title>
+<link rel="icon" href="/page/icon.ico" sizes="16x16 32x32 48x48"><link rel="icon" href="/page/icon.png" type="image/png" sizes="192x192"><link rel="stylesheet" href="/page/style.css"><link rel="stylesheet" href="/page/notify.css"><link rel="stylesheet" href="/page/sembx.css"><link rel="stylesheet" href="/page/semupd.css"><link rel="stylesheet" href="/page/semmask.css"></head><body>
+<div class="app"><aside class="side" id="side" data-here="sem"></aside>
+<main class="main sem">
+
+<header class="sem-hero">
+<div><h1>Семантика</h1>
+<p class="sub">Что ищут люди, какая страница должна это закрывать и что сделать на сайте.</p></div>
+<div class="sem-dl"><button class="btn" id="nsOpen" title="Сайта ещё нет или он закрыт: структура будущего сайта по словам темы и конкурентам">Новый сайт…</button>
+<a class="btn" id="semXlsx" href="#" hidden>Скачать Excel</a>
+<a class="btn" id="semTree" href="#" target="_blank" hidden title="Главная, разделы, подразделы и фильтры со спросом и тем, что есть и чего нет; карта признаков категорий (бренд, назначение, цвет…) и сочетания, под которые стоит делать страницы">Дерево сайта</a>
+<a class="btn" id="semStruct" href="#" target="_blank" hidden title="Страница для клиента: разделы и подразделы будущего сайта с адресами и H1, блог, портфолио">Структура сайта</a>
+<a class="btn" id="semTz" href="#" hidden title="Одним файлом Word: задания на все новые страницы и страницы с замечаниями: title, H1, описание, слова, запросы, вопросы">ТЗ копирайтеру</a></div>
+<button class="btn" id="semFolder" type="button" hidden title="Открыть папку проверки: там Excel, ТЗ копирайтеру, дерево сайта и все отчёты этого сайта (скачанное браузером - в «Загрузках», Ctrl+J)">Папка с файлами</button>
+</header>
+
+<section class="card sem-top" id="pick">
+<div class="sem-pick">
+<div class="sem-site"><label for="semSite">Сайт</label><select id="semSite"></select></div>
+<div class="sem-meta" id="semMeta"></div>
+<button class="btn primary" id="semGo">Собрать</button>
+</div>
+<details class="sem-opts" id="semOpts"><summary><span>Конкуренты и режим сбора</span> <span class="mut2" id="semOptsSum"></span></summary>
+<div class="sem-opts-body">
+<div><div class="f-label">Конкуренты из проверенных сайтов, до 5</div><div id="semRivList" class="chips-row"></div></div>
+<div class="sem-rivurls"><label for="semRivUrls">Или адреса конкурентов через запятую, без их проверки: программа возьмёт разделы из меню главной</label>
+<input type="text" id="semRivUrls" placeholder="например: bkc.ru, english-language.ru" autocomplete="off"></div>
+<p class="hint" id="semRivHint">Их разделы тоже войдут в семантику: будет видно, каких разделов нет у вас. Можно и без конкурентов.</p>
+<div class="sem-files"><div class="f-label">Запросы из файлов: частотность и показы</div>
+<p class="hint">Вордстат (wordstat.yandex.ru, кнопка «Скачать»), Key Collector, Арсёнкин (arsenkin.ru), выгрузка «Запросы» из Яндекс Вебмастера, «Эффективность» из Search Console. Excel, CSV или текст: запрос и число. Если частотностей несколько (базовая, в кавычках, с «!»), берётся в кавычках, как у Вордстата через Директ. Запросы войдут в семантику, частотность - в спрос групп. Файлы запоминаются для сайта и учитываются при каждом сборе.</p>
+<div id="semFiles" class="sem-flist"></div>
+<label class="btn small">Добавить файл<input type="file" id="semFile" accept=".xlsx,.xlsm,.csv,.tsv,.txt" multiple hidden></label> <span id="semFileMsg" class="mut"></span></div>
+<label class="opt"><input type="checkbox" id="semDeep"><span><b>Подробный сбор</b><small>Ещё «раздел + буква»: запросов в 3–5 раз больше, особенно длинных и точных. Сбор 15–30 минут вместо 5.</small></span></label>
+</div></details>
+<details class="sem-opts" id="mkBox" hidden><summary><span>Маски и стоп-слова</span> <span class="mut2" id="mkSum"></span></summary>
+<div class="sem-opts-body" id="mkBody"></div></details>
+<div class="sem-run" id="semRun" hidden><div class="pbar"><i id="semBar"></i></div><div class="sem-run-l"><div class="mut" id="semStep"></div><button class="btn small" id="semStop" title="Остановить сбор: прежняя семантика останется как была, полученные подсказки сохранятся">Остановить</button></div></div>
+<div class="err" id="semErr"></div>
+<div class="sem-direct" id="semDirect" hidden></div>
+</section>
+
+<!-- Семантика нового сайта (semantics/newsite.py): проект без своего сайта -->
+<section class="card sem-new" id="nsCard" hidden>
+<h2>Семантика для нового сайта</h2>
+<p class="hint">Сайта ещё нет или он закрыт. Программа соберёт запросы по словам темы и разделам конкурентов и покажет, какие страницы нужно создать: это готовая структура будущего сайта, с адресами, H1, статьями для блога.</p>
+<div class="sem-new-grid">
+<div><label class="f-label" for="nsName">Название проекта</label><input type="text" id="nsName" placeholder="например: Газовое оборудование в Уфе" autocomplete="off"></div>
+<div><label class="f-label" for="nsCity">Город</label><input type="text" id="nsCity" placeholder="например: Уфа. Пусто - вся Россия" autocomplete="off"></div>
+<div class="wide"><label class="f-label" for="nsWords">Слова темы: чем будет заниматься сайт. Через запятую или с новой строки</label>
+<textarea id="nsWords" rows="3" placeholder="газовые котлы, газовые колонки, монтаж отопления"></textarea></div>
+<div><label class="f-label" for="nsDomain">Будущий домен, если уже есть</label><input type="text" id="nsDomain" placeholder="необязательно" autocomplete="off"></div>
+</div>
+<div class="f-label" style="margin-top:12px">Конкуренты из проверенных сайтов</div><div id="nsRivList" class="chips-row"></div>
+<div class="sem-rivurls"><label for="nsRivUrls">Или адреса конкурентов через запятую: программа сначала быстро проверит каждый (до 300 страниц), это несколько минут на сайт</label>
+<input type="text" id="nsRivUrls" placeholder="например: gigas.su, teplo-ufa.ru" autocomplete="off"></div>
+<p class="hint">Лучше 1-3 конкурента: их разделы, которые люди ищут, станут разделами вашего сайта. Файлы Вордстата и Key Collector можно добавить после первого сбора и нажать «Собрать заново».</p>
+<div class="sem-btns"><button class="btn primary" id="nsGo">Собрать структуру</button><button class="btn" id="nsCancel">Отмена</button></div>
+<div class="err" id="nsErr"></div>
+</section>
+
+<div id="semEmpty" class="card sem-empty" hidden></div>
+
+<div id="semView" hidden>
+<div class="alert warn" id="semRealBanner" hidden>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+  <div class="alert-t" id="semRealText"></div>
+  <a class="btn small" href="#near" id="semRealHow">Как получить доступ</a></div>
+<p class="sem-newer" id="semNewer" hidden></p>
+
+<div class="sem-tiles" id="semTiles"></div>
+
+<nav class="sem-tabs" role="tablist">
+  <a href="#tasks" data-v="tasks" role="tab">Задачи <small id="cntTasks"></small></a>
+  <a href="#pages" data-v="pages" role="tab">Запрос → страница <small id="cntPages"></small></a>
+  <a href="#groups" data-v="groups" role="tab">Группы запросов <small id="cntGroups"></small></a>
+  <a href="#map" data-v="map" role="tab">Карта спроса <small id="cntMap"></small></a>
+  <a href="#dropped" data-v="dropped" role="tab">Отсеяно <small id="cntDropped"></small></a>
+  <a href="#brands" data-v="brands" role="tab">Бренды <small id="cntBrands"></small></a>
+  <a href="#bx" data-v="bx" role="tab" title="По каким запросам ваш сайт и конкуренты видны в Яндексе (Букварикс, бесплатно)">Видимость</a>
+  <a href="#demand" data-v="demand" role="tab" title="Узнаваемость, местный спрос, сезонность, что ещё ищут - Вордстат через Директ, бесплатно">Спрос</a>
+  <a href="#sort" data-v="sort" role="tab">Разложить новые</a>
+</nav>
+
+<!-- Задачи. Место для галочек «сделано» и счётчика: .task-ck в каждой задаче и #taskDone (делает чат «Семантика: решения») -->
+<section class="sv" data-sv="tasks">
+<div class="task-bar"><div class="task-done" id="taskDone" hidden></div>
+  <div class="task-flt" id="taskFlt"><button class="fpill on" data-p="">Все</button><button class="fpill" data-p="hi">Важно</button><button class="fpill" data-p="mid">Средне</button><button class="fpill" data-p="lo">Потом</button></div></div>
+<div class="tasks" id="semTasks"></div>
+</section>
+
+<!-- Запрос → страница: какая страница сайта под каждую группу; если подходящей нет - адрес, H1 и title новой -->
+<section class="sv" data-sv="pages" hidden>
+<div class="sem-tools">
+<input type="search" id="lpQ" placeholder="Найти группу или адрес…" aria-label="Найти">
+<div class="sem-kinds" id="lpFlt" role="tablist"></div>
+<label class="rchip fix" id="lpYaBox" hidden title="Группы, по запросам которых ваш сайт не нашёлся в Яндексе (Букварикс, вкладка «Видимость»)"><input type="checkbox" id="lpYa"><span>Не видны в Яндексе</span></label>
+<span class="tools-sep"></span><button class="btn small" id="lpCopy" title="Таблицей: вставляется в Excel или Google Таблицы">Скопировать таблицу</button>
+</div>
+<div class="card glist">
+<div id="lpSrc"></div>
+<div class="lprow lp5 ghead"><span>Группа и главный запрос</span><span>Страница на сайте</span><span>Что с ней</span><span title="По скольким запросам группы ваш сайт в первой полусотне Яндекса и сколько из них в первой десятке (Букварикс, вкладка «Видимость»)">В Яндексе</span><span></span></div>
+<div id="lpList"></div>
+<p class="mut sem-more" id="lpMore"></p>
+</div>
+</section>
+
+<!-- Группы запросов -->
+<section class="sv" data-sv="groups" hidden>
+<div class="sem-tools">
+<input type="search" id="semQ" placeholder="Найти запрос или группу…" aria-label="Найти">
+<div class="sem-kinds" id="semTabs" role="tablist"></div>
+<label class="rchip fix"><input type="checkbox" id="semFix"><span>С замечаниями</span></label>
+<span class="tools-sep"></span>
+<div class="seg" id="semIntent" role="radiogroup" aria-label="Намерение">
+<button data-v="" class="on">Все</button><button data-v="Покупка">Купить</button><button data-v="Услуга">Услуга</button><button data-v="Информация">Узнать</button><button data-v="Сравнение" title="Выбирают между вариантами: «котел или колонка», «чем отличается», «что лучше» - нужна таблица сравнения">Сравнить</button><button data-v="Навигация" title="Ищут сам сайт или компанию: название сайта, «официальный сайт», телефон, адрес - ведут на главную и «Контакты»">Найти сайт</button><button data-v="Галерея" title="Ищут фото и примеры работ: «котлы фото», «видео»">Фото</button></div>
+</div>
+<div class="card glist">
+<div id="semSrc"></div>
+<div class="grow ghead"><span>Группа и примеры запросов</span><span>Страница на сайте</span><span class="r">Запросов</span><span>Замечания</span><span></span></div>
+<div id="semGroups"></div>
+<p class="mut sem-more" id="semMore"></p>
+</div>
+<div class="sem-dist" id="semDist" hidden></div>
+</section>
+
+<!-- Карта спроса -->
+<section class="sv" data-sv="map" hidden>
+<div class="card sem-map" id="semMap" hidden>
+<p class="mut">Каждый шар: группа запросов. Чем больше шар, тем больше спрос (примерно, по подсказкам Яндекса и Google<span id="smapAt"></span>). Похожие группы стоят рядом и связаны линиями. Крупные красные шары: готовый список, какие страницы создать. Нажмите на шар: появятся запросы группы и что с ней сделать.</p>
+<div class="smap-leg"><span><i style="background:var(--good)"></i>есть на сайте</span><span><i style="background:var(--warn)"></i>есть, но слабая</span><span><i style="background:var(--crit)"></i>создать</span><span><i class="ring"></i>решить, нужна ли</span><span><i class="dash"></i>две страницы мешают друг другу</span></div>
+<div class="smap-bar" id="smapBar"><button class="btn small" data-a="gaps">Создать страницы</button><button class="btn small" data-a="rival" hidden>Есть у конкурента</button><button class="btn small" data-a="near" hidden title="Группы, где сайт уже на 11–20 месте по настоящим запросам">Почти в топе</button>
+<span class="sp"></span><button class="btn small" data-a="out" title="Отдалить">−</button><button class="btn small" data-a="in" title="Приблизить">+</button><button class="btn small" data-a="fit">Вся карта</button></div>
+<div class="smap" id="smapBox"><canvas></canvas><div class="wtip"></div></div>
+<div class="smap-info" id="smapInfo"></div></div>
+</section>
+
+<!-- Отсеяно -->
+<section class="sv" data-sv="dropped" hidden>
+<section class="card sem-dropped" id="semDropped"><h2 id="semDroppedT"></h2><div id="semDroppedList"></div></section>
+<section class="card sem-words" id="semWords"><h2>Слова в запросах <span class="mut">быстро убрать лишнее</span></h2>
+<p class="mut">Все слова из запросов и сколько раз встречаются. Нажмите на лишнее слово («высоте», «авто», «пиво»): запросы с ним сразу пропадут из списка. «Запомнить»: такие запросы будут убираться при каждом сборе, для всех сайтов.</p>
+<div class="words-bar"><input type="search" id="semWq" placeholder="Найти слово…" aria-label="Найти слово">
+<button class="btn primary" id="semWsave" disabled>Запомнить</button><button class="btn" id="semWclear" hidden>Снять выбор</button></div>
+<div id="semWsaved" class="words-saved"></div>
+<div id="semWlist" class="words-list"></div></section>
+</section>
+
+<!-- Бренды: спрос, страницы, бренд × категория, как пишут (page/sembrand.js, semantics/brands.py) -->
+<section class="sv" data-sv="brands" hidden>
+<p class="mut br-wait" id="brWait">Ищу бренды в запросах, на сайте и у конкурентов…</p>
+<div id="brView" hidden>
+<div class="sem-tiles" id="brTiles"></div>
+<section class="card glist">
+<div class="br-head"><h2>Бренды <span class="mut">по спросу</span></h2><div class="task-flt" id="brFlt"></div>
+<input type="search" id="brQ" placeholder="Найти бренд…" aria-label="Найти бренд"></div>
+<div id="brSrc"></div>
+<div class="br-row ghead"><span>Бренд и как пишут</span><span>Спрос</span><span>Страница бренда у вас</span><span>У конкурентов</span><span>Товаров</span><span>Что сделать</span></div>
+<div id="brList"></div><p class="sem-more" id="brMore"></p></section>
+<section class="card br-mx">
+<h2>Бренд × категория <span class="mut">«котлы Baxi», «бойлеры Baxi», «Baxi в Уфе»</span></h2>
+<p class="mut">В ячейке - спрос на запросы с брендом в этой категории (<span id="brMxSrc"></span>). Цвета как в «Дереве сайта». Наведите на ячейку: запросы и что с ней сделать.</p>
+<div class="br-leg" id="brLeg"></div>
+<div class="br-scroll"><table class="br-table" id="brTable"></table></div>
+<p class="sem-more" id="brMxMore"></p></section>
+<section class="card">
+<h2>Как пишут бренды</h2>
+<p class="mut">Программа сама узнаёт бренд по звучанию (Baxi = бакси), «х» вместо «x» (бахи) и написание с одной другой буквой. Если бренд пишут совсем иначе («Samsung = самсунг»), добавьте строку на странице <a href="/dictionary#brand" id="brDict">«Словарь»</a>, вид «Бренды», и откройте эту вкладку снова.</p>
+<div id="brForms" class="br-forms"></div></section>
+</div>
+<section class="card cat-card" id="catCard">
+<h2>Общая таблица «Бренды и прочие» <span class="mut">все сайты, по нишам</span></h2>
+<p class="mut">Бренды и свойства товаров со всех проверенных сайтов: лист на нишу («Мебель», «Автосервис»…), внутри - марки, модели, производители, комплектующие, материалы, стили. Пополняется сама после каждой проверки и сборки семантики.</p>
+<div class="cat-row"><button class="btn" id="catOpen">Открыть Excel</button><span class="mut" id="catGstate"></span>
+<button class="btn" id="catPush" hidden>Отправить сейчас</button><button class="btn" id="catGset">Подключить Google-таблицу</button></div>
+<div id="catSteps" hidden>
+<ol class="cat-steps">
+<li>Откройте вашу Google-таблицу, меню <b>Расширения → Apps Script</b>.</li>
+<li>Удалите всё в окне кода и вставьте скрипт ниже (кнопка «Скопировать»), нажмите значок сохранения.</li>
+<li><b>Начать развертывание → Новое развертывание</b>, тип (шестерёнка) - <b>Веб-приложение</b>. «Запуск от имени» - от вашего имени, «У кого есть доступ» - <b>Все</b>. Нажмите «Начать развертывание» и разрешите доступ своему аккаунту (Google покажет предупреждение: «Дополнительные настройки → Перейти на страницу»).</li>
+<li>Скопируйте «URL веб-приложения» (заканчивается на /exec) и вставьте сюда.</li>
+</ol>
+<textarea id="catScript" class="cat-script" readonly spellcheck="false"></textarea>
+<div class="cat-row"><button class="btn" id="catCopy">Скопировать скрипт</button></div>
+<div class="cat-row"><input type="url" id="catUrl" placeholder="https://script.google.com/macros/s/…/exec" aria-label="Адрес веб-приложения">
+<button class="btn primary" id="catSave">Подключить и отправить</button><button class="btn" id="catOff" hidden>Отключить</button></div>
+<p class="mut">Пароль и доступ к аккаунту программа не получает: она только отправляет таблицу по этому адресу, а скрипт проверяет ключ, который в нём записан. Программа заполняет листы сама, свои листы в этой таблице лучше не держать.</p>
+</div>
+<p class="mut" id="catMsg"></p>
+</section>
+</section>
+
+<!-- Видимость: запросы сайта и конкурентов из Букварикса по группам (page/sembx.js, window/sembx.py, semantics/bukvarix.py) -->
+<section class="sv" data-sv="bx" hidden>
+<p class="mut br-wait" id="bxWait"></p>
+<div id="bxView" hidden>
+<section class="card bx-in">
+<h2>По каким запросам сайты видны в Яндексе <span class="mut">Букварикс, бесплатно</span></h2>
+<p class="mut">Букварикс знает, по каким запросам сайт был в первой полусотне Яндекса. Загрузите ваш сайт и конкурентов: запросы лягут в группы семантики, и у каждой группы будет видно, по каким запросам вы уже видны и каких запросов конкурентов у вас нет. Чужие города, чужие фирмы и мусор уйдут в «Отсеяно», вопросы - в «Статьи для блога».</p>
+<div class="bx-grid">
+<div><div class="f-label">Сайты, по одному в строке (ваш и до 9 конкурентов)</div>
+<textarea id="bxDoms" rows="5" spellcheck="false"></textarea></div>
+<div><div class="f-label">Город выдачи</div><select id="bxRegion"></select>
+<p class="mut bx-or">Или скачайте на bukvarix.com («Анализ домена» → CSV) и добавьте файл: город и сайт программа возьмёт из имени файла (ufa_site.ru.csv).</p>
+<label class="btn small">Добавить файл Букварикса<input type="file" id="bxFile" accept=".csv,.tsv,.txt" hidden></label></div>
+</div>
+<div class="ss-go"><button class="btn primary" id="bxGo">Загрузить из Букварикса</button><span class="err" id="bxErr"></span><span class="mut" id="bxMsg"></span></div>
+<div id="bxLoaded" class="bx-loaded"></div>
+<p class="mut bx-note" id="bxNote"></p>
+</section>
+<div class="sem-tiles" id="bxTiles"></div>
+<section class="card glist" id="bxRes" hidden>
+<div class="br-head"><h2>По группам</h2><button class="btn small" id="bxAds" title="Прогноз Яндекс Директа: цена клика по запросам, где ваш сайт виден (до 300 запросов за раз, баллы Директа не тратит, лимит частотности не трогает)">Посчитать стоимость в рекламе</button><a class="btn small" id="bxXlsx" href="#" title="«семантика с решениями.xlsx»: листы «Видимость» и «Видимость - запросы»">Скачать Excel</a><div class="task-flt" id="bxFlt"></div>
+<input type="search" id="bxQ" placeholder="Найти группу или запрос…" aria-label="Найти группу или запрос"></div>
+<div id="bxList"></div><p class="sem-more" id="bxMore"></p></section>
+</div>
+</section>
+
+<!-- Спрос: Вордстат через Директ - узнаваемость, местный спрос, сезонность… (page/semdemand.js, window/semdemand.py, semantics/demand.py) -->
+<section class="sv" data-sv="demand" hidden>
+<p class="mut br-wait" id="dmWait"></p>
+<div id="dmView" hidden></div>
+</section>
+
+<!-- Обновления поиска на графиках и «Что просело» (page/semupd.js, window/semupd.py) -->
+<section class="sv" data-sv="upd" hidden>
+<p class="mut br-wait" id="upWait"></p>
+<div id="upView" hidden></div>
+</section>
+
+<!-- Разложить новые запросы по готовым группам и словари (page/semsort.js, window/semsort.py) -->
+<section class="sv" data-sv="sort" hidden>
+<section class="card ss-in">
+<h2>Разложить новые запросы по группам</h2>
+<p class="mut">Вставьте новые запросы или добавьте файл (Вордстат, Key Collector, любой список): каждый запрос ляжет в ту группу, на запросы которой он больше всего похож. Вопросы («как», «что такое», «своими руками») пойдут в «Статьи для блога», «фото» и «видео» в «Галерея и портфолио». Бесплатно, без интернета, за секунды.</p>
+<div class="ss-grid">
+<div><div class="f-label">Новые запросы, по одному в строке (можно с частотностью через табуляцию, как из Excel)</div>
+<textarea id="ssText" rows="7" placeholder="газовый котел навьен 24 квт&#10;термопара для колонки нева&#10;как выбрать бойлер"></textarea>
+<label class="btn small">Или файл с запросами<input type="file" id="ssFile" accept=".xlsx,.xlsm,.csv,.tsv,.txt" hidden></label> <span id="ssFileName" class="mut"></span></div>
+<div><div class="f-label">По каким группам</div>
+<label class="opt"><input type="radio" name="ssSrc" value="sem" checked><span><b>Группы этой семантики</b><small>С вашими решениями: разделённые группы, выбранные страницы.</small></span></label>
+<label class="opt"><input type="radio" name="ssSrc" value="file"><span><b>Мой файл с группами</b><small>Excel или CSV с колонками «Группа» и «Запрос», например выгрузка Key Collector.</small></span></label>
+<label class="btn small" id="ssGBtn" hidden>Выбрать файл с группами<input type="file" id="ssGFile" accept=".xlsx,.xlsm,.csv,.tsv,.txt" hidden></label> <span id="ssGName" class="mut"></span></div>
+</div>
+<div class="ss-go"><button class="btn primary" id="ssGo">Разложить</button><span class="err" id="ssErr"></span></div>
+</section>
+<section class="card ss-res" id="ssRes" hidden>
+<div class="ss-head"><h2 id="ssT"></h2><a class="btn small" id="ssXlsx" href="#">Скачать Excel</a></div>
+<div class="task-flt" id="ssFlt"></div>
+<input type="search" id="ssQ" placeholder="Найти запрос или группу…" aria-label="Найти">
+<div class="ss-table"><div class="ss-row ghead"><span>Запрос</span><span>Группа</span><span>Как определено</span></div><div id="ssList"></div></div>
+<p class="mut sem-more" id="ssMore"></p>
+</section>
+<section class="card ss-syn" id="synCard">
+<h2>Синонимы этого сайта</h2>
+<p class="mut">Синонимы («бойлер» и «водонагреватель», «пк» и «компьютер») держатся в одной группе и на одной странице, но остаются отдельными строками: у них своя частота, и обе фразы нужны в тексте. Одно слово в разных нишах значит разное («батарея» у котлов - радиатор, у телефонов - аккумулятор), поэтому словарь у каждой ниши свой.</p>
+<div class="syn-niche"><label class="f-label" for="synNiche">Тема сайта</label><select id="synNiche"></select><span class="mut" id="synAuto"></span></div>
+<p class="mut" id="synMoved"></p>
+<h3 class="syn-h">Похоже на синонимы <small class="mut" id="synN"></small></h3>
+<p class="mut">Программа нашла слова, с которыми ищут одно и то же («ремонт X уфа» и «ремонт Y уфа»). Часто это разные вещи одного ряда («газовый» и «электрический»): тогда «Нет», и пара больше не появится. «Да, это одно» - пара попадёт в словарь темы сайта и будет работать на всех сайтах этой темы.</p>
+<div id="synList"></div>
+<p class="mut syn-dict">Все синонимы, бренды, омонимы и мусорные слова по темам - на странице <a href="/dictionary" id="synDictLink">«Словарь»</a><span id="synDN"></span>.</p>
+</section>
+<section class="card ss-dicts">
+<h2>Словари<span class="mut">для раскладки и сбора семантики, общие для всех сайтов</span></h2>
+<p class="mut">По одному слову или фразе в строке. Строка с «#» в начале выключена: так помечены слова, которые в магазинах часто означают товар или покупку («техника», «ширина», «гост»). Уберите «#», если на этом сайте слово означает вопрос.</p>
+<div class="seg" id="ssKinds" role="tablist"><button data-k="info" class="on">Маркеры статей</button><button data-k="gallery">Галерея и портфолио</button><button data-k="ignore">Не учитывать</button><button data-k="axes">Признаки</button></div>
+<p class="mut ss-khint" id="ssKHint"></p>
+<textarea id="ssDict" rows="14" spellcheck="false"></textarea>
+<div class="ss-go"><button class="btn primary" id="ssDSave" disabled>Сохранить</button><button class="btn" id="ssDReset">Вернуть как было</button><span class="mut" id="ssDMsg"></span></div>
+</section>
+</section>
+
+<!-- Страницы мешают друг другу. Места для чата «Семантика: решения»: #cannProgress («Решено X из N»),
+     .cann-decision и .cann-task в каждом случае (data-case = номер случая), #cannFoot (кнопки внизу) -->
+<section class="sv sub" data-sv="cann" hidden>
+<nav class="crumbs"><a href="#tasks">← Семантика</a><span class="site-crumb"></span><span>Задачи</span></nav>
+<div class="sub-head"><div><h1>Страницы мешают друг другу</h1>
+<p class="mut">По одним и тем же запросам на сайте несколько страниц. Поиск не понимает, какую показывать, и обе стоят ниже, чем могла бы одна. Главной оставьте ту, на которую больше ссылок, остальным дайте свои title и H1 по их группе.</p></div>
+<div class="cann-progress" id="cannProgress"></div></div>
+<div class="cases" id="semCann"></div>
+<div class="cann-foot" id="cannFoot"><a class="btn" id="cannXlsx" href="#">Список в Excel</a></div>
+</section>
+
+<!-- Похоже, не та страница (и смешанные группы), группы из текста кнопок и меню: заполняет semdec.js -->
+<section class="sv sub" data-sv="landing" hidden>
+<nav class="crumbs"><a href="#tasks">← Семантика</a><span class="site-crumb"></span><span>Задачи</span></nav>
+<div class="sub-head"><div><h1>Похоже, не та страница</h1>
+<p class="mut">Группа привязана к странице, которая не про это: поиск будет показывать её по чужим запросам, а нужную страницу не найдёт. Выберите правильную страницу или отметьте «создать новую»: программа запомнит выбор для следующих сборов.</p></div></div>
+<div id="sdLanding" class="sd-screen"></div>
+</section>
+<section class="sv sub" data-sv="junk" hidden>
+<nav class="crumbs"><a href="#tasks">← Семантика</a><span class="site-crumb"></span><span>Задачи</span></nav>
+<div class="sub-head"><div><h1>Группы из текста кнопок и меню</h1>
+<p class="mut">Эти группы собраны из подписей на сайте («Узнать подробнее», «Записаться», «Наши достижения»), а не из того, что ищут клиенты. Отмеченные уйдут в «Отсеяно», и при следующих сборах программа будет убирать их сама.</p></div></div>
+<div id="sdJunk" class="sd-screen"></div>
+</section>
+
+<!-- Страница группы. Место для чата «Семантика: решения»: #grpMixed (блок «В группе смешаны…», data-group = номер группы) -->
+<section class="sv sub" data-sv="group" hidden>
+<nav class="crumbs"><a href="#tasks">← Семантика</a><span class="site-crumb"></span><a href="#groups">Группы запросов</a></nav>
+<div id="grpPage"></div>
+</section>
+
+<!-- Подробности задач -->
+<section class="sv sub" data-sv="near" hidden>
+<nav class="crumbs"><a href="#tasks">← Семантика</a><span class="site-crumb"></span><span>Задачи</span></nav>
+<div class="sub-head"><h1 id="semNearT"></h1></div>
+<section class="card sem-near" id="semNear"><div id="semNearBody"></div></section>
+</section>
+<section class="sv sub" data-sv="rivals" hidden>
+<nav class="crumbs"><a href="#tasks">← Семантика</a><span class="site-crumb"></span><span>Задачи</span></nav>
+<div class="sub-head"><div><h1 id="rvT">Темы конкурентов, которых нет у вас</h1>
+<p class="mut">Разделы и страницы конкурентов, под которые люди ищут, а на вашем сайте подходящей страницы нет. Сверху темы с самым большим спросом. «Создать»: на сайте уже есть подходящие товары или раздел рядом, страницу сделать просто. «Решить»: таких товаров или услуг у вас нет, нужно ли их добавлять, решаете вы.</p></div></div>
+<div id="rvList"></div>
+</section>
+<section class="sv sub" data-sv="flt" hidden>
+<nav class="crumbs"><a href="#tasks">← Семантика</a><span class="site-crumb"></span><span>Задачи</span></nav>
+<div class="sub-head"><h1 id="semFltT">Страницы-фильтры</h1></div>
+<section class="card sem-filters" id="semFlt">
+<p class="mut">Люди ищут не только «газовые котлы», но и «газовые котлы навьен», «двухконтурные», «на 24 квт». Под частые уточнения интернет-магазины делают отдельные страницы с подборкой товаров: такие страницы дают много трафика. Сверху с наибольшим числом запросов; «товаров»: сколько подходящих товаров уже есть на сайте.</p>
+<div class="flt-head"><span>Страница-фильтр</span><span>Группа</span><span>Запросов</span><span>Товаров</span></div>
+<div id="semFltList"></div><p class="sem-more" id="semFltMore"></p></section>
+</section>
+<section class="sv sub" data-sv="geo" hidden>
+<nav class="crumbs"><a href="#tasks">← Семантика</a><span class="site-crumb"></span><span>Задачи</span></nav>
+<div class="sub-head"><h1 id="semGeoT">Готовность к нейросетям</h1></div>
+<section class="card sem-geo" id="semGeo">
+<p class="mut">Чтобы сайт попадал в ответы Нейро в Яндексе, Алисы, ChatGPT и обзоров ИИ в Google. Нейро и Google берут ответы из обычного поиска, поэтому основа та же, SEO; а цитируют чаще страницы с короткими ответами на вопросы, точными цифрами и понятными данными о компании.</p>
+<div id="semGeoList"></div></section>
+<section class="card" id="semFaq"><h2>Вопросы для блоков «вопрос - ответ»</h2><div id="semFaqList"></div></section>
+</section>
+<section class="sv sub" data-sv="art" hidden>
+<nav class="crumbs"><a href="#tasks">← Семантика</a><span class="site-crumb"></span><span>Задачи</span></nav>
+<div class="sub-head"><h1 id="semArtT">План статей для блога</h1></div>
+<section class="card sem-art" id="semArt">
+<p class="mut">Запросы бывают коммерческие («купить», «цена», «записаться»): под них нужна страница товара или услуги, и информационные («как выбрать», «что такое», «почему»): под них нужна статья. Ниже темы статей из информационных запросов: каждая статья отвечает на вопросы людей и ведёт ссылкой на страницу, где можно купить или записаться.</p>
+<div id="semArtList"></div><p class="sem-more" id="semArtMore"></p></section>
+</section>
+</div>
+</main></div>
+<script src="/page/side.js"></script><script src="/page/keys.js"></script><script src="/page/semmap.js"></script><script src="/page/semmask.js"></script><script src="/page/semantics.js"></script><script src="/page/semtasks.js"></script><script src="/page/semgroups.js"></script><script src="/page/semcards.js"></script><script src="/page/semdec.js"></script><script src="/page/semsort.js"></script><script src="/page/sembrand.js"></script><script src="/page/sembx.js"></script><script src="/page/semdirect.js"></script><script src="/page/semdemand.js"></script><script src="/page/semupd.js"></script><script src="/page/tablefs.js"></script><script src="/page/notify.js"></script></body></html>

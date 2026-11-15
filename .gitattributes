@@ -1,0 +1,2 @@
+# хуки git (.githooks/) - всегда с концами строк Linux, иначе sh их не запустит
+.githooks/* text eol=lf

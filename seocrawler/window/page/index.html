@@ -1,0 +1,377 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Clayler SEO</title>
+<link rel="icon" href="/page/icon.ico" sizes="16x16 32x32 48x48"><link rel="icon" href="/page/icon.png" type="image/png" sizes="192x192"><link rel="stylesheet" href="/page/style.css"><link rel="stylesheet" href="/page/queue.css"><link rel="stylesheet" href="/page/notify.css"></head><body>
+<!-- бледная паутина на общем фоне: сюда рисует модуль паутины (свои файлы, подключается отдельно) -->
+<div class="web-bg" id="webBg" aria-hidden="true"></div>
+<div class="app">
+
+<!-- меню слева рисует page/side.js (одно на все страницы окна) -->
+<aside class="side" id="side" data-here="home" data-main="1"></aside>
+
+<main class="main">
+<div class="alert" id="alertBox" role="status" hidden>
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+  <div class="alert-t" id="alertText"></div><button class="btn small" id="alertGo" type="button">Посмотреть</button></div>
+
+<div class="view" data-view="home">
+<div class="top-row">
+
+<section class="card" id="form">
+<div class="card-head"><h2>Новая проверка</h2>
+  <button class="btn ghost small" id="formFold" type="button" hidden aria-expanded="true">Свернуть</button></div>
+<div class="form-body" id="formBody">
+<div class="segm" role="radiogroup" aria-label="Что проверить">
+<label><input type="radio" name="mode" value="site" checked><span>Весь сайт</span></label>
+<label><input type="radio" name="mode" value="section"><span>Только раздел</span></label>
+<label><input type="radio" name="mode" value="list"><span>Мой список</span></label>
+</div>
+<p class="hint mode-hint" id="modeHint"></p>
+<div id="listBox" hidden><label for="urls">Адреса, по одному в строке (можно вставить столбец из Excel)</label>
+<textarea id="urls" rows="6" placeholder="https://site.ru/catalog/kotly/&#10;https://site.ru/catalog/kolonki/"></textarea>
+<small class="hint">Проверятся сами страницы, их картинки, ссылки на другие сайты и куда ведут редиректы. Другие страницы своего сайта не открываются. Глубину, сирот и перелинковку по списку не посчитать, их в отчёте не будет.</small></div>
+<div class="f-row" id="siteRow">
+<div class="f-site" id="siteBox"><label for="site" id="siteLabel">Адрес сайта</label><input type="text" id="site" placeholder="https://example.ru" list="siteList"><datalist id="siteList"></datalist></div>
+<div class="f-limit"><label for="pages">Лимит страниц</label>
+<select id="pages"><option value="300">300, экспресс-аудит (1 лист)</option><option value="500">500, быстрая проба</option><option value="2000">2 000</option>
+<option value="10000" selected>10 000, большинство сайтов</option><option value="50000">50 000</option><option value="200000">200 000</option></select></div>
+</div>
+<div class="f-checks">
+<label class="ck" title="Для сайтов на React, Vue, Angular. В несколько раз медленнее."><input type="checkbox" id="js"><span>Выполнять JavaScript</span></label>
+<label class="ck" title="С того места, где она остановилась."><input type="checkbox" id="resume"><span>Продолжить прошлую проверку</span></label>
+</div>
+<div id="compBox"><div class="f-label">Конкуренты <span class="mut2">до 5, проверяются вместе с вашим (не больше 3 сайтов сразу, у каждого своя паутина и журнал), потом таблица «ваш сайт против конкурентов»</span></div>
+<div class="comp" id="compChips"><input type="text" id="compAdd" class="comp-add" placeholder="+ Добавить адрес" aria-label="Адрес конкурента"></div>
+<textarea id="competitors" hidden></textarea></div>
+<details class="adv" id="adv"><summary><span>Дополнительные настройки</span> <span class="mut2" id="advSum"></span></summary>
+<div class="adv-body">
+<div class="f-grid2">
+<div><label for="speed">Скорость</label><select id="speed"><option value="slow">Бережно (сайт тормозит или блокирует)</option><option value="normal" selected>Обычная</option><option value="fast">Быстро (только свой сайт)</option></select><small class="hint">Слишком быстро: чужой сайт может заблокировать проверку.</small></div>
+<div><label for="seenAs">Проверять как</label><select id="seenAs"><option value="yandex" selected>Яндекс</option><option value="google">Google</option><option value="visitor">Обычный посетитель</option><option value="crawler">Программа аудита</option><option value="custom">Своя настройка</option></select><small class="hint" id="seenAsHint"></small></div>
+</div>
+<div class="f-grid2" id="customAs" hidden>
+<div><label for="robots">Правила robots.txt</label><select id="robots"><option value="googlebot">Для Google</option><option value="yandex">Для Яндекса</option></select><small class="hint">В robots.txt бывают разные запреты для Google и Яндекса.</small></div>
+<div><label for="ua">Представляться как</label><select id="ua"><option value="">Программа аудита</option><option value="chrome">Браузер Chrome</option><option value="googlebot">Googlebot</option><option value="yandexbot">YandexBot</option></select><small class="hint">Некоторые сайты отвечают по-разному роботу и браузеру.</small></div>
+</div>
+<div class="f-sec">Что ещё обходить</div>
+<div class="f-grid2">
+<label class="opt"><input type="checkbox" id="regions"><span><b>Сайт с городами</b><small>Найдёт городские версии по переключателю города (msk.site.ru или site.ru/spb/), проверит их вместе и сделает в аудите раздел «По городам».</small></span></label>
+<label class="opt"><input type="checkbox" id="subdomains"><span><b>Поддомены, часть сайта</b><small>Обходить и blog.site.ru, msk.site.ru вместе с основным сайтом.</small></span></label>
+</div>
+<div class="f-sec">Ограничения</div>
+<div class="f-grid2">
+<label class="opt"><input type="checkbox" id="no_external"><span><b>Не проверять ссылки на другие сайты</b><small>Быстрее, но битые внешние ссылки не попадут в отчёт.</small></span></label>
+<label class="opt warn"><input type="checkbox" id="ignore_robots"><span><b>Не соблюдать robots.txt</b><small>Заходить и в разделы, закрытые для роботов. Нужно для тестовой копии сайта.</small></span></label>
+</div>
+<div><label for="skip">Не обходить адреса</label>
+<textarea id="skip" rows="2" placeholder="/filter/&#10;*?sort=*&#10;/tag/*/page-*"></textarea>
+<small class="hint">По маске в строке: <code>*</code> - любые символы, маска ищется в любом месте адреса. Так можно убрать фильтры,
+сортировки, личный кабинет. Такие адреса не открываются и в лимит страниц не входят, в отчёте - строка «Исключены настройками проверки».</small></div>
+</div></details>
+<div class="f-go"><button class="btn primary big" id="go" type="button">Начать проверку</button>
+<span class="hint" id="goNote" hidden>Сейчас идёт другая проверка. Новую можно начать, когда она закончится.</span></div>
+<div class="err" id="err"></div>
+</div>
+</section>
+
+<section class="card" id="run" hidden>
+<div class="run-head">
+  <div class="run-title"><div class="kicker" id="runKicker"><i></i><span>Идёт проверка</span></div>
+    <h2 id="runSite"></h2><div class="mut" id="meta"></div><div class="mut res-line" id="resLine" hidden></div></div>
+  <div class="run-btns"><button class="btn" id="stop" type="button">Остановить</button><button class="btn primary" id="cont" type="button" hidden></button><a id="open" class="btn primary" hidden></a><a id="openc" class="btn" hidden></a></div>
+</div>
+<div class="step" id="step">Запускаю…</div>
+<ol class="steps" id="steps">
+  <li><i><b></b></i><span>1 · robots.txt</span></li>
+  <li><i><b></b></i><span>2 · Sitemap</span></li>
+  <li><i><b></b></i><span>3 · Обход по ссылкам</span></li>
+  <li><i><b></b></i><span>4 · Проверки и отчёт</span></li>
+</ol>
+<div class="pbar" id="pbar" hidden><i id="bar"></i></div>
+<div class="run-body">
+  <!-- место под живую паутину: модуль паутины кладёт сюда свой canvas -->
+  <div class="web-stage" id="webStage"></div>
+  <div class="tiles" id="tiles"></div>
+</div>
+<div class="ptext" id="ptext"></div>
+<div class="next" id="nextUp" hidden></div>
+<div class="runs" id="runs" hidden></div>
+<details class="log"><summary>Подробный журнал</summary><pre id="log"></pre></details>
+</section>
+
+</div>
+
+<section class="card" id="reportsCard">
+<div class="rep-head"><div><h2>Отчёты</h2><div class="mut" id="repTotal"></div></div>
+<input type="search" id="q" placeholder="Найти сайт…" aria-label="Найти сайт"></div>
+<div class="rep-filters" id="repFilters">
+  <button class="fpill on" data-f="all" type="button">Все</button>
+  <button class="fpill" data-f="bad" type="button">Много проблем</button>
+  <button class="fpill" data-f="good" type="button">Хорошие</button>
+  <button class="fpill" data-f="partial" type="button">Проверены не полностью</button>
+  <button class="fpill" data-f="fav" type="button" title="Сайты со звёздочкой">★ Избранное</button>
+  <button class="fpill" data-f="sem" type="button" title="У сайта собрана семантика">Семантика собрана</button>
+  <button class="fpill" data-f="nosem" type="button" title="Сайт только проверен, семантики нет">Только проверка</button>
+  <button class="fpill" data-f="sent" type="button" title="У сайта есть проблемы с меткой «передано разработчику»">Передано разработчику</button>
+  <button class="fpill" data-f="wait" type="button" title="У сайта есть проблемы с меткой «ждёт проверки»">Ждёт проверки</button>
+  <span class="legend" title="Здоровье - доля страниц сайта без критичных ошибок и предупреждений. Замечания не считаются. Проблема всего сайта (битая ссылка в меню, тяжёлый шаблон) снимает 5-10%, все вместе не больше 30%."><i class="dot good"></i>90% и выше <i class="dot mid"></i>70–89% <i class="dot bad"></i>ниже 70%</span>
+</div>
+<div class="err" id="cmperr"></div>
+<div class="rep-bulk" id="repBulk" hidden></div>
+<div id="reports"><p class="mut">Загружаю…</p></div>
+<details id="archiveBox" class="archive" hidden><summary>Архив <span class="mut" id="archiveCount"></span></summary>
+<p class="mut">Проверки, убранные из списка. Файлы на месте: их можно открыть, вернуть или удалить насовсем.</p><div id="archive"></div></details>
+</section>
+</div>
+
+<div class="view" data-view="tools" hidden>
+<div class="tool-head"><h2>Инструменты</h2><p class="mut">Редкие дела, которые не нужны каждый день</p></div>
+<div class="tool-tiles">
+<a class="tool-tile" href="#search" data-view="search"><i class="tool-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m20 20-4.5-4.5"/></svg></i><b>Поиск по сайту</b><span>Страницы, где есть или нет нужной фразы: старый телефон, «нет в наличии», чужой город. По готовой проверке, без нового обхода</span><em class="tool-go">Открыть →</em></a>
+<a class="tool-tile" href="#extract" data-view="extract"><i class="tool-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7"/><path d="m16 15 2 2 4-4"/></svg></i><b>Свои данные со страниц</b><span>Цена, артикул, телефон, автор, есть ли нужный код: что взять с каждой страницы при следующей проверке</span><em class="tool-go">Открыть →</em></a>
+<a class="tool-tile" href="#robot" data-view="robot"><i class="tool-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="8" width="14" height="11" rx="2"/><path d="M12 4v4M9 13h.01M15 13h.01M9 16h6"/></svg></i><b>Глазами поисковика</b><span>Страница без JavaScript и стилей: что читает робот, который не запускает скрипты</span><em class="tool-go">Открыть →</em></a>
+<a class="tool-tile" href="#list" data-view="list"><i class="tool-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h11l-3-3M20 17H9l3 3"/></svg></i><b>Переезд</b><span>Проверить свой список адресов или после переезда (новый дизайн, новый домен) найти потерянные страницы</span><em class="tool-go">Открыть →</em></a>
+<a class="tool-tile" href="#reindex" data-view="reindex"><i class="tool-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 5v6h-6"/></svg></i><b>Переобход в Яндексе</b><span>После правок отправить изменённые страницы на переобход: в поиске они обновятся за дни, а не недели</span><em class="tool-go">Открыть →</em></a>
+<a class="tool-tile" href="#auth" data-view="auth"><i class="tool-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></i><b>Закрытые сайты</b><span>Логин и пароль (или cookie) для тестовой копии сайта, чтобы проверить её до запуска</span><em class="tool-go">Открыть →</em></a>
+</div>
+</div>
+
+<div class="view" data-view="robot" hidden>
+<section class="card tool" id="rvCard"><div class="tool-head"><h2>Страница глазами поисковика</h2>
+<p class="mut">Исходный HTML без JavaScript и без стилей: что читает робот, который не запускает скрипты</p></div>
+<div class="rv-form"><input type="text" id="rvUrl" placeholder="https://example.ru/stranica/" aria-label="Адрес страницы">
+<select id="rvUa" aria-label="Представляться как"><option value="crawler">Программа аудита</option><option value="yandexbot">YandexBot</option>
+<option value="googlebot">Googlebot</option><option value="chrome">Браузер Chrome</option></select>
+<button class="primary" id="rvGo">Показать</button></div>
+<div class="err" id="rvErr"></div>
+<div id="rvOut" hidden>
+<div class="rv-sum" id="rvSum"></div>
+<div class="rv-snip" id="rvSnip" hidden></div>
+<div class="rv-tabs"><button data-tab="clean" class="on">Без стилей</button><button data-tab="heads">Заголовки</button><button data-tab="src">Исходный код</button></div>
+<iframe id="rvFrame" sandbox="allow-popups allow-popups-to-escape-sandbox" title="Страница без стилей и скриптов"></iframe>
+<div id="rvHeads" class="rv-pane" hidden></div><pre id="rvSrc" class="rv-pane" hidden></pre>
+</div></section>
+</div>
+
+<div class="view" data-view="search" hidden>
+<section class="card tool" id="srCard"><div class="tool-head"><h2>Поиск по сайту</h2>
+<p class="mut">Найти страницы, где есть или нет нужной фразы: старый телефон, «нет в наличии», чужой город. Ищет по готовой проверке, сайт заново не обходится</p></div>
+<div class="sr-form">
+<div><label for="srSite">Сайт (последняя проверка)</label><select id="srSite"></select></div>
+<div><label for="srMode">Что найти</label><select id="srMode"><option value="has">Страницы, где фраза есть</option>
+<option value="none">Страницы, где фразы нет</option><option value="no_ym">Страницы без счётчика Яндекс Метрики</option>
+<option value="no_ga">Страницы без Google Analytics</option></select></div>
+<div><label for="srWhere">Где искать</label><select id="srWhere"><option value="text">В тексте страницы</option>
+<option value="meta">В title, description и H1</option><option value="url">В адресе страницы</option><option value="all">Везде</option></select></div>
+</div>
+<label for="srQ">Фраза. Можно несколько, каждую с новой строки (подойдёт любая)</label>
+<textarea id="srQ" rows="2" placeholder="+7 960 800-77-71&#10;нет в наличии"></textarea>
+<div class="sr-presets mut">Например: <button data-q="нет в наличии&#10;товар закончился&#10;нет на складе">«нет в наличии»</button>
+<button data-q="lorem ipsum&#10;тестовая страница&#10;тестовый текст&#10;здесь будет">тестовый текст</button>
+<button data-q="товаров не найдено&#10;раздел пуст&#10;в этом разделе нет товаров&#10;ничего не найдено">пустой раздел</button>
+<label class="sr-rx"><input type="checkbox" id="srRx"> регулярное выражение</label></div>
+<button class="primary" id="srGo">Найти</button>
+<div class="err" id="srErr"></div>
+<div id="srOut" hidden><p id="srSum"></p><div class="tw"><table class="sr-t"><thead><tr><th>Страница</th><th>Где</th><th>Фрагмент</th></tr></thead><tbody id="srRows"></tbody></table></div></div>
+</section>
+</div>
+
+<div class="view" data-view="extract" hidden>
+<section class="card tool" id="exCard"><div class="tool-head"><h2>Свои данные со страниц</h2>
+<p class="mut">Что взять с каждой страницы сайта: цену, артикул, телефон, автора статьи - или проверить, есть ли в коде нужный
+скрипт или тег. Правила работают при следующей проверке сайта (повторно проверять старые не нужно, но и данных в них не будет).
+Результат - в отчёте, раздел «Свои данные со страниц», и в файле «свои данные.csv» в папке проверки.</p></div>
+<div class="tw"><table class="ex-t"><thead><tr><th>Название</th><th>Как искать</th><th>Что искать</th><th>Что взять</th><th>Сайт</th><th></th></tr></thead>
+<tbody id="exRows"></tbody></table></div>
+<div class="sr-presets mut">Добавить: <button id="exAdd">пустое правило</button>
+<button data-ex="0">цена из разметки</button>
+<button data-ex="1">артикул</button>
+<button data-ex="2">телефон</button>
+<button data-ex="3">есть ли Метрика в коде</button>
+<button data-ex="4">картинки без alt</button>
+<button data-ex="5">хлебные крошки</button></div>
+<details class="ex-help mut"><summary>Как писать правила</summary>
+<p><b>CSS-селектор</b> - как в стилях сайта: <code>.price</code>, <code>#main h1</code>, <code>div.card &gt; span</code>,
+<code>[itemprop=sku]</code>, <code>a[href^="tel:"]</code>, <code>li:nth-child(2)</code>, <code>img:not([alt])</code>.
+Чтобы узнать селектор, в Chrome нажмите на нужное место правой кнопкой → «Посмотреть код».</p>
+<p><b>XPath</b>: <code>//h1</code>, <code>//span[@class='price']</code>, <code>//div[contains(@class,'sku')]/text()</code>,
+<code>//meta[@property='og:title']/@content</code>, <code>//ul/li[2]</code>.</p>
+<p><b>Регулярное выражение</b> ищет прямо в коде страницы (вместе со скриптами). Если в нём есть скобки, берётся то, что в первых скобках:
+<code>Артикул:\s*(\S+)</code>. «Сколько найдено» = 0 - на странице этого нет: так ищутся страницы без нужного кода.</p>
+<p><b>Сайт</b>: пусто - правило для всех сайтов, иначе только для этого (например <code>shop.ru</code>).
+В режиме JavaScript правила смотрят страницу после скриптов.</p></details>
+<div class="st-btns"><button class="primary" id="exSave">Сохранить правила</button><span class="ok" id="exOk"></span></div>
+<div class="err" id="exErr"></div>
+<h3 class="ex-h">Проверить на странице</h3>
+<p class="mut">Правила из таблицы (можно ещё не сохранять) применятся к одной странице - сразу видно, что они находят.</p>
+<div class="rv-form"><input type="text" id="exUrl" placeholder="https://example.ru/tovar/" aria-label="Адрес страницы">
+<button id="exTest">Проверить</button></div>
+<div class="err" id="exTErr"></div>
+<div id="exTOut" hidden><p id="exTSum" class="mut"></p><div class="tw"><table class="sr-t"><thead><tr><th>Правило</th><th>Что нашлось</th></tr></thead><tbody id="exTRows"></tbody></table></div></div>
+</section>
+</div>
+
+<div class="view" data-view="list" hidden>
+<section class="card tool" id="lsCard"><div class="tool-head"><h2>Список адресов и переезд сайта</h2>
+<p class="mut">Проверить только нужные адреса или после переезда (новый дизайн, новый домен) найти потерянные страницы: старые адреса из прошлой проверки, куда ведут сейчас</p></div>
+<div class="ls-mode"><label><input type="radio" name="lsMode" value="list" checked> Свой список адресов</label>
+<label><input type="radio" name="lsMode" value="move"> Переезд: адреса из прошлой проверки сайта</label></div>
+<div id="lsList"><label for="lsUrls">Адреса, по одному в строке (можно вставить столбец из Excel или Вебмастера)</label>
+<textarea id="lsUrls" rows="5" placeholder="https://site.ru/katalog/&#10;https://site.ru/uslugi/remont/"></textarea></div>
+<div id="lsMove" hidden><div class="ls-move">
+<div><label for="lsSite">Проверка до переезда</label><select id="lsSite"></select></div>
+<div><label for="lsHost">Новый домен, если сайт переехал на другой адрес (необязательно)</label><input type="text" id="lsHost" placeholder="https://new-site.ru"></div></div>
+<p class="mut">Программа возьмёт все рабочие страницы и адреса sitemap из той проверки и откроет их сейчас: на месте ли страница, ведёт ли 301 на новую, не ушла ли на главную, не поменялись ли title и H1.</p></div>
+<button class="primary" id="lsGo">Проверить</button><div class="err" id="lsErr"></div>
+<div id="lsPrev"></div>
+</section>
+</div>
+
+<div class="view" data-view="reindex" hidden>
+<section class="card tool" id="riCard"><div class="tool-head"><h2>Сообщить Яндексу об изменениях</h2>
+<p class="mut">После правок на сайте отправить изменённые страницы на переобход: в поиске они обновятся за дни, а не недели</p></div>
+<div class="ri-top"><div><label for="riSite">Сайт (последняя проверка)</label><select id="riSite"></select></div>
+<button id="riFind">Найти изменённые страницы</button></div>
+<p class="mut" id="riInfo">Программа сравнит последнюю проверку с прошлой и подставит страницы, у которых поменялись title, description, H1, canonical, код ответа, и новые страницы. Список можно поправить руками.</p>
+<textarea id="riUrls" rows="6" placeholder="https://site.ru/katalog/"></textarea>
+<div class="ri-ways">
+<div class="ri-way"><h3>IndexNow: Яндекс и Bing, без лимита</h3><div id="riKey" class="mut">Выберите сайт.</div>
+<div class="st-btns"><button id="riKeyCheck">Проверить файл</button><button class="primary" id="riSendIN">Отправить через IndexNow</button></div></div>
+<div class="ri-way"><h3>Очередь переобхода Вебмастера</h3><p class="mut" id="riQuota">Через подключённый вход в Яндекс. Лимит: несколько десятков адресов в день.</p>
+<div class="st-btns"><button class="primary" id="riSendWM">Отправить в Вебмастер</button></div></div>
+</div>
+<div class="err" id="riErr"></div><p id="riOk"></p>
+</section>
+</div>
+
+<!-- «Клиенты»: сводка по сайтам с меткой «клиент» (page/app.js renderClients, метка - ⋯ → «Метка сайта») -->
+<div class="view" data-view="clients" hidden>
+<section class="card tool"><div class="tool-head"><h2>Клиенты</h2>
+<p class="mut">Одна строка на сайт клиента: здоровье, что изменилось за неделю и есть ли новые критичные проблемы. Сайт попадает сюда по метке «клиент»: в списке «Проверки и отчёты» нажмите «⋯» у сайта → «Метка: клиент» или добавьте его здесь.</p></div>
+<div class="cl-add"><select id="clPick" aria-label="Сайт"></select><button class="btn" id="clAdd" type="button">Добавить клиента</button></div>
+<div id="clList"></div>
+<div class="cl-night"><label for="clWeekly">Проверять всех клиентов по расписанию, по одному</label>
+<div class="cl-add"><input type="text" id="clWeekly" value="вс 02:00" aria-label="День и время"><button class="btn" id="clNightOn" type="button">Включить</button><button class="btn ghost" id="clNightOff" type="button">Выключить</button></div>
+<p class="hint">День недели и время, например «вс 02:00». В это время окно программы ставит сайты клиентов на проверку один за другим (окно должно быть открыто, компьютер не спит), итог каждого - в Telegram. Сравнение с прошлой проверкой соберётся само, «Отчёт за месяц» - кнопкой в строке клиента. <span id="clNightMsg"></span></p></div>
+</section>
+</div>
+
+<div class="view" data-view="queue" hidden>
+<section class="card tool" id="qCard"><div class="tool-head"><h2>Очередь сайтов</h2>
+<p class="mut">Много сайтов подряд, без вас: программа проверяет их по одному, пока окно открыто. Сайт, который не открылся, закрыт от проверки или перестал отвечать посреди обхода (ошибки 5xx или нет ответа больше 10 минут), пропускается с пометкой, очередь идёт дальше. В Telegram придёт сообщение о пропущенном сайте и итог, когда очередь закончится. Очередь сохраняется: после перезапуска программы она продолжится с того же места.</p></div>
+<div class="q-top">
+<div class="q-state" id="qState">Загружаю…</div>
+<div class="st-btns"><button class="primary" id="qStart">Запустить</button><button id="qPause">Пауза</button><button id="qSkip" title="Остановить текущий сайт (отчёт соберётся по тому, что успели) и перейти к следующему">Пропустить сайт</button><button id="qStop" title="Остановить текущий сайт (отчёт соберётся по тому, что успели) и поставить очередь на паузу">Остановить</button></div>
+</div>
+<div class="q-add">
+<div><label for="qText">Добавить сайты: по одному в строке (можно вставить столбец из Excel)</label>
+<textarea id="qText" rows="4" placeholder="site.ru&#10;https://other-site.ru/&#10;big-shop.ru 1000   - своё число страниц для этого сайта"></textarea></div>
+<div class="q-side"><label for="qPages">Страниц на сайт</label><input type="number" id="qPages" min="100" step="500">
+<small class="hint">Для теста словаря и семантики хватает 5 000.</small>
+<label class="q-chk" title="Быстрый сбор: главная и разделы сайта, подсказки Яндекса и Google. Вордстат не тратится (его лимит 1 000 фраз в сутки) - частотность потом можно загрузить для выбранных сайтов в «Отчётах»."><input type="checkbox" id="qSem"> После проверки собрать семантику</label>
+<small class="hint">Только главная и разделы, без Вордстата. Пары слов копятся в «Словарь → Ждут подтверждения».</small>
+<button id="qAdd">Добавить в очередь</button><div id="qLists"></div></div>
+</div>
+<div class="err" id="qErr"></div>
+<div class="q-filter" id="qFilter"></div>
+<div class="tw" id="qTable" hidden><table class="q-t"><thead><tr><th>#</th><th>Сайт</th><th>Состояние</th><th>Страниц</th><th></th></tr></thead><tbody id="qRows"></tbody></table></div>
+<div class="st-btns q-clear"><button class="ghost" id="qClearAll">Очистить очередь</button></div>
+<details class="q-hist" id="qHist" hidden><summary>История очередей <small id="qHistN"></small></summary><div id="qHistBody"></div></details>
+</section>
+</div>
+
+<div class="view" data-view="log" hidden>
+<section class="card tool"><div class="tool-head"><h2>Журнал</h2>
+<p class="mut">Всё, что происходило в программе: какие кнопки вы нажимали и на каком сайте, что закончилось и что сломалось. Ошибки - простыми словами, техническое сообщение под «Подробнее». Хранятся последние 30 дней. Что вы вводите в поля (пароли, ключи, тексты), сюда не пишется. Ход обхода сайта - отдельно, в «Подробном журнале» проверки.</p></div>
+<div class="jr-top"><div class="jr-f" id="jrKinds"><button class="small on" data-k="">Всё</button><button class="small" data-k="action">Действия</button><button class="small" data-k="event">Уведомления</button><button class="small" data-k="error">Ошибки</button></div>
+<input type="search" id="jrQ" placeholder="Найти: сайт или слово" aria-label="Найти в журнале"></div>
+<div class="jr-list" id="jrList"><p class="mut">Загружаю…</p></div>
+<div class="jr-file mut">Файл журнала: <span id="jrFile"></span> <button class="small" id="jrOpen" type="button">Открыть файл</button></div>
+</section>
+</div>
+
+<div class="view" data-view="auth" hidden>
+<section class="card tool" id="saCard"><div class="tool-head"><h2>Закрытые сайты</h2>
+<p class="mut">Логин и пароль (или cookie) для тестовой копии сайта, закрытой от посторонних, чтобы проверить её до запуска</p></div>
+<div class="br-grid">
+<div><label for="sa_site">Сайт</label><input type="text" id="sa_site" placeholder="test.site.ru"></div>
+<div><label for="sa_user">Логин</label><input type="text" id="sa_user" autocomplete="off"></div>
+<div><label for="sa_pass">Пароль</label><input type="password" id="sa_pass" autocomplete="new-password"></div>
+</div>
+<label for="sa_cookie">Cookie, если вход не через окошко браузера, а через форму на сайте (необязательно)</label>
+<input type="text" id="sa_cookie" placeholder="PHPSESSID=…; другое=…" autocomplete="off">
+<p class="mut">Хранится зашифрованным на этом компьютере и отправляется только этому сайту (с www и без), не картинкам и ссылкам на другие сайты. В режиме JavaScript вход не работает.</p>
+<div class="err" id="saErr"></div>
+<div class="st-btns"><button class="primary" id="saSave">Сохранить</button><span class="mut" id="saOk"></span></div>
+<div id="saList"></div>
+</section>
+</div>
+
+<div class="view" data-view="brand" hidden>
+<section class="card tool" id="brCard"><div class="tool-head"><h2>Ваши данные в аудите</h2>
+<p class="mut">Логотип и контакты в шапке аудита и отчёта для клиента (HTML, PDF и Word)</p></div>
+<div class="br-grid">
+<div><label for="br_name">Имя или компания</label><input type="text" id="br_name" placeholder="Тимур Панин, SEO"></div>
+<div><label for="br_phone">Телефон</label><input type="text" id="br_phone" placeholder="+7 900 000-00-00"></div>
+<div><label for="br_email">Почта</label><input type="text" id="br_email" placeholder="mail@example.ru"></div>
+<div><label for="br_site">Сайт</label><input type="text" id="br_site" placeholder="example.ru"></div>
+<div><label for="br_telegram">Telegram</label><input type="text" id="br_telegram" placeholder="@username"></div>
+<div><label for="brLogo">Логотип (PNG, JPG, SVG, до 600 КБ)</label><input type="file" id="brLogo" accept="image/png,image/jpeg,image/svg+xml,image/webp">
+<div class="br-logo"><img id="brImg" alt="" hidden><button id="brNoLogo" hidden>Убрать логотип</button></div></div>
+</div>
+<p class="mut">Появится в новых аудитах. В готовых: «⋯ → Обновить отчёт».</p>
+<div class="err" id="brErr"></div>
+<div class="st-btns"><button class="primary" id="brSave">Сохранить</button><span class="mut" id="brOk"></span></div>
+</section>
+</div>
+
+<div class="view" data-view="settings" hidden>
+<section class="card tool" id="lookCard"><div class="tool-head"><h2>Вид окна</h2>
+<p class="mut">Живая паутина: паук плетёт её по ходу проверки. Настройка хранится в этом браузере и меняется сразу</p></div>
+<div class="f-grid2">
+<label class="opt"><input type="checkbox" id="webBgOn"><span><b>Паутина на фоне</b><small>Бледный слой паутины на всём окне.</small></span></label>
+<label class="opt"><input type="checkbox" id="webSpiderOn"><span><b>Показывать паучка</b><small>Без него паутина плетётся сама.</small></span></label>
+</div></section>
+<section class="card tool" id="stCard"><div class="tool-head"><h2>Пороги и проверки</h2>
+<p class="mut">Что считать проблемой и какие проверки включать в отчёт</p></div>
+<p class="mut">Изменения действуют на новые проверки и на «⋯ → Обновить отчёт» у готовых. Хранятся в файле настройки.json в папке «данные».</p>
+<h3>Пороги</h3><div class="st-grid" id="stThr"></div>
+<h3>Проверки <span class="mut" id="stCount"></span></h3>
+<p class="mut">Снимите галочку: проблема не попадёт в отчёт и не будет влиять на здоровье сайта.</p>
+<div id="stChecks"></div>
+<div class="err" id="stErr"></div>
+<div class="st-btns"><button class="primary" id="stSave">Сохранить</button><button id="stReset">Вернуть всё как было</button><span class="mut" id="stOk"></span></div>
+</section>
+</div>
+</main>
+</div>
+
+<dialog id="cardDlg" class="card-dlg"><div class="card-head"><b id="cardTitle"></b><span class="sp"></span><a id="cardTab" target="_blank">Открыть в новой вкладке</a><button id="cardClose">Закрыть</button></div>
+<iframe id="cardFrame" title="Карточка сайта"></iframe><div id="cardNone" class="card-none"></div><div id="cardLabels" class="card-labels" hidden></div></dialog>
+<dialog id="cmpdlg" class="cmp-dlg"><h2>Сравнить с конкурентами</h2>
+<p>Ваш сайт: <b id="cmpOwn"></b></p><p class="mut"><b>1.</b> Отметьте галочками конкурентов (до 5). <b>2.</b> Нажмите «Сравнить» внизу. Берётся последняя проверка каждого сайта.</p>
+<div id="cmpList"></div><div class="err" id="cmpErr"></div>
+<div class="dlg-btns"><span class="mut cmp-n" id="cmpN">Конкуренты не выбраны</span><button id="cmpCancel">Отмена</button><button class="primary" id="cmpGo" disabled>Сравнить</button></div></dialog>
+<dialog id="rsDlg"><h2>Дообойти сайт</h2>
+<p>Сайт: <b id="rsSite"></b></p><p id="rsInfo"></p>
+<label for="rsPages">Лимит страниц</label><input type="number" id="rsPages" min="1" step="1">
+<small class="hint" id="rsHint"></small><div class="err" id="rsErr"></div>
+<div class="dlg-btns"><button id="rsCancel">Отмена</button><button class="primary" id="rsGo">Дообойти</button></div></dialog>
+<dialog id="acDlg"><h2 id="acTitle">Вебмастер, Метрика, Search Console и Директ</h2>
+<p class="mut" id="acIntro">Вход без пароля: вы входите на странице Яндекса или Google и нажимаете «Разрешить». Программа получает ключ только на чтение, он хранится зашифрованным на этом компьютере, «Отключить» отзывает его.</p>
+<div id="acList"><p class="mut">Загружаю…</p></div>
+<div class="ac" id="dirBox"></div>
+<div class="dlg-btns"><button id="acClose">Закрыть</button></div></dialog>
+<dialog id="wDlg"><h2>Наблюдение за сайтами</h2>
+<p class="mut">Пока окно программы открыто: <b>мониторинг</b> раз в час проверяет главную и до 9 важных страниц, robots.txt и сертификат. Если что-то сломалось, придёт тревога в Telegram. <b>Раз в неделю</b>: полная проверка в выбранный день и час, итог придёт в Telegram. То же можно делать из бота: /watch, /weekly, /check.</p>
+<div id="wList"></div>
+<div class="w-add"><input type="text" id="wUrl" placeholder="site.ru" aria-label="Адрес сайта"><button class="primary" id="wAdd">Добавить сайт</button></div>
+<div class="err" id="wErr"></div>
+<div class="dlg-btns"><button id="wClose">Закрыть</button></div></dialog>
+<dialog id="tgDlg"><h2>Сообщение в Telegram</h2>
+<div id="tgBox"><p class="mut">Загружаю…</p></div>
+<div class="dlg-btns"><button id="tgClose">Закрыть</button></div></dialog>
+<script src="/page/side.js"></script><script src="/page/keys.js"></script>
+<script src="/page/web_spider.js"></script>
+<script src="/page/web.js"></script>
+<script src="/page/web_live.js"></script>
+<script src="/page/app.js"></script><script src="/page/queue.js"></script><script src="/page/tablefs.js"></script><script src="/page/journal.js"></script><script src="/page/notify.js"></script></body></html>

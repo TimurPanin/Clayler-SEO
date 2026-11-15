@@ -1,0 +1,57 @@
+/* Уведомления (page/notify.js): плашки справа внизу, колокольчик у названия программы, список уведомлений.
+   Вкладка «Журнал» (page/journal.js). Цвета - переменные из style.css. */
+.brand.has-bell{position:relative;padding-right:46px}
+.nt-bell{position:absolute;right:6px;top:0;width:36px;min-height:36px;height:36px;padding:0;display:grid;place-items:center;border-radius:9px;background:transparent;border:1px solid transparent;color:var(--mut)}
+.nt-bell:hover{background:var(--hov);color:var(--tx)}
+.nt-bell svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.nt-n{position:absolute;top:1px;right:0;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--acc);color:var(--on-acc);font-size:12px;font-weight:700;line-height:18px;text-align:center}
+.nt-n.bad{background:var(--crit);color:#2a1210}
+
+.nt-stack{position:fixed;right:20px;bottom:20px;z-index:1000;display:flex;flex-direction:column;gap:10px;width:min(400px,calc(100vw - 32px));pointer-events:none}
+.nt{pointer-events:auto;display:flex;gap:12px;align-items:flex-start;padding:14px 12px 14px 14px;border-radius:12px;background:#222;border:1px solid var(--bd2);border-left:4px solid var(--mut2);box-shadow:0 10px 30px rgba(0,0,0,.45);animation:nt-in .22s ease-out}
+.nt-ok{border-left-color:var(--good)}.nt-err{border-left-color:var(--crit);background:#251c1b}.nt-warn{border-left-color:var(--warn)}.nt-info{border-left-color:var(--acc)}
+@keyframes nt-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.nt{animation:none}}
+.nt-ic{flex:none;width:22px;height:22px;margin-top:1px}
+.nt-ic svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nt-ok .nt-ic{color:var(--good)}.nt-err .nt-ic{color:var(--crit)}.nt-warn .nt-ic{color:var(--warn)}.nt-info .nt-ic{color:var(--acc)}
+.nt-b{flex:1;min-width:0;font-size:14px;line-height:1.45}
+.nt-t{font-weight:600;color:var(--tx);overflow-wrap:anywhere}
+.nt-x{color:var(--tx2);margin-top:2px;overflow-wrap:anywhere}
+.nt-todo{color:var(--tx2);margin-top:6px}.nt-todo b{color:var(--tx);font-weight:600}
+.nt-more{margin-top:6px}.nt-more summary{cursor:pointer;color:var(--mut);font-size:13px}
+.nt-more pre{max-height:160px;margin-top:6px;font-size:12px}
+.nt-go{display:inline-block;margin-top:8px;font-weight:600}
+.nt-x-btn{flex:none;min-height:28px;width:28px;padding:0;border:0;background:transparent;color:var(--mut);font-size:20px;line-height:1;border-radius:7px}
+.nt-x-btn:hover{background:var(--hov);color:var(--tx)}
+
+.nt-panel{position:fixed;left:264px;top:14px;z-index:1001;width:min(420px,calc(100vw - 32px));max-height:calc(100vh - 28px);display:flex;flex-direction:column;background:var(--card);border:1px solid var(--bd2);border-radius:12px;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+.nt-p-head{display:flex;justify-content:space-between;align-items:center;padding:10px 10px 10px 16px;border-bottom:1px solid var(--bd)}
+.nt-p-head button{font-size:20px;width:32px;padding:0}
+.nt-p-list{overflow-y:auto;padding:6px 8px}
+.nt-p-i{display:flex;gap:10px;padding:10px 8px;border-radius:9px}
+.nt-p-i+.nt-p-i{border-top:1px solid var(--bd)}
+.nt-p-i.new{background:var(--acc-soft)}
+.nt-when{color:var(--mut2);font-size:13px}
+.nt-empty{padding:12px 8px;margin:0}
+.nt-p-foot{border-top:1px solid var(--bd);padding:12px 16px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.nt-snd{display:flex;gap:8px;align-items:center;color:var(--tx2);font-size:14px;margin:0;cursor:pointer}
+.nt-p-btns{display:flex;gap:8px;align-items:center;justify-content:space-between}
+@media (max-width:900px){.nt-panel{left:16px;top:70px}}
+
+/* вкладка «Журнал» */
+.jr-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.jr-top input[type=search]{flex:1;min-width:220px}
+.jr-f{display:flex;gap:4px;flex-wrap:wrap}
+.jr-f button.on{background:var(--acc-soft);border-color:var(--acc-line);color:var(--tx)}
+.jr-list{display:flex;flex-direction:column}
+.jr-day{color:var(--mut);font-size:13px;font-weight:600;padding:14px 4px 6px}
+.jr-i{display:grid;grid-template-columns:52px 120px minmax(0,1fr);gap:10px;padding:7px 4px;border-top:1px solid var(--bd);font-size:14px;align-items:baseline}
+.jr-t{color:var(--mut2);font-variant-numeric:tabular-nums}
+.jr-k{font-size:13px;color:var(--mut)}
+.jr-i.error .jr-k{color:var(--crit)}.jr-i.event .jr-k{color:var(--good)}
+.jr-x{overflow-wrap:anywhere}.jr-s{color:var(--link);margin-right:6px}
+.jr-todo{color:var(--tx2);margin-top:2px}
+.jr-x details{margin-top:4px}.jr-x summary{cursor:pointer;color:var(--mut);font-size:13px}.jr-x pre{font-size:12px}
+.jr-file{margin-top:12px}
+@media (max-width:700px){.jr-i{grid-template-columns:48px minmax(0,1fr)}.jr-k{display:none}}
