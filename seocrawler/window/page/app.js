@@ -231,7 +231,7 @@ async function poll(){
   if (s.semantics) { open.href = '/semantics?f=' + encodeURIComponent(s.semantics); open.textContent = 'Открыть семантику →'; }
   if (s.result) { open.href = '/r/' + s.result.split('/').map(encodeURIComponent).join('/'); open.target = '_blank'; open.textContent = 'Открыть результат →'; }
   if (s.report) { open.href = '/r/' + encodeURIComponent(s.report) + '/отчёт.html'; open.target = '_blank'; open.textContent = 'Открыть отчёт →'; }
-  // остановили - продолжить одной кнопкой: «Обновить отчёт» ещё раз или «Дообойти» с того же места (29.10.2026)
+  // остановили - продолжить одной кнопкой: «Обновить отчёт» ещё раз или «Дообойти» с того же места
   const cont = $('cont');
   $('stop').dataset.site = s.site || '';   // «Журнал» (notify.js): нажатие «Остановить» - с названием сайта, а не «-»
   cont.hidden = s.running || !s.stopped || !s.report || !['crawl', 'rebuild'].includes(s.kind);
@@ -364,7 +364,7 @@ function staleTag(c){
   const d = (Date.now() - new Date(c.finished.replace(' ', 'T')).getTime()) / 864e5;
   return d > STALE_DAYS ? `<span class="tag warn" title="Последняя проверка ${Math.floor(d)} дн. назад. Сайт с тех пор мог измениться: перед отчётом клиенту проверьте его заново.">нет свежих данных</span>` : '';
 }
-function base(c, archived){ return '/r/' + (archived ? encodeURIComponent('архив') + '/' : '') + encodeURIComponent(c.folder) + '/'; }
+function base(c, archived){ return '/r/' + (archived ? 'archive' + '/' : '') + encodeURIComponent(c.folder) + '/'; }
 function smallLinks(c, archived){
   const b = base(c, archived), out = [];
   if (c.has_card) out.push(`<a href="${b}карточка.html" target="_blank" title="Всё главное о сайте на одной странице: дата проверки, здоровье, что исправить первым, движок и хостинг, бренды, смета, файлы">Карточка</a>`);
@@ -510,13 +510,13 @@ const FILTERS = {
   fav: g => !!g.fav,
   sem: g => !!g.sem_folder,
   nosem: g => !g.sem_folder,
-  // метки работы у проблем (labels.py), по всем сайтам: что отдано разработчику и что ждёт проверки (29.10.2026)
+  // метки работы у проблем (labels.py), по всем сайтам: что отдано разработчику и что ждёт проверки
   sent: g => LBL.some(x => x.site === g.key && x.state === 'sent'),
   wait: g => LBL.some(x => x.site === g.key && x.state === 'wait'),
 };
 let LBL = [], LBL_STATES = {};   // все метки с названиями проблем (/api/labels?all=1)
 async function loadLabels(){
-  // true - метки изменились: список проверок перерисовываем только тогда (проверка кода 29.10.2026)
+  // true - метки изменились: список проверок перерисовываем только тогда
   try { const j = await (await fetch('/api/labels?all=1')).json(), was = JSON.stringify(LBL);
     LBL = j.items || []; LBL_STATES = j.states || {}; return JSON.stringify(LBL) !== was; } catch (e) { return false; }
 }
@@ -587,7 +587,7 @@ function openCard(g){
   dlg.showModal();
   loadLabels().then(() => { if (CARD_G === g && dlg.open) cardLabels(g); });   // метку могли поставить только что в отчёте
 }
-// метки работы у проблем сайта - прямо в карточке, менять без открытия отчёта (29.10.2026)
+// метки работы у проблем сайта - прямо в карточке, менять без открытия отчёта
 let CARD_G = null;
 function cardLabels(g){
   CARD_G = g;
@@ -1112,7 +1112,7 @@ async function loadAccounts(){
     <div class="err">${esc(a.error)}</div></div>`).join('');
   acOnly();
 }
-// окошко подключений - только тот сервис, который нажали в «Подключениях»: Яндекс, Google или Директ (28.10.2026:
+// окошко подключений - только тот сервис, который нажали в «Подключениях»: Яндекс, Google или Директ (
 // раньше в одном окне были все три, и Директ было не найти)
 const AC_TITLE = {yandex: 'Яндекс Вебмастер и Метрика', google: 'Google Search Console', direct: 'Яндекс Директ: точная частотность'};
 let AC_P = '';

@@ -22,7 +22,7 @@ from .words import (CITIES, CITY_ALIASES, CITY_WORDS, INTENT, JUNK, MODIFIER_STE
 # Версия «Семантики» - своя, отдельно от версии программы (seocrawler/__init__.py). Показывается в окне и пишется
 # в семантика.json. Повышать при заметном изменении сбора, групп, ТЗ или раздела для клиента: 1.0 → 1.1;
 # если старые семантики стоит собрать заново - 2.0. Что поменялось - строкой в РЕШЕНИЯ.md.
-VERSION = "1.6"  # 16.10.2026: одинаковый результат при каждом сборе, город сайта в ТЗ, бренды и серии с конкурентом по адресу
+VERSION = "1.6"  #: одинаковый результат при каждом сборе, город сайта в ТЗ, бренды и серии с конкурентом по адресу
 
 VOWELS = "аеиоуыэюя"
 MAX_QUERY_WORDS = 8
@@ -63,7 +63,7 @@ def repeated_word(toks):
     «папа папа» (резьба с двух сторон), его оставляем. Возвращает слово или ""."""
     if len(toks) < 2 or len(toks[0]) < 3 or toks[0].isdigit():
         return ""
-    if ("-" in toks[0]) != ("-" in toks[1]):   # «шкаф-купе купить»: часть «купе» - не повтор «купить» (15.10.2026)
+    if ("-" in toks[0]) != ("-" in toks[1]):   # «шкаф-купе купить»: часть «купе» - не повтор «купить»
         return ""
     a, b = ({k for k in keys(t) if not k.startswith("~")} for t in toks[:2])   # основы, «котел» = «котла»
     return toks[1] if a & b else ""
@@ -87,8 +87,8 @@ def keys(tok):
             if len(t) >= 4:
                 out.add("~" + sound(st))
                 out.add("~" + sound(t))
-            elif len(t) == 3:   # «сео» = «seo», «смм» = «smm» (hightime.agency 29.10.2026): буква в букву латиницей,
-                # а не по звучанию - звучание склеивало «час» и «касса», «суд» и «зуд» (проверка кода 29.10.2026)
+            elif len(t) == 3:   # «сео» = «seo», «смм» = «smm» (hightime.agency): буква в букву латиницей,
+                # а не по звучанию - звучание склеивало «час» и «касса», «суд» и «зуд»
                 out.add("".join(TRANSLIT.get(c, c) for c in t))
         else:
             out.add(t)
@@ -111,12 +111,12 @@ def core(q, drop=frozenset()):
     for t in tokens(q):
         k = keys(t)
         # слово через дефис - уточнение, только если уточнения все его части («интернет-магазин»): у «шкафы-купе»
-        # часть «купе» совпадала с «купить», и группа «Шкафы-купе на заказ» становилась группой «на заказ» (15.10.2026)
+        # часть «купе» совпадала с «купить», и группа «Шкафы-купе на заказ» становилась группой «на заказ»
         mod = all(_mod(p) for p in t.split("-")) if "-" in t else _mod(t)
         if mod or k & drop or (len(t) == 1 and not t.isdigit()):
             continue
         if re.fullmatch(r"[а-я]+(-[а-я]+)+", t):   # «шкафы-купе» - два слова: «шкафы купе» и «шкаф-купе» - одно и то же,
-            # а «шкафы» отдельно - другое (иначе «шкафы купе» уходили в «Шкафы на заказ», 15.10.2026)
+            # а «шкафы» отдельно - другое (иначе «шкафы купе» уходили в «Шкафы на заказ»)
             out += [keys(p) for p in t.split("-") if len(p) > 1 and not _mod(p)]
             continue
         out.append(k)
@@ -126,7 +126,7 @@ def core(q, drop=frozenset()):
 def _canon(k):
     plain = [x for x in k if not x.startswith("~")]
     # есть латинская форма - она: «seo» и «сео» (keys: «seo» буква в букву) - одна группа, а не «Seo продвижение
-    # сайтов» и «Сео продвижения сайтов» рядом (hightime.agency 29.10.2026)
+    # сайтов» и «Сео продвижения сайтов» рядом (hightime.agency)
     lat = [x for x in plain if re.fullmatch(r"[a-z0-9\-]+", x)]
     if lat:
         return min(lat, key=lambda x: (len(x), x))
@@ -391,7 +391,7 @@ def _topic_phrases(main, seeds, folder, new, light):
     own_masks = set(niche) - topic_masks
     # бренды и серии из названий товаров (models.py): маски уровня 3 или, без подтверждённых масок, сами
     models = main.get("models")
-    # быстрый сбор (light) - без них. До 16.10.2026 здесь по ошибке проверялся список конкурентов по адресу (имя light
+    # быстрый сбор (light) - без них. До здесь по ошибке проверялся список конкурентов по адресу (имя light
     # было перекрыто): с конкурентом по адресу бренды и серии не собирались, а в быстром сборе собирались
     if models is None and not new and not light:
         from . import models as MD
@@ -432,7 +432,7 @@ def shorter(ph):
 def _shorter_tasks(phrases, res, sug, stop, log):
     """Маска, по которой оба поисковика ответили пустыми подсказками (длинный заголовок, слоган): спрашиваем её
     короткие формы, все подсказки идут к самой маске. Без этого у сайта с длинными названиями 0 запросов
-    (timurpanin.ru, 22.10.2026). → {(поисковик, короткая фраза): ([подсказки], маска)}."""
+    (timurpanin.ru). → {(поисковик, короткая фраза): ([подсказки], маска)}."""
     out = {}
     for ph in dict.fromkeys(phrases):
         if res.get(("yandex", ph)) != [] or res.get(("google", ph)) != []:
@@ -460,7 +460,7 @@ def _suggest_tasks(main, seeds, niche, topic_masks, models, city_word, new, deep
         if city_word and (new or main["host"] in e["sites"]):
             tasks.append(("yandex", ph + " " + city_word))
         # «шкафы-купе на заказ» (так названо на сайте) - подсказки и без «на заказ»: иначе общий спрос «шкаф купе»
-        # не собирается вовсе (lk-fabrika, 15.10.2026)
+        # не собирается вовсе (lk-fabrika)
         if main["host"] in e["sites"] and ph.endswith(" на заказ") and e["lv"] <= 2 and len(ph.split()) >= 3:
             tasks += [("yandex", ph[:-len(" на заказ")]), ("google", ph[:-len(" на заказ")])]
         if deep and main["host"] in e["sites"] and e["lv"] <= 2:   # подразделы и карточки - без «+ буква»
@@ -628,7 +628,7 @@ def _drop_junk(Q, main, rivals, cities, my_city, topic):
         elif (rep := repeated_word(toks)):
             reason = "слово повторяется: " + rep
         # длинный запрос с покупкой или своим городом - настоящий хвост («изготовление фасадов для кухни на заказ в
-        # москве недорого»), до MAX_INFO_WORDS слов, как вопросы (15.10.2026)
+        # москве недорого»), до MAX_INFO_WORDS слов, как вопросы
         elif len(toks) > (MAX_INFO_WORDS if r["mark"] == "info" or LONG_OK_RX.search(q)
                           or (my_city and my_city in cities.find(q)) else MAX_QUERY_WORDS):
             reason = "слишком длинная фраза - не запрос"
@@ -696,7 +696,7 @@ def _assign_queries(Q, glist, other, city_stems, cities, my_city, own, vocab, to
     """Каждый запрос - в лучшую группу (или в other); уточнение, намерение, пометка «про другое», оценка спроса.
     → [(запрос, причина)] - отсеять: слов запроса нет на сайтах."""
     covering = _covering_index(glist)
-    known = vocab | client_ok   # один раз, а не на каждое слово каждого запроса (проверка кода 29.10.2026)
+    known = vocab | client_ok   # один раз, а не на каждое слово каждого запроса
     gone = []
     for q, r in Q.items():
         qc = core(q, city_stems)
@@ -712,7 +712,7 @@ def _assign_queries(Q, glist, other, city_stems, cities, my_city, own, vocab, to
                 if g["phrases"] & r["seeds"]:
                     hit = sum(1 for k in g["core"] if any(k & x for x in qc))
                     # совпасть должно не только общее слово: «мебель на заказ» из подсказок к «шкафы-купе на заказ»
-                    # совпадала одним «заказ» и уводила 130 общих запросов в шкафы-купе (lk-fabrika, 15.10.2026)
+                    # совпадала одним «заказ» и уводила 130 общих запросов в шкафы-купе (lk-fabrika)
                     real = sum(1 for k in g["core"] if not k & SHARED_STEMS and any(k & x for x in qc))
                     if hit * 2 >= len(g["core"]) and real:
                         best = g
@@ -726,14 +726,14 @@ def _assign_queries(Q, glist, other, city_stems, cities, my_city, own, vocab, to
             r["intent"] = "Покупка"
         r["intent"] = refine_intent(q, r["intent"], own)
         # «под ключ» - обычное коммерческое уточнение, а не слово «про другое» («seo продвижение сайтов под ключ» у
-        # hightime.agency уходило в «Без группы»: слова «ключ» нет на сайте, 28.10.2026)
+        # hightime.agency уходило в «Без группы»: слова «ключ» нет на сайте)
         turnkey = "ключ" if re.search(r"(?<![а-я])под ключ(?![а-я])", q) else None
         extra = [t for t in r["extra"].split() if not re.search(r"\d", t) and not INFO_RX.search(t)
                  and t not in NEUTRAL and t != turnkey]
         # «про нас» человека («топ», «раскрутка») - не «возможно, про другое»: раньше слово спасало запрос только от
-        # «Отсеяно», а пометка оставалась, и запрос лежал в «Без группы» (hightime.agency 29.10.2026)
+        # «Отсеяно», а пометка оставалась, и запрос лежал в «Без группы» (hightime.agency)
         odd = [t for t in extra if not keys(t) & known]
-        # слова нет ни в тексте страниц сайтов, ни в заголовках: запрос про другое - в отсеянное (15.10.2026,
+        # слова нет ни в тексте страниц сайтов, ни в заголовках: запрос про другое - в отсеянное (
         # gasprof: «группа безопасности для самогонного аппарата»); настоящие запросы из Вебмастера и Search
         # Console и запросы с показами из файлов не трогаем
         # латиница (марки и модели: «royal thermo insignia») - только пометка: это может быть марка, которой нет на сайте
@@ -762,7 +762,7 @@ def _assign_queries(Q, glist, other, city_stems, cities, my_city, own, vocab, to
 def _reextra(Q, qs, gcore, city_stems):
     """Уточнение запроса - относительно его новой группы, а не «Без группы», где оно было почти всем запросом:
     иначе «продвижение» в группе «Seo продвижение сайтов» считалось уточнением, и в дереве сайта у каждой новой
-    группы был фильтр-двойник «/seo-prodvizhenie-saytov/prodvizhenie/» (hightime.agency 29.10.2026)."""
+    группы был фильтр-двойник «/seo-prodvizhenie-saytov/prodvizhenie/» (hightime.agency)."""
     gw = set().union(*gcore) if gcore else set()
     for q in qs:
         Q[q]["extra"] = " ".join(x for x in tokens(q) if not keys(x) & (gw | MODIFIER_STEMS | city_stems) and len(x) > 1)
@@ -809,7 +809,7 @@ def _niche_groups(Q, glist, other, niche, topic_masks, own_masks, main, new, cit
             _reextra(Q, qs, gcore, city_stems)
             other["queries"] = [q for q in other["queries"] if q not in set(qs)]
         # чистые запросы «тема + одно слово» без своей группы - в группу главной, а не в «Без группы»: там лежали
-        # «продвижение сайтов услуги», «… агентство», «… за результат» (hightime.agency 28.10.2026). Запросы с
+        # «продвижение сайтов услуги», «… агентство», «… за результат» (hightime.agency). Запросы с
         # пометкой «возможно, про другое» сюда не попадают (в buckets их нет)
         for t, qs in fold.items():
             hg = next((g for g in glist if g["main"] == [home] and g["name"].lower() == t), None)
@@ -817,7 +817,7 @@ def _niche_groups(Q, glist, other, niche, topic_masks, own_masks, main, new, cit
                 continue
             tc = core(t, city_stems)
             # тема + одно-два слова («… в поисковых системах», «услуги разработка и …»); длиннее - на ручной разбор
-            # (29.10.2026: «ровно одно» после проверки кода вернуло эти запросы в «Без группы»)
+            # («ровно одно» после проверки кода вернуло эти запросы в «Без группы»)
             qs = [q for q in qs if sum(1 for k in core(q, city_stems) if not any(k & x for x in tc)) <= 2]
             _reextra(Q, qs, hg["core"], city_stems)
             hg["queries"] += qs
@@ -847,9 +847,9 @@ def _with_pages(glist, main, main_pages, Q, city_stems, dropped):
         g["score"] = sum(sorted((Q[q]["score"] for q in g["queries"] if not Q[q]["check"]), reverse=True)[:10])
     glist = [g for g in glist if g["queries"]]
     # своя страница не из меню, которую никто не ищет: в группе одна фраза - её же название, подсказок нет (карточки
-    # «Кантри-кухня в шалфейно-зелёном» у lk-fabrika - 93 такие группы из 216, 15.10.2026) - не группа
+    # «Кантри-кухня в шалфейно-зелёном» у lk-fabrika - 93 такие группы из 216) - не группа
     # пункт меню, по которому ищут только его название («seo-продвижение сайтов в германии»): страница есть, группа
-    # остаётся, но «Продвигать эту страницу» - неправда, спроса не видно (hightime.agency 28.10.2026)
+    # остаётся, но «Продвигать эту страницу» - неправда, спроса не видно (hightime.agency)
     for g in glist:
         if g["main"] and g.get("level", 9) < 2 and len(g["queries"]) == 1 and Q[g["queries"][0]]["src"] <= {"раздел сайта"}:
             g["no_demand"] = True
@@ -893,7 +893,7 @@ def _set_todos(glist, other, seeds, sec_group, new):
             g["todo"], g["prio"] = "Разобрать вручную: запросы не подошли ни к одному разделу", 4
         elif g["main"] and g.get("no_demand"):
             # приоритет 1, как у страницы: 4 - это «Без группы» (export.PRIO_KIND), страница пропала бы из дерева сайта,
-            # проверки title/H1 и решений (проверка кода 28.10.2026)
+            # проверки title/H1 и решений
             g["todo"], g["prio"] = "Спроса не видно: ищут только название страницы - продвигать по другим словам", 1
         elif g["main"]:
             g["todo"], g["prio"] = "Продвигать эту страницу", 1

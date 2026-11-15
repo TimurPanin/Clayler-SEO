@@ -146,7 +146,7 @@ function mixedCard(m){
     <div class="sd-acts"><button class="btn primary" data-sd-mix="split" data-axis="${m.axis}" data-group="${esc(m.name)}">Разделить на две группы</button>
     <button class="btn" data-sd-mix="keep" data-axis="${m.axis}" data-group="${esc(m.name)}">Оставить как есть</button></div></section>`;
 }
-// сравнение текущей страницы и кандидатов (идея из разговора с ChatGPT, 29.10.2026): выбирать не вслепую
+// сравнение текущей страницы и кандидатов: выбирать не вслепую
 function compareHtml(L){
   const C = L.compare || []; if (C.length < 2) return '';
   return `<table class="sd-cmp"><thead><tr><th>Страница</th><th title="Сколько слов из названия группы есть в title и H1 страницы">Слов группы в title и H1</th>

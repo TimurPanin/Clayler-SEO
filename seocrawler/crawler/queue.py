@@ -128,7 +128,7 @@ class QueueMixin:
         if kind == "resource" and not self.cfg.check_resources:
             return "Проверка картинок выключена"
         # глубина - защита от бесконечных ссылок (календарь, листание без конца). Адрес из sitemap - не ловушка: сайт
-        # сам назвал его своей страницей. 05.11.2026: на oidbearing.ru так отбрасывались 50 настоящих карточек товаров
+        # сам назвал его своей страницей.: на oidbearing.ru так отбрасывались 50 настоящих карточек товаров
         # из sitemap - цепочка товаров длиннее 50 кликов, а шаг «sitemap без ссылок» уже виденные адреса не открывает
         if depth > self.cfg.max_depth and kind == "page" and not self.store.in_sitemap(url):
             return f"Глубина больше {self.cfg.max_depth}"

@@ -134,7 +134,7 @@ def _loop():
                     except direct.DirectError as e1:
                         if e1.code <= 0 or e1.code in direct.DAY_ERRORS:
                             # лимит или связь: остальные фразы остаются в очереди. Раньше они снимались с очереди
-                            # и записывались нулём показов, как будто их не ищут (24.10.2026)
+                            # и записывались нулём показов, как будто их не ищут
                             day_err = e1.code in direct.DAY_ERRORS
                             break
                     tried.append(x)   # загружена или плохая фраза (пропустить)

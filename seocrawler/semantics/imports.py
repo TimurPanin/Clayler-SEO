@@ -174,7 +174,7 @@ def parse(name, raw):
                 if v is not None:
                     row[k] = round(v, 1) if k == "pos" else int(v)
             p = str(get("page") or "").strip()
-            if p.startswith(("http", "/")):   # путь «/kotly/» - адрес этого сайта (rows), раньше терялся (24.10.2026)
+            if p.startswith(("http", "/")):   # путь «/kotly/» - адрес этого сайта (rows), раньше терялся
                 row["page"] = p
             old = out.get(q)
             if not old or (row.get("freq") or row.get("shows") or 0) > (old.get("freq") or old.get("shows") or 0):

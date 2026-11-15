@@ -12,7 +12,7 @@ from ..fetcher import Response
 from .common import retry_after
 
 STOPPED = "Проверка остановлена"   # ответ work() после «Стоп»: главный цикл его уже не ждёт
-_JS_NOTE_LOCK = threading.Lock()   # js_state_note из нескольких потоков (проверка кода 04.11.2026)
+_JS_NOTE_LOCK = threading.Lock()   # js_state_note из нескольких потоков
 
 
 class PageMixin:
@@ -82,7 +82,7 @@ class PageMixin:
 
     def js_state_note(self):
         """Браузер для JavaScript не запустился заново или выключен после 5 неудач (renderer._recycle) - строка в
-        журнале один раз на каждое изменение: раньше это было видно только по отчёту (проверка кода 01.11.2026)."""
+        журнале один раз на каждое изменение: раньше это было видно только по отчёту."""
         r = self.renderer
         state = ("off", r.start_error) if r.start_error else ("retry", r.launch_error) if r.launch_error else ("ok", "")
         with _JS_NOTE_LOCK:   # зовут сразу несколько потоков: без замка одна строка писалась по нескольку раз
@@ -173,7 +173,7 @@ class PageMixin:
             row["redirect_type"] = f"HTTP {r.status}"
             if r.location:
                 # не http(s) (tg://, mailto:) или кривой адрес - add_link его не берёт, но адрес перехода есть: пишем как
-                # есть, иначе отчёт назвал бы это «Редирект без адреса» (codes.bucket; ревью кода 04.11.2026)
+                # есть, иначе отчёт назвал бы это «Редирект без адреса» (codes.bucket)
                 row["location"] = add_link(r.location, "redirect",
                                            kind_hint=kind if kind in ("resource", "sitemap") else "page") \
                     or r.location.strip()[:500] or None
@@ -330,7 +330,7 @@ class PageMixin:
         self.store.add_rel_links(rel_links)
         self.store.mark(url, "done", fail_note)
         if not fail_note:   # со второго раза разобрана целиком (перепроверка, повторно в браузере) - старый сбой
-            # снимаем: mark причину не стирает, и страница оставалась «разобрана не целиком» (ревью 05.11.2026)
+            # снимаем: mark причину не стирает, и страница оставалась «разобрана не целиком» (ревью)
             self.store.db.execute("UPDATE urls SET skip_reason=NULL WHERE url=? AND skip_reason LIKE 'Сбой обработки%'",
                                   (url,))
         if not internal and (kind == "resource" or U.is_file_url(url)):

@@ -132,7 +132,7 @@ TEMPLATE_LINK_MIN = 10
 
 def _by_status(pages):
     """Сводка «Что отвечают страницы»: [{s: код или «нет ответа», n}]. По тем же правилам, что пункты о кодах
-    (codes.bucket): страница с кодом 200, которая пришла обрывком, - «нет ответа», а не «200 работает» (04.11.2026)."""
+    (codes.bucket): страница с кодом 200, которая пришла обрывком, - «нет ответа», а не «200 работает»."""
     from collections import Counter
     from .checks.codes import bucket
     cnt = Counter("нет ответа" if bucket(p["status"], p["error"], p["location"]) == "noresp" else str(p["status"])
@@ -143,7 +143,7 @@ def _by_status(pages):
 def health_base(pages):
     """Страницы, по которым считается здоровье: рабочие HTML-страницы и адреса страниц с ошибкой или необычным ответом
     (все ящики codes.bucket, кроме рабочего ответа и редиректа с адресом - раньше «код от 400 или ошибка»: страницы с
-    кодом 204, 206 и редирект без адреса в здоровье не участвовали; ревью кода 04.11.2026)."""
+    кодом 204, 206 и редирект без адреса в здоровье не участвовали)."""
     from .checks.codes import bucket
     return {p["url"] for p in pages
             if (p["status"] == 200 and p["content_type"] in ("text/html", "application/xhtml+xml"))
@@ -157,7 +157,7 @@ def template_link(n_pages, n_base):
 
 
 # Контентные проблемы - то, что правит контент-менеджер или копирайтер в админке (тексты, заголовки, карточки
-# товаров, цены). Всё остальное - техника: сервер, шаблон, ссылки, индексация, скорость (24.10.2026).
+# товаров, цены). Всё остальное - техника: сервер, шаблон, ссылки, индексация, скорость.
 CONTENT_CATS = {"Title", "Description", "H1", "Контент", "Магазин", "Коммерческие факторы", "Местное SEO", "Соцсети",
                 "Города", "Что мешает покупать"}
 CONTENT_KEYS = {"img_alt_empty", "img_alt_long", "img_alt_missing", "near_dup", "dup_content"}
@@ -165,7 +165,7 @@ CONTENT_KEYS = {"img_alt_empty", "img_alt_long", "img_alt_missing", "near_dup", 
 
 def is_content(iss):
     # «Передайте разработчику: …» в совете - правка в шаблоне или на сервере, это техника, даже в разделе Title или
-    # «Что мешает покупать» (кодировка, два тега title, формула цены, og:image) - ревизия 24.10.2026
+    # «Что мешает покупать» (кодировка, два тега title, формула цены, og:image) - ревизия
     if (iss.fix or "").lstrip().lower().startswith("передайте разработчику"):
         return False
     return iss.category in CONTENT_CATS or iss.key in CONTENT_KEYS

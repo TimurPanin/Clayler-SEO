@@ -19,7 +19,7 @@ PAGE_TYPES = {".html": "text/html; charset=utf-8", ".css": "text/css; charset=ut
 
 
 def _folder(name):
-    """Папка проверки внутри «отчёты» по имени из окна (только имя, без путей наружу)."""
+    """Папка проверки внутри «reports» по имени из окна (только имя, без путей наружу)."""
     return os.path.join(REPORTS, os.path.basename(name or ""))
 
 
@@ -32,7 +32,7 @@ _TITLES = {}
 
 def _check_titles():
     """{ключ проблемы: название} из списка проверок программы. Список собирается разбором кода всех проверок, а
-    метки окно перечитывает при каждом возврате в окно - считаем один раз за запуск (проверка кода 29.10.2026)."""
+    метки окно перечитывает при каждом возврате в окно - считаем один раз за запуск."""
     if not _TITLES:
         from .settings_ui import catalog
         _TITLES.update({c["key"]: c["title"] for c in catalog()})
@@ -238,7 +238,7 @@ class H(BaseHTTPRequestHandler):
     def g_index(self, path):
         return self.send_page("index.html")
 
-    def g_favicon(self, path):   # своя иконка окна и панели задач (рисунок: тест/нарисовать_иконку.py)
+    def g_favicon(self, path):   # своя иконка окна и панели задач (рисунок: tests/нарисовать_иконку.py)
         return self.send_page("icon.ico")
 
     def g_page(self, path):
@@ -678,7 +678,7 @@ class H(BaseHTTPRequestHandler):
         if not self.query().get("all"):
             return self.send(200, {"labels": labels.load(self.query().get("site", "")), "states": labels.STATES})
         # все метки с названиями проблем: из последней проверки сайта (проблемы.csv), «не ошибка» там уже нет -
-        # из списка проверок программы (карточка сайта и фильтры в окне, 29.10.2026)
+        # из списка проверок программы (карточка сайта и фильтры в окне)
         import csv
         import glob
         names = _check_titles()
@@ -686,8 +686,8 @@ class H(BaseHTTPRequestHandler):
         for site, got in labels.everything().items():
             titles = {}
             # папки проверки «сайт_ГГГГ-ММ-ДД_ЧЧ-ММ-СС» и «www.сайт_…», свежая первой; «сайт.ru:8080_…» и
-            # «сайт.ru.old_…» - другой сайт (проверка кода 29.10.2026)
-            # и «…_2» - две проверки в одну секунду (как reindex._FOLDER_RX; проверка кода 04.11.2026)
+            # «сайт.ru.old_…» - другой сайт
+            # и «…_2» - две проверки в одну секунду (как reindex._FOLDER_RX)
             dated = re.compile(r"(?:www\.)?" + re.escape(site) + r"_(\d{4}-\d\d-\d\d_\d\d-\d\d-\d\d(?:_\d+)?)$", re.I)
             found = [(m.group(1), d) for d in glob.glob(os.path.join(REPORTS, "*" + glob.escape(site) + "_*"))
                      for m in [dated.match(os.path.basename(d))] if m]
@@ -994,7 +994,7 @@ class H(BaseHTTPRequestHandler):
 
 
 def list_results(limit=8):
-    """Последние проверки списков и переездов (папка «отчёты/списки») — для окна."""
+    """Последние проверки списков и переездов (папка «reports/списки») - для окна."""
     import json as _j
     import time as _t
     lists = os.path.join(REPORTS, "списки")
@@ -1139,7 +1139,7 @@ def _already_running():
 
 def main():
     # «Семантику» и её страницы окна - загрузить сразу, до потоков бота, наблюдения и очереди: два потока, впервые
-    # загружающие эти модули одновременно, падали с _DeadlockError (15.10.2026, /api/version при открытии страницы)
+    # загружающие эти модули одновременно, падали с _DeadlockError (/api/version при открытии страницы)
     from .. import semantics  # noqa: F401
     from . import dictview, sembx, semdec, semdemand, semsort, semupd  # noqa: F401
     running = _already_running()

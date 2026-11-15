@@ -34,7 +34,7 @@ LAT_STOP = {"wifi", "wi-fi", "led", "pro", "plus", "max", "mini", "home", "eco",
             "premium", "air", "gas", "water", "aqua", "power", "nova", "line", "steel", "inverter", "ip", "rs", "bt",
             "nr", "erp", "gpl", "lpg", "dhw", "ch", "kombi", "boiler", "www", "http", "https", "html", "xxl", "xl",
             # отраслевые сокращения и английские слова темы - не бренды: «Seo» (1 100), «Serm», «Programmatic Seo» в
-            # листе «Бренды» у SEO-агентства (hightime.agency 29.10.2026)
+            # листе «Бренды» у SEO-агентства (hightime.agency)
             "seo", "smm", "serm", "orm", "ppc", "crm", "cms", "saas", "b2b", "b2c", "it", "ai", "geo", "ux", "ui",
             "api", "sem", "smo", "seo-продвижение", "programmatic", "marketing", "digital", "content", "agency",
             "landing", "ecommerce", "e-commerce", "growth", "strategy", "audit", "course", "skill", "meaning",
@@ -225,9 +225,9 @@ def site_extra(folder, host):
     return _EXTRA.get((os.path.abspath(folder), mt)) or {"logos": [], "facets": []}
 
 
-CACHE_FILE, CACHE_V = ".бренды сайта.json", 9   # 9: адреса брендов по порядку (16.10.2026)
+CACHE_FILE, CACHE_V = ".бренды сайта.json", 9   # 9: адреса брендов по порядку
 
-# Раздел марок или брендов по устройству сайта (11.10.2026, exist.ru: /Catalog/Global/Cars/Audi «Запчасти для Audi
+# Раздел марок или брендов по устройству сайта (exist.ru: /Catalog/Global/Cars/Audi «Запчасти для Audi
 # (Ауди)»): в одной папке много соседних страниц, у каждой конец адреса - название, которое стоит в её title или H1
 # («Audi», «Alfa_Romeo» = «Alfa Romeo», «%D0%93%D0%90%D0%97» = «ГАЗ»). Так узнаются и /brands/…, и любые другие адреса.
 HUB_MIN, HUB_SHARE, HUB_LAT = 8, 0.6, 0.5    # от стольких страниц, такая доля совпала, такая доля из них - латиницей
@@ -362,7 +362,7 @@ def _site_brands(db, host):
     except sqlite3.Error:
         return pages, filters, models
     hub = {u for _n, u, _k, _f in pages}
-    for u in sorted(cand - hub):   # по порядку: одинаковый итог при каждом сборе (16.10.2026)
+    for u in sorted(cand - hub):   # по порядку: одинаковый итог при каждом сборе
         sp = urlsplit(u)
         if (sp.hostname or "").removeprefix("www.") != host or (sp.query and not re.search(r"brand", sp.query, re.I)):
             continue

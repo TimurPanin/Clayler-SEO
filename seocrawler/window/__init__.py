@@ -10,5 +10,7 @@ import os
 HERE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))  # папка программы
 # папка проверок - одна на всю программу: crawl.py, окно, семантика, каталог брендов. Автотесты подменяют её
 # через CLAYLER_REPORTS (раньше переменную видел только crawl.py, а окно и семантика читали настоящую папку)
-REPORTS = os.environ.get("CLAYLER_REPORTS") or os.path.join(HERE, "отчёты")
+from .. import paths  # noqa: E402
+
+REPORTS = paths.reports_dir()   # «reports» (или старая «reports», пока окно её не перенесло)
 PAGE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "page")

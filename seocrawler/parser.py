@@ -28,7 +28,7 @@ _GA_NEED = ("googletagmanager.com/gtag/js?id=", "gtag(")
 _REQUISITES = re.compile(r"юр\.|юридическ|инн|огрн|кпп|р/с|реквизит|банк", re.I)
 # Спрятанный блок (так прячут ссылки на чужие сайты при взломе): стиль самого тега, без CSS-файлов. Сдвиг за экран -
 # от 1000 px (left:-9999px): конструкторы (Tilda) на узком экране ставят блокам left:-146px, и они видны
-# (ложные «спрятанные ссылки» на hightime.agency, 23.10.2026)
+# (ложные «спрятанные ссылки» на hightime.agency)
 _HIDDEN_STYLE = re.compile(r"display\s*:\s*none|visibility\s*:\s*hidden|font-size\s*:\s*0(?:px|pt|em|rem|%)?\s*(?:;|$|!)|"
                            r"(?:left|top|text-indent)\s*:\s*-\d{4,}|opacity\s*:\s*0(?:\.0+)?\s*(?:;|$|!)|"
                            r"(?:height|width)\s*:\s*0(?:px)?\s*;[^\"]*overflow\s*:\s*hidden", re.I)
@@ -138,7 +138,7 @@ class _Extractor(HTMLParser):
         self.md_text = {}              # microdata: первое название и бренд товара (itemprop name, brand) - текстом
         self._mdcap = None             # [свойство, тег, вложенность, текст] - собирается текст свойства
         # microdata по объектам (itemscope): [{types, props, avail, parent, end}] и стек открытых (номера) - у каждого
-        # товара свои свойства, вложенный Offer - к своему товару (_md_scope, schema_info; 05.11.2026)
+        # товара свои свойства, вложенный Offer - к своему товару (_md_scope, schema_info)
         self.md_scopes = []
         self._mds = []
         self.md_itemref = False   # на странице есть itemref - разбор по объектам не годится (schema_info)
@@ -175,11 +175,11 @@ class _Extractor(HTMLParser):
             hidden = bool(a.get("style") and _HIDDEN_STYLE.search(a["style"]))
             self._open.append([tag, hidden])
             if hidden:   # счётчик вместо any() по всему стеку: на кривом HTML с тысячами незакрытых тегов разбор
-                self._nhid += 1   # был квадратичным (проверка кода 04.11.2026)
+                self._nhid += 1   # был квадратичным
                 self._hid = True
         if tag in self.BLOCK:
             self._flush()
-            if self._hstack:   # «сайтов<br>в США» - «сайтов в», не «сайтовв» (hightime.agency, 28.10.2026)
+            if self._hstack:   # «сайтов<br>в США» - «сайтов в», не «сайтовв» (hightime.agency)
                 self._hstack[1].append(" ")
         if tag in self.tag_counts:
             self.tag_counts[tag] += 1
@@ -302,7 +302,7 @@ class _Extractor(HTMLParser):
     def _md_scope(self, tag, a):
         """Свойство itemprop - тому объекту (itemscope), внутри которого стоит; новый itemscope - объект, вложенный
         в текущий. Раньше свойства всей страницы складывались в один товар: на странице с несколькими товарами
-        название одного и цена другого давали «разметка заполнена» (проверка кода 04.11.2026, НА ПОТОМ)."""
+        название одного и цена другого давали «разметка заполнена» (НА ПОТОМ)."""
         cur = self._mds[-1] if self._mds else None
         props = a.get("itemprop", "").split()
         if cur is not None and props:
@@ -336,7 +336,7 @@ class _Extractor(HTMLParser):
 
     def _implied_close(self, tag):
         # теги, у которых закрывающий можно не писать: <li> закрывает прежний <li>, блок - открытый <p> и т. д.
-        # Без этого незакрытый спрятанный <li style="display:none"> делал «спрятанными» все ссылки ниже (ревизия 24.10.2026)
+        # Без этого незакрытый спрятанный <li style="display:none"> делал «спрятанными» все ссылки ниже
         for old, stop in _IMPLIED.get(tag, ()):
             self._close_to(old, stop)
         if tag in _CLOSES_P and self._open and self._open[-1][0] == "p":
@@ -432,7 +432,7 @@ def counters(html_text):
     """Счётчики на странице: {"ym": [номера Метрики], "ga": [...], "gtm": [...]}. JSON-строка; "{}" — счётчиков нет."""
     out = {}
     # шаблон ищем, только если на странице есть его обязательный кусок: поиск подстроки во много раз быстрее
-    # шаблона по всей странице (01.11.2026: 33 мс на страницу товара thehome.ru в 570 КБ, а счётчиков там нет)
+    # шаблона по всей странице (33 мс на страницу товара thehome.ru в 570 КБ, а счётчиков там нет)
     has = lambda s: s in html_text   # noqa: E731
     ym = sorted({m for rx, s in zip(_YM, _YM_NEED) if has(s) for m in rx.findall(html_text)})
     if ym or ((has("mc.yandex.") or has("metrika/tag.js")) and _YM_ANY.search(html_text)):
@@ -501,7 +501,7 @@ _MD_OFFER = {"Offer", "AggregateOffer"}
 def _md_products(ex):
     """[(свойства, availability)] каждого товара microdata, который не внутри другого товара: со свойствами вложенных
     объектов (Offer, AggregateRating, варианты hasVariant), кроме вложенных «похожих» товаров (_MD_OTHER), и с
-    предложением вокруг товара (Offer → itemOffered → Product). Ревью кода 05.11.2026: без вариантов и предложения
+    предложением вокруг товара (Offer → itemOffered → Product). Ревью кода: без вариантов и предложения
     вокруг правильная разметка давала ложное «Товар размечен без цены»."""
     from collections import deque
     scopes = ex.md_scopes
@@ -568,7 +568,7 @@ def schema_info(ex):
         else:
             # несколько товаров (каталог или «похожие» рядом с карточкой - какой основной, по разметке не понять),
             # itemref или itemtype без itemscope - как раньше, по всей странице: так отчёт не строже, чем было, и
-            # ложного «без цены» нет (ревью кода 05.11.2026)
+            # ложного «без цены» нет
             info["product"] = _md_product(md, ex.md_avail[0] if ex.md_avail else "")
             if len(prods) > 1:
                 info["product"]["count"] = len(prods)
@@ -581,7 +581,7 @@ def schema_info(ex):
 class _Both(HTMLParser):
     """Одно чтение страницы для двух разборов (_Extractor и «Что мешает покупать»): теги и текст режутся один раз и
     отдаются обоим. Раньше каждый резал страницу сам - на странице товара thehome.ru в 570 КБ это ~60 мс лишнего
-    на каждое чтение (01.11.2026). Разбор, упавший с ошибкой, дальше ничего не получает - как раньше, когда его
+    на каждое чтение. Разбор, упавший с ошибкой, дальше ничего не получает - как раньше, когда его
     feed прерывался исключением, а второй читал страницу до конца."""
 
     NAMES = ("handle_starttag", "handle_startendtag", "handle_endtag", "handle_data")
@@ -625,7 +625,7 @@ def parse_html(body: bytes, content_type_header: str = "", light=False):
     """light - исходный HTML, когда страница успешно открылась в браузере с JavaScript и осталась на своём адресе:
     страницей тогда считается версия после скриптов (crawler/page.compare_js), а от исходной нужно только то, с чем
     её сравнивают (title, H1, canonical, robots, ссылки, текст, телефоны, ошибки в <head>). Цены и наличие,
-    счётчики, разметка, блоки текста и отпечаток для неё не считаются (01.11.2026: ~110 мс на страницу товара)."""
+    счётчики, разметка, блоки текста и отпечаток для неё не считаются (~110 мс на страницу товара)."""
     enc, enc_src = detect_encoding(body, content_type_header)
     text = body.decode(enc, errors="replace")
     ex = _Extractor()

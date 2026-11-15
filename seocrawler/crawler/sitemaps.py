@@ -16,7 +16,7 @@ class SitemapsMixin:
         todo = list(robots.sitemaps) or [origin + "/sitemap.xml"]
         # в robots.txt не указан - пробуем обычные адреса по очереди, до первого найденного: у WordPress и Yoast
         # карта бывает только по /wp-sitemap.xml или /sitemap_index.xml, и одного 404 на /sitemap.xml мало, чтобы
-        # написать клиенту «sitemap на сайте нет» (проверка кода 04.11.2026)
+        # написать клиенту «sitemap на сайте нет»
         spare = [] if robots.sitemaps else [origin + "/sitemap_index.xml", origin + "/wp-sitemap.xml"]
         if not robots.sitemaps:
             self.log("   В robots.txt sitemap не указан, пробую " + todo[0])

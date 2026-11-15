@@ -16,7 +16,7 @@ JOURNAL_FILE = "ход проверки.txt"
 
 def speed_now(points) -> float:
     """Скорость за последние отметки [(время, сколько проверено)]. Раньше в окне было среднее с начала шага, и оно
-    сползало медленно: thehome.ru 05.11.2026 показывал 2,4 адр/с, когда шло 1,5, и обещал 41 минуту вместо 97."""
+    сползало медленно: thehome.ru показывал 2,4 адр/с, когда шло 1,5, и обещал 41 минуту вместо 97."""
     if len(points) < 2:
         return 0.0
     (t0, n0), (t1, n1) = points[0], points[-1]
@@ -129,7 +129,7 @@ class MainLoopMixin:
         return line
 
     # ---------- ход проверки на диске: строки журнала живут только в памяти окна, и после проверки не понять, сколько
-    # шли страницы и картинки по часам (thehome.ru 06.11.2026: скорости пришлось восстанавливать по порядку записей в
+    # шли страницы и картинки по часам (thehome.ru: скорости пришлось восстанавливать по порядку записей в
     # базе)
     def note_progress(self, label, pages_done, speed, force=False):
         now = time.time()
@@ -200,7 +200,7 @@ class MainLoopMixin:
         self.stop_flag = True
         return True
 
-    # ---------- памяти компьютера почти не осталось: остановиться самим, а не упасть (thehome.ru, 31.10.2026)
+    # ---------- памяти компьютера почти не осталось: остановиться самим, а не упасть (thehome.ru)
     def low_memory(self):
         """Раз в 5 с смотрим, сколько памяти ещё можно выделить (seocrawler/memory.py). Мало - обход
         останавливается, как по «Остановить»: всё проверенное в базе, «Продолжить прошлую проверку» доделает."""
@@ -530,7 +530,7 @@ class MainLoopMixin:
             self.store.set_meta("sitemap_checked", bool(has_sm and left == 0 and not self.partial))
         lap("адреса из sitemap без ссылок")
 
-        # закрытая в robots.txt навигация - и без sitemap: что за ней спрятано (30.10.2026, vsekuhni.ru)
+        # закрытая в robots.txt навигация - и без sitemap: что за ней спрятано (vsekuhni.ru)
         if not self.stop_flag and left == 0 and cfg.respect_robots and not self.partial:
             try:
                 self.probe_blocked_pagination()

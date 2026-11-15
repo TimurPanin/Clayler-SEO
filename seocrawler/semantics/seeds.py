@@ -28,7 +28,7 @@ def _undouble(s):
 
 
 def _style_case(s):
-    """«Мебель в стиле современный» (фильтр сайта склеен без падежа) → «Мебель в современном стиле» (15.10.2026)."""
+    """«Мебель в стиле современный» (фильтр сайта склеен без падежа) → «Мебель в современном стиле»."""
     def fix(m):
         a = m.group(1)
         low = a.lower()
@@ -57,7 +57,7 @@ def clean_name(s, site_words=()):
     parts = re.split(r"\s[—|–-]\s|\s\|", s)
     s = parts[0]  # «Газовые котлы в Уфе — купить с гарантией»
     # «HighTime.agency — кратный рост заявок»: первая часть - только название компании, от неё оставался хвост
-    # «agency» (имя главной в масках и дереве, hightime.agency 28.10.2026) - берём следующую часть
+    # «agency» (имя главной в масках и дереве, hightime.agency) - берём следующую часть
     if len(parts) > 1 and _only_brand(s, site_words):
         s = parts[1]
     s = _undouble(s)
@@ -100,11 +100,11 @@ def _brand_words(db, host):
 NOT_SECTION_URL = re.compile(r"/(blog|news|novosti|stati|articles?|o-kompanii|company|about|info/?$|kontakty|"
                              r"contacts?|politika|privacy|polic|konfidenc|reviews|otzyvy|rassrochk|kredit|oplat|payment|"
                              r"vakans|"
-                             # 16.10.2026 (exist.ru, talisman): форум и его темы, справка, документы, статистика, вакансии,
+                             # exist.ru, talisman: форум и его темы, справка, документы, статистика, вакансии,
                              # филиалы, преподаватели, приложение - не товар и не услуга
                              r"forum|help/|hint/|document/|stat/|stat\.|statisti|vacanc|career|karer|filial|branches|"
                              r"teachers|prepodavatel|application|"
-                             # 28.10.2026 (hightime.agency): вакансии, кейсы и портфолио, словарь терминов - не услуга
+                             # hightime.agency: вакансии, кейсы и портфолио, словарь терминов - не услуга
                              # целым кусочком адреса: /cases/, а не /case-iphone-15/ (чехлы) или /team-building/
                              r"(?:jobs?|cases?|team)(?:/|$|\?)|kejs|keis|portfolio|glossar|slovar-terminov|komanda)", re.I)
 # ссылка-фраза, а не название раздела: «сюда», «нам об этом», «@DIRECT продажи» («Как выбрать кофе?» - раздел)
@@ -166,7 +166,7 @@ def load(folder, cards=0):
             continue
         name = clean_name(anc, brand)
         # в ссылке счётчик: «Центральный округ 1 перевозчик», «Шкафы 120 товаров» - раздел без числа
-        # (gruzoperevozka23.ru 17.10.2026: 37 страниц районов не попадали в маски из-за цифры в ссылке).
+        # (gruzoperevozka23.ru: 37 страниц районов не попадали в маски из-за цифры в ссылке).
         # Только если заголовок страницы - про то же и без этого числа: «Котлы 24 кВт» с H1 «Котлы 24 кВт» -
         # фильтр, а не раздел
         m = re.search(r"\s+(\d[\d\s]*)\D.*$|\s+(\d[\d\s]*)$", name or "")
@@ -184,7 +184,7 @@ def load(folder, cards=0):
         if re.search(r"@|«\s*»", name) or all(w in FUNC_WORDS for w in name.lower().split()):
             continue
         # H1 оборван на предлоге («Шкаф-купе с» - шаблон не подставил «без декора»): страница-фильтр без значения,
-        # её ссылка «Шкаф-купе» уводила общие запросы из раздела шкафов-купе (lk-fabrika, 15.10.2026)
+        # её ссылка «Шкаф-купе» уводила общие запросы из раздела шкафов-купе (lk-fabrika)
         if re.search(r"\s(с|со|для|из|в|на|по|от|без|под)$", (pages[url][0] or "").strip(), re.I):
             continue
         h1 = clean_name(pages[url][0] or "", brand)
@@ -221,7 +221,7 @@ def load(folder, cards=0):
             wide = _topic_head(" ".join(w for w in clean_name(pages[u][1] or "", brand).split()
                                         if re.sub(r"[^a-zа-яё0-9]", "", w.lower()) not in own)).lower()
     _with_topic(secs, topic, brand, wide)
-    # служебное имя могло появиться из H1 («Вопросы» → «Часто задаваемые вопросы», reestr-719 28.10.2026)
+    # служебное имя могло появиться из H1 («Вопросы» → «Часто задаваемые вопросы», reestr-719)
     secs = [s for s in secs if not SERVICE_NAMES.match(s["name"])]
     if not topic:   # после _with_topic: к запросам разделов не дописывается, только тема главной
         topic = _menu_topic(secs)
@@ -260,7 +260,7 @@ def _stems(t):
 def _topic_head(t):
     """Длинный заголовок главной - его начало: до запятой или двоеточия, потом до первого «в/на/для/по…» после
     первых двух слов. «Продвижение IT-компаний и SaaS-продуктов в России и за рубежом» → «Продвижение IT-компаний и
-    SaaS-продуктов» (hightime.agency 28.10.2026: темы не было, «Тарифы» собрали «тарифы теле2»)."""
+    SaaS-продуктов» (hightime.agency: темы не было, «Тарифы» собрали «тарифы теле2»)."""
     if len(t.split()) <= MAX_WORDS:
         return t
     t = re.split(r"\s*[:,(]\s*", t)[0].strip()
@@ -271,7 +271,7 @@ def _topic_head(t):
 
 def _menu_topic(secs):
     """Тема главной из пунктов меню, когда её нет в заголовках главной: два слова подряд (по-русски), которые есть хотя
-    бы в трёх пунктах. hightime.agency (28.10.2026): H1 главной - слоган, title длинный, и «продвижение сайтов», «seo
+    бы в трёх пунктах. hightime.agency: H1 главной - слоган, title длинный, и «продвижение сайтов», «seo
     продвижение сайтов под ключ» - главные запросы агентства - лежали в «Без группы», а пункты меню - «SEO-продвижение
     сайтов в Германии», «… во Франции», «… в США»."""
     cnt = Counter()
@@ -299,7 +299,7 @@ def _weak(name):
 
 def _with_topic(secs, topic, brand=(), wide=""):
     """Короткий пункт меню - по заголовку H1 его страницы, а если и так нет слова темы сайта - со словом темы
-    (15.10.2026, lk-fabrika: «Библиотеки» собрали «библиотеки москвы», «Без декора» - «торт без декора»,
+    (lk-fabrika: «Библиотеки» собрали «библиотеки москвы», «Без декора» - «торт без декора»,
     «Кухни» вела на «Распил кухонь»). Имя для людей - H1 («Детская мебель на заказ», «Распил кухонь»); слово
     темы («мебель» из заголовка главной) - в sec["need"], его добавляет query_form к запросу."""
     head = []
@@ -315,7 +315,7 @@ def _with_topic(secs, topic, brand=(), wide=""):
         name = orig = s["name"]
         h1 = clean_name(s.get("h1") or "", brand)
         # длинный H1 - его начало до запятой или двоеточия: «Германия» → «SEO-продвижение сайтов в Германии» из
-        # «SEO-продвижение сайтов в Германии, Австрии, Швейцарии…» (hightime.agency 28.10.2026)
+        # «SEO-продвижение сайтов в Германии, Австрии, Швейцарии…» (hightime.agency)
         # после двоеточия - всегда пояснение («SEO-продвижение eCommerce-проектов: магазины и экспортёры»)
         h1 = re.split(r"\s*:\s+", h1)[0].strip()
         if len(h1.split()) > MAX_WORDS:

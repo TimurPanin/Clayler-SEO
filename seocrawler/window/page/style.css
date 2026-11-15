@@ -293,7 +293,7 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 .card-none{padding:24px 22px}
 .card-labels{flex:none;max-height:32vh;overflow:auto;padding:12px 18px 14px;border-top:1px solid var(--bd2);background:var(--card)}.cl-h{font-weight:600;margin-bottom:6px}.cl-h .mut{font-weight:400;font-size:13px}.cl-row{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd);font-size:14px}.cl-row select{font-size:13px}
 .pick{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--bd);cursor:pointer;color:var(--tx);font-size:14px}
-/* «Сравнить с конкурентами»: список прокручивается сам, кнопки всегда видны внизу (17.10.2026) */
+/* «Сравнить с конкурентами»: список прокручивается сам, кнопки всегда видны внизу*/
 .cmp-dlg[open]{display:flex;flex-direction:column;max-height:calc(100vh - 48px)}
 .cmp-dlg>*{flex:none}.cmp-dlg .dlg-btns button{white-space:nowrap}
 .cmp-dlg #cmpList{flex:1 1 auto;min-height:80px;overflow:auto;border:1px solid var(--bd);border-radius:8px;padding:0 10px}
@@ -832,7 +832,7 @@ section.card>.src-note,.bx-g+.src-note,.br-scroll+.src-note{padding:6px 0 0;bord
 .syn-btns{display:flex;gap:6px;flex:none}.syn-dict{margin-top:14px}.syn-dict summary{cursor:pointer}.syn-dict textarea{font-family:ui-monospace,Consolas,monospace;font-size:14px}
 @media (max-width:760px){.syn-row{flex-direction:column}}
 .dc-quote{font-style:italic;color:var(--tx2)!important;overflow-wrap:anywhere}
-/* «Отчёты»: галочки и избранное (10.10.2026) */
+/* «Отчёты»: галочки и избранное*/
 .r-name{display:flex;align-items:center;gap:6px}
 .r-pick{flex:none;width:16px;height:16px;margin:0;accent-color:var(--acc)}
 .r-star{flex:none;min-height:0;padding:0 2px;border:0;background:transparent;color:var(--mut2);font-size:17px;line-height:1;cursor:pointer}
@@ -844,9 +844,9 @@ section.card>.src-note,.bx-g+.src-note,.br-scroll+.src-note{padding:6px 0 0;bord
 .cat-steps{margin:12px 0 8px 18px;display:grid;gap:6px;font-size:14px}
 .cat-script{width:100%;height:160px;font:12px/1.4 ui-monospace,Consolas,monospace;resize:vertical}
 .cat-card .bad{color:var(--crit)}
-/* «Отсеяно → слов нет на сайтах»: слово, запросы, «Это про нас» (semantics.js, 15.10.2026) */
+/* «Отсеяно → слов нет на сайтах»: слово, запросы, «Это про нас» (semantics.js)*/
 .fw-row{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin:6px 0}.fw-row b{white-space:nowrap}
-/* главная в рамке поверх Семантики (side.js, app.js EMBED): прозрачный фон, видно только открытое окошко (22.10.2026) */
+/* главная в рамке поверх Семантики (side.js, app.js EMBED): прозрачный фон, видно только открытое окошко*/
 html.embed,html.embed body{background:transparent!important}
 html.embed body *{visibility:hidden}
 html.embed dialog[open],html.embed dialog[open] *{visibility:visible}

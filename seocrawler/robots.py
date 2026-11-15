@@ -9,7 +9,7 @@ CLOSED_LIKE = "Закрыт в robots%"   # urls.skip_reason адреса, за�
 
 def is_html_page(text: str) -> bool:
     """Вместо файла (robots.txt, sitemap) пришла обычная страница: код 200 ещё не значит, что это тот файл
-    (nabiullin.com 06.11.2026: на любой адрес - главная, и её HTML попал в готовый robots.txt для разработчика)."""
+    (nabiullin.com: на любой адрес - главная, и её HTML попал в готовый robots.txt для разработчика)."""
     head = (text or "").lstrip("﻿ \r\n\t")[:300].lower()
     return head.startswith(("<!doctype", "<html", "<head", "<body")) or "<html" in head
 

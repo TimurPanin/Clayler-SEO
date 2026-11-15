@@ -7,7 +7,7 @@
 """
 import os
 
-# свои файлы - в папку «данные» до того, как модули окна запомнят пути к ним (seocrawler/paths.py)
+# свои файлы - в папку «data» до того, как модули окна запомнят пути к ним (seocrawler/paths.py)
 from seocrawler import paths
 paths.migrate()
 from seocrawler.window import REPORTS  # noqa: E402

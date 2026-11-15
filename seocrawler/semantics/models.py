@@ -1,4 +1,4 @@
-"""Бренды, серии и модели из названий товаров (план, пункт 3.1, 10.10.2026; пример - ochkarik.ru).
+"""Бренды, серии и модели из названий товаров.
 
 «Оправа Christian Lacroix CL1160 004» → тип «оправа», бренд «christian lacroix», модель «cl1160», цвет «004».
 «ACUVUE OASYS with HydraLuxe (30 линз) -1.00/8.5» → тип нет, бренд «acuvue», серия «oasys».
@@ -155,7 +155,7 @@ def seeds(folder):
     out += [(f"{b} {s}", "бренд + серия", n, ex) for b, s, n, ex in p["series"][:MAX_SERIES]]
     seen, res = set(), []
     for ph, src, n, ex in out:
-        # «носителем. средний» - кусок из двух предложений названия (курсы talisman, 16.10.2026), а не бренд и серия
+        # «носителем. средний» - кусок из двух предложений названия (курсы talisman), а не бренд и серия
         if re.search(r"[.,;:!?]\s", ph):
             continue
         if ph not in seen:

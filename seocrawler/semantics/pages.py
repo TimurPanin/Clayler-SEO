@@ -89,11 +89,11 @@ def _main_query(g, Q):
     return max(pure, key=lambda q: Q[q]["score"]) if pure else g["name"].lower()
 
 
-# слова вопроса - не тема страницы: «Технический аудит: такое. Цены…» из «что такое технический аудит» (29.10.2026)
+# слова вопроса - не тема страницы: «Технический аудит: такое. Цены…» из «что такое технический аудит»
 ASK_WORDS = {"это", "такое", "что", "как", "какой", "какая", "какие", "зачем", "почему", "где", "когда", "сколько",
              "чем", "значит", "простыми", "словами"}
 # приписка title и описания для услуг: «запись» - только если люди сами ищут «записаться» (курсы, клиника); иначе
-# «заказать» - у SEO-агентства или ремонта «цены, запись» звучало странно (hightime.agency 29.10.2026)
+# «заказать» - у SEO-агентства или ремонта «цены, запись» звучало странно (hightime.agency)
 SIGNUP_RX = re.compile(r"(?<![а-я])запис")
 BUY_WORDS_RX = re.compile(r"(?<![а-я])(купить|цен[аыу]?|стоимост|недорог|дешев|прайс|отзыв|заказать|акци|скидк)")
 
@@ -116,7 +116,7 @@ def proper(text, city_words=()):
 
 def nice_name(g, Q, city_words=()):
     """Название новой страницы для H1 и title - самый востребованный естественный запрос группы, а не её название из
-    слов («Продвижение яндекс» → «Продвижение в Яндексе», hightime.agency 29.10.2026). Без вопросов, 2-6 слов."""
+    слов («Продвижение яндекс» → «Продвижение в Яндексе», hightime.agency). Без вопросов, 2-6 слов."""
     # без «купить», «цена», «отзывы»: их добавит хвост title («- купить, цены»), иначе «Купить кухни … - купить, цены»
     cand = [q for q in g["queries"] if not Q[q]["check"] and Q[q]["intent"] not in ("Информация", "Покупка")
             and 2 <= len(q.split()) <= 6 and not set(q.split()) & ASK_WORDS and not BUY_WORDS_RX.search(q)]
@@ -236,7 +236,7 @@ def audit(sem_mod, main, comps, groups, Q, city, city_stems):
         df.update({min(keys(w), key=lambda x: (x.startswith("~"), len(x), x))
                    for w in set(re.findall(r"[а-яёa-z]{4,}", t.lower().replace("ё", "е")))})
     generic = {k for k, n in df.items() if n >= max(3, 0.4 * len(rival_text))}
-    # город сайта (как есть и «в …»): не уточнение для фильтров и слов ТЗ. До 16.10.2026 здесь были зашиты «уфа», «уфе»
+    # город сайта (как есть и «в …»): не уточнение для фильтров и слов ТЗ. До здесь были зашиты «уфа», «уфе»
     city_words = {w for x in (city or ())[:2] if isinstance(x, str) for w in norm(x).replace("-", " ").split()}
     city_words |= {a for a, n in sem_mod.CITY_ALIASES.items() if city and n == city[0]}   # «спб», «мск»
     skip = {"купить", "цена", "цены"} | city_words
@@ -274,7 +274,7 @@ def audit(sem_mod, main, comps, groups, Q, city, city_stems):
                     + (f" - {brand}" if brand else "") + ".")
         desc_new = re.sub(r"\s+", " ", desc_new).replace(" :", ":")
         # одно слово после двоеточия («… в топ: Яндекса.») читается обрывком - только список из двух и больше;
-        # после двоеточия - со строчной («Продвижение в Яндексе: цены, условия…», 29.10.2026)
+        # после двоеточия - со строчной («Продвижение в Яндексе: цены, условия…»)
         if hot_txt and "," not in hot_txt:
             desc_new = desc_new.replace(f": {hot_txt}. ", ": ", 1)
         desc_new = re.sub(r": (Цены)", lambda m: ": " + m.group(1).lower(), desc_new, count=1)
@@ -293,7 +293,7 @@ def audit(sem_mod, main, comps, groups, Q, city, city_stems):
             continue
         _u, title, h1, desc, words, blob = r
         title, h1, desc = (html.unescape(x or "") for x in (title, h1, desc))
-        # одинаковые H1 (для компьютера и телефона) - один раз: «A | A» в «сейчас» ТЗ (hightime.agency 29.10.2026)
+        # одинаковые H1 (для компьютера и телефона) - один раз: «A | A» в «сейчас» ТЗ (hightime.agency)
         h1 = " | ".join(dict.fromkeys(x.strip() for x in h1.split(" | ") if x.strip()))
         bl = _blocks(blob, template) if blob else []
         text = " ".join(bl)
@@ -311,7 +311,7 @@ def audit(sem_mod, main, comps, groups, Q, city, city_stems):
                      "В title нет «цена» или «стоимость», а по этим запросам выбирают, где заниматься или заказать")
             a["title"] = title_new
         # ищут с городом: город целым словом (City.find). Раньше - первые три буквы где угодно: у Перми «перила»,
-        # у Курска «курсы», у Самары «самый» давали ложное «В title нет города» (24.10.2026)
+        # у Курска «курсы», у Самары «самый» давали ложное «В title нет города»
         elif city_prep and city_prep.lower() not in title.lower() and city[0].lower() not in title.lower() \
                 and any(city[0] in cities.find(q) for q in g["queries"]):
             P.append(f"В title нет города - ищут «… {city[0].lower()}»")

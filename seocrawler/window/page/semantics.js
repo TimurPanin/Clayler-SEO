@@ -31,7 +31,7 @@ const hiddenRow = r => (STOP.size || PICK.size) && toks(r[0]).some(t => STOP.has
 let dirFolder = '';
 let REP = null, DATA = null, FOLDER = '', tab = 'all', intent = '', shown = PAGE_SIZE, wasRunning = false, LIST = [], prio = '';
 // номер выбора сайта: ответ, пришедший после выбора другого сайта, не рисуется (иначе на franmeb.ru было видно
-// семантику gasprof, которая грузилась при открытии страницы, 16.10.2026)
+// семантику gasprof, которая грузилась при открытии страницы)
 let SITE_SEQ = 0;
 
 function finished(g){ return g.checks.find(c => c.finished && !c.running) || null; }
@@ -207,7 +207,7 @@ function overview(newer){
   const ntz = DATA.groups.filter(g => g.kind === 'create' || (g.kind === 'page' && g.a && g.a.problems.length)).length;
   $('semTree').href = '/api/semdec/tree?f=' + encodeURIComponent(FOLDER);   // дерево сайта (semantics/tree.py)
   $('semTree').hidden = false;
-  $('semFolder').hidden = false;   // папка проверки: там же Excel, ТЗ и дерево (29.10.2026)
+  $('semFolder').hidden = false;   // папка проверки: там же Excel, ТЗ и дерево
   $('semStruct').hidden = !DATA.new_site;
   $('semRealHow').hidden = !!DATA.new_site;   // у нового сайта Вебмастера и Search Console нет   // новый сайт: структура для клиента (newsite.write_client)
   $('semStruct').href = '/r/' + encodeURIComponent(FOLDER) + '/' + encodeURIComponent('структура сайта.html');
@@ -252,7 +252,7 @@ function drawDropped(nd){
     : '<p class="mut">Ничего не отсеяно.</p>';
 }
 
-// «Отсеяно → слов нет на сайтах»: по словам, с кнопкой «Это про нас» (15.10.2026). Слово запоминается для сайта
+// «Отсеяно → слов нет на сайтах»: по словам, с кнопкой «Это про нас». Слово запоминается для сайта
 // (маски, semantics/masks.set_ok), запросы с ним вернутся в группы при следующем «Собрать заново».
 const FOREIGN = 'слов нет на сайтах';
 function foreignHtml(l){

@@ -201,7 +201,7 @@ def job_finished(job, what):
         return error(_last_error(job.lines), host, "Семантика не собралась")
     if what == "masks":
         # итог - по строке «маски готовы: …» (semantics/masks.py): раньше у задачи не было папки, и готовые маски
-        # показывались красным «Маски не предложились: маски готовы: 18…» (gruzoperevozka23.ru 17.10.2026)
+        # показывались красным «Маски не предложились: маски готовы: 18…» (gruzoperevozka23.ru)
         done = next((ln.strip() for ln in reversed(job.lines) if ln.strip().startswith("маски готовы:")), "")
         if done or (folder and os.path.isdir(folder)):
             return push("warn", f"Маски семантики готовы: {host}",
@@ -224,7 +224,7 @@ def job_finished(job, what):
             return push("ok", "Проверка списка адресов готова", link="/r/" + "/".join(quote(p) for p in rel.split("/")))
         return error(_last_error(job.lines), "", "Проверка списка не получилась")
     # сборку остановили из-за памяти (memory.build_stopped_text): часть файлов могла уже обновиться, и свежий отчёт.html
-    # ещё не значит «готово» - раньше окно и Telegram говорили «Отчёт обновлён» (ревью кода 05.11.2026)
+    # ещё не значит «готово» - раньше окно и Telegram говорили «Отчёт обновлён»
     mem = next((ln.strip() for ln in reversed(job.lines) if ln.strip().startswith("Нехватка памяти:")), "")
     if mem and what in ("check", "rebuild"):
         return error(mem, host, "Отчёт собран не до конца")

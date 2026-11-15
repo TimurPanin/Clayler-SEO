@@ -87,7 +87,7 @@
   else setRoom(ls.get('claylerRoom') === 'sem' && COMMON.includes(location.hash.slice(1)) ? 'sem' : 'tech');
   // окошко главной (/#yandex, /#google, /#telegram, /#watch) с другой страницы: открывается прямо здесь, поверх
   // страницы - главная в прозрачной рамке показывает только окошко (app.js, ?embed=1), «Закрыть» убирает рамку.
-  // Раньше «Подключения» из Семантики резко переносили в Техничку (22.10.2026)
+  // Раньше «Подключения» из Семантики резко переносили в Техничку
   if (!MAIN) document.addEventListener('click', e => {
     const a = e.target.closest && e.target.closest('a[href^="/#"]');
     const m = a && /^\/#(yandex|google|direct|telegram|watch)$/.exec(a.getAttribute('href'));

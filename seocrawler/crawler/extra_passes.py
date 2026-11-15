@@ -12,7 +12,7 @@ class ExtraPassesMixin:
     def _get(self, url, **kw):
         """Загрузка для дополнительных проверок. Сертификат не прошёл проверку - берём без проверки, как обход
         (crawler/page.py): сам сертификат - отдельная проблема, а склейка, 404, служебные файлы и остальное
-        должны проверяться как обычно, а не пропадать или дублировать ошибку SSL (timurpanin.ru 01.10.2026)."""
+        должны проверяться как обычно, а не пропадать или дублировать ошибку SSL (timurpanin.ru)."""
         r = self.fetcher.fetch(url, **kw)
         if r.error.startswith("SSL: ошибка сертификата"):
             r2 = self.insecure.fetch(url, **kw)
@@ -95,7 +95,7 @@ class ExtraPassesMixin:
         for v in variants:
             chain = self._follow(v)
             # 502-504 без редиректа, а такого адреса нет в DNS - ответил прокси (VPN), а не сайт: варианта нет
-            # (www.127.0.0.1 и несуществующий www у сайта под VPN давали ложное «перенаправляет неправильно», 28.10.2026)
+            # (www.127.0.0.1 и несуществующий www у сайта под VPN давали ложное «перенаправляет неправильно»)
             if len(chain) == 1 and chain[0][1] in (502, 503, 504):
                 import socket
                 from urllib.parse import urlsplit
@@ -238,7 +238,7 @@ class ExtraPassesMixin:
                     base = U.normalize(ph["base"], u) if ph["base"] else u
                     rows = []
                     # nofollow - как при обходе (crawler/page.handle): по таким ссылкам обход не шёл, и «не нашёл»
-                    # тут не значит «поисковик не найдёт» (кнопки «в сравнение» Битрикса; проверка кода 04.11.2026)
+                    # тут не значит «поисковик не найдёт» (кнопки «в сравнение» Битрикса)
                     bot = "yandex" if self.cfg.robots_for.startswith("yandex") else "googlebot"
                     rmeta = " ".join(c for nm, c in ph["robots"] if nm in ("robots", bot))
                     page_nofollow = ("nofollow" in rmeta or "none" in rmeta) and not self.cfg.follow_nofollow
@@ -437,7 +437,7 @@ class ExtraPassesMixin:
         browser.extra_headers = {"Accept-Language": "ru-RU,ru;q=0.9"}
         browser.host_headers.update(self.auth or {})
         # сертификат не прошёл проверку: обход берёт страницы без проверки (crawler/page.py), так же открываем
-        # и как браузер - иначе каждая страница «отличается» ошибкой SSL (timurpanin.ru 01.10.2026), а сам
+        # и как браузер - иначе каждая страница «отличается» ошибкой SSL (timurpanin.ru), а сам
         # сертификат и так отдельная проблема
         browser_insecure = Fetcher(UA_PRESETS["chrome"], timeout=self.cfg.timeout, verify_ssl=False,
                                    total_timeout=self.cfg.total_timeout)
@@ -649,14 +649,14 @@ class ExtraPassesMixin:
                  + (f" Ещё {_n(skipped)} {_plural(skipped, 'ссылку', 'ссылки', 'ссылок')} на сайты, которые не ответили "
                     "и при перепроверке, повторно не открывал." if skipped else ""))
 
-    # ---------- страницы, которые браузер не открыл (05.11.2026, полнота отчёта)
+    # ---------- страницы, которые браузер не открыл (полнота отчёта)
     def recheck_js(self, timeout=60, limit=400, give_up=10):
         """Свои страницы, которые открылись (200), а в браузере с JavaScript - нет (не дождался загрузки, сбой
         вкладки): ещё раз по одной, с ожиданием подольше. Без этого для них в отчёте только исходный HTML, а в
         «Что не проверено и почему» их не было (thehome.ru 01.11: 15 страниц, «Timeout 20000ms exceeded»).
         Открылась - новый результат вместо старого; нет - остаётся с ошибкой и попадает в «Что не проверено».
         Не больше limit страниц, как у перепроверки ошибок; give_up подряд не открылись и сейчас - браузер на этом
-        сайте не справляется, дальше не ждём по минуте на страницу (ревью 05.11.2026)."""
+        сайте не справляется, дальше не ждём по минуте на страницу (ревью)."""
         rd = self.renderer
         if not rd or rd.start_error:
             return

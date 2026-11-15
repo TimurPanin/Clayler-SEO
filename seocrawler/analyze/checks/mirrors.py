@@ -1,5 +1,5 @@
 """Склейка домена (версия 7).
-05.10.2026: /index.html и /index.php, которые открываются сами, но с canonical на главный адрес, - не копия сайта,
+/index.html и /index.php, которые открываются сами, но с canonical на главный адрес, - не копия сайта,
 а замечание (на GitHub Pages /index.html всегда открывается сам, редирект там не задать)."""
 from urllib.parse import urljoin
 
@@ -65,7 +65,7 @@ def run(ctx):
             elif last[1] != 200:
                 mrow.append([m["variant"], f"главный адрес ответил {last[1]}", path])
         # одна причина - одна проблема: вариант ведёт на копию, которая сама открывается без редиректа (http при
-        # выключенном https, timurpanin.ru 01.10.2026) - исправится вместе с ней, так и пишем
+        # выключенном https, timurpanin.ru) - исправится вместе с ней, так и пишем
         copies = {r[0] for r in dup}
         for r in mrow:
             tail = r[2].rsplit("\n→ ", 1)[-1].rsplit(" (", 1)[0]

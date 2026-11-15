@@ -3,13 +3,13 @@ from ..common import IMG_HEAVY_KB, IMG_OLD_FORMAT_KB, IMG_VERY_HEAVY_KB, NOTE, W
 
 
 def _bad_type_why(src, ct, example):
-    """Почему «картинка» не картинка - понятным языком (thehome.ru 01.11.2026: адрес «картинки» https://thehome.ru/ на
+    """Почему «картинка» не картинка - понятным языком (thehome.ru: адрес «картинки» https://thehome.ru/ на
     293 товарах - у картинки пустой src, браузер грузит главную)."""
     from urllib.parse import urlsplit
     sp, own = urlsplit(src), (urlsplit(example or "").hostname or "").lower()
     same_host = (sp.hostname or "").lower() == own
     # «главная» - только своего сайта: корень чужого (https://cdn.example.com/) - не про пустой src в шаблоне;
-    # и «пустой или неверный», а не «пустой»: какой он был в коде, по адресу не узнать (проверка кода 04.11.2026)
+    # и «пустой или неверный», а не «пустой»: какой он был в коде, по адресу не узнать
     if (same_host and sp.path in ("", "/") and not sp.query) or src.rstrip("/") == (example or "").rstrip("/"):
         return ("адрес картинки - " + ("главная страница" if sp.path in ("", "/") else "сама эта страница")
                 + ": обычно у картинки пустой или неверный адрес (src), браузер вместо файла получает страницу")

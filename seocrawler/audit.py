@@ -128,7 +128,7 @@ def sections_html(summary, h2="h2", cls="pt"):
     tr = []
 
     def idx(s):
-        # «индексируются» и «закрыты» (22.10.2026): в проверках, собранных раньше, их нет до «Обновить отчёт»
+        # «индексируются» и «закрыты»: в проверках, собранных раньше, их нет до «Обновить отчёт»
         if s.get("idx") is None:
             return "<td>-</td><td>-</td>"
         return f'<td>{_num(s["idx"])}</td><td>{_num(s["closed"]) if s["closed"] else "-"}</td>'
@@ -448,7 +448,7 @@ def write_audit_docx(path, meta, issues, summary):
             _para([_run(HEALTH_ABOUT, color="6B6B70", size=18)], 200),
             _para([_run("По каждому пункту - вывод и найденные проблемы. Полные списки адресов - в Excel-таблице к аудиту"
                         + (f" (самые длинные - первые {_num(MAX_ISSUE_ROWS)} строк, полный список - по запросу)."
-                           if any(len(i.rows) > MAX_ISSUE_ROWS for i in issues) else "."),   # ревью кода 05.11.2026
+                           if any(len(i.rows) > MAX_ISSUE_ROWS for i in issues) else "."),   #
                         size=20)], 240)]
     tech = site_tech.rows(meta.get("site_tech"))
     if tech:

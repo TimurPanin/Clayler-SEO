@@ -38,7 +38,7 @@ def _product(add, info):
             continue
         if not pr.get("price"):
             row = [p["url"], pr.get("src", ""), "нет блока Offer" if not pr.get("offers") else "в Offer нет price"]
-            # цены нет и на самой странице (техническая карточка производителя, oidbearing.ru 31.10.2026): цену в
+            # цены нет и на самой странице (техническая карточка производителя, oidbearing.ru): цену в
             # разметку не добавишь - разметка должна совпадать с тем, что видно на странице
             (no_price_anywhere if _price_on_page(p) is False else no_price).append(row)
         miss = [FIELDS[k] for k in ("currency", "availability", "image", "name") if not pr.get(k)]

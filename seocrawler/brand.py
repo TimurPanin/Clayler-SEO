@@ -1,5 +1,5 @@
 """Ваши данные в аудите для клиента: имя или компания, телефон, почта, сайт, Telegram и логотип.
-Хранятся в «бренд.json» и «логотип.*» в папке «данные» (не в git). Попадают в аудит (HTML, PDF, Word)
+Хранятся в «бренд.json» и «логотип.*» в папке «data» (не в git). Попадают в аудит (HTML, PDF, Word)
 при сборке отчёта — у готовых проверок: «Ещё → Обновить отчёт»."""
 import base64
 import html
@@ -8,7 +8,7 @@ import os
 
 from . import jsonfile, paths
 
-DIR = os.path.dirname(paths.data("бренд.json"))   # «данные» (до переноса - корень)
+DIR = os.path.dirname(paths.data("бренд.json"))   # «data» (до переноса - корень)
 FILE = os.path.join(DIR, "бренд.json")
 FIELDS = [("name", "Имя или компания"), ("phone", "Телефон"), ("email", "Почта"), ("site", "Сайт"), ("telegram", "Telegram")]
 LOGO_TYPES = {"image/png": ".png", "image/jpeg": ".jpg", "image/svg+xml": ".svg", "image/webp": ".webp"}
@@ -76,7 +76,7 @@ def status():
 
 
 def contacts_line(d=None):
-    """«Тимур Панин · +7 900 000-00-00 · mail@… · site.ru» — для подписи; пусто, если ничего не заполнено."""
+    """«Иван Петров · +7 900 000-00-00 · mail@… · site.ru» - для подписи; пусто, если ничего не заполнено."""
     if os.environ.get("CLAYLER_NO_USER_SETTINGS") == "1":  # автотесты: аудит без личных данных
         return ""
     d = d or load()

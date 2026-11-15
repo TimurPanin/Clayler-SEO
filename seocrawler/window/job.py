@@ -176,7 +176,7 @@ class Job:
             if self.active:
                 return False
             self.active = True
-        started = False   # сбой подготовки или запуска потока - «занято» снимается (проверка кода 04.11.2026)
+        started = False   # сбой подготовки или запуска потока - «занято» снимается
         try:
             env = dict(os.environ, PYTHONUTF8="1", PYTHONIOENCODING="utf-8", PYTHONUNBUFFERED="1")
             self.lines, self.out_dir, self.site = [], "", sites[0] if sites else (label or "сравнение отчётов")
@@ -245,7 +245,7 @@ class Job:
                     if masks_folder:   # маски семантики: только читает проверку, «Остановить» просто закрывает программу
                         self.step_text = "Предлагаю маски семантики"
                         self.add("Предлагаю маски семантики: " + os.path.basename(masks_folder))
-                        self.out_dir = masks_folder   # без папки окно считало готовые маски ошибкой (17.10.2026)
+                        self.out_dir = masks_folder   # без папки окно считало готовые маски ошибкой
                         run_cmd(crawl + ["--masks", masks_folder])
                         return
                     if compare_folders:
@@ -267,7 +267,7 @@ class Job:
                             run_cmd(crawl + ["--competitors"] + self.dirs + ["--no-open"])
                             self.competitors_report = os.path.join(self.dirs[0], "конкуренты.html")
                         return
-                    # один сайт (несколько - выше, одновременно; прежний обход сайтов по очереди убран 28.10.2026)
+                    # один сайт (несколько - выше, одновременно; прежний обход сайтов по очереди убран)
                     if sites and not os.path.exists(self.stop_file):
                         self.out_dir = ""
                         try:
@@ -418,7 +418,7 @@ class Job:
     def stop(self):
         if self.running and self.stop_file:
             open(self.stop_file, "w").close()
-            # в «Подробном журнале» карточки видно, что остановили вручную и когда (29.10.2026)
+            # в «Подробном журнале» карточки видно, что остановили вручную и когда
             self.add(time.strftime("%H:%M:%S") + " Нажата кнопка «Остановить»: "
                      + ("отчёт обновлён не до конца" if getattr(self, "rebuild", False)
                         else "останавливаю, отчёт соберётся по тому, что успели проверить"))
@@ -566,7 +566,7 @@ class Job:
             unit = "pages"
         if not running and site_pages and prog:
             # итог проверки, а не последняя строка обхода: она пишется раз в несколько секунд, последние страницы
-            # (и страницы после обхода) в неё не попадают - vsekuhni.ru 30.10.2026: в окне 2 061, в отчёте 2 064
+            # (и страницы после обхода) в неё не попадают - vsekuhni.ru: в окне 2 061, в отчёте 2 064
             prog = [site_pages[0][1], prog[1]]
         return {"running": running, "unit": unit, "result": result, "site": site, "log": lines[-60:], "step": step, "progress": prog,
                 "elapsed": round((self.finished or time.time()) - self.started) if self.started else 0,

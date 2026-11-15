@@ -102,11 +102,11 @@ def cached_analyze(store):
     # код проверок тоже в подписи: поправили проверку — кеш пересчитается сам, даже без смены VERSION.
     # Весь пакет seocrawler, кроме окна: проверки берут и код снаружи analyze/ (lost_clicks.py, mirror_copy.py,
     # labels.py, search_console.py…). Раньше в подписи была только analyze/, и после правки такого файла
-    # «Обновить отчёт» показывал старый расчёт (ревизия 22.10.2026)
+    # «Обновить отчёт» показывал старый расчёт
     code = hashlib.md5()
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     for root, dirs, files in os.walk(here):
-        # run/ - запуск и сборка отчёта (раньше crawl.py, вне пакета): анализ не меняет (проверка кода 28.10.2026)
+        # run/ - запуск и сборка отчёта (раньше crawl.py, вне пакета): анализ не меняет
         dirs[:] = sorted(d for d in dirs if d not in ("window", "run", "__pycache__"))
         for f in sorted(files):
             if f.endswith(".py"):

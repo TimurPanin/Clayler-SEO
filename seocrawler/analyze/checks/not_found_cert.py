@@ -1,4 +1,4 @@
-"""Несуществующая страница, срок сертификата (версия 6) и срок оплаты домена (23.10.2026)."""
+"""Несуществующая страница, срок сертификата (версия 6) и срок оплаты домена."""
 import datetime as dt
 
 from ..common import CERT_CRIT_DAYS, CERT_WARN_DAYS, CRIT, DOMAIN_CRIT_DAYS, DOMAIN_WARN_DAYS, NOTE, WARN

@@ -3,7 +3,7 @@
 // (точные цифры есть / частично / ждут), «самое интересное»: пустышки и неожиданно крупные запросы.
 (function(){
   let timer = null, lastDone = -1, open = false, openFor = '', allGroups = false, off = false;
-  // «Как идёт загрузка» свёрнуто, пока человек сам не развернул на этом сайте (запоминается по сайту, 16.10.2026)
+  // «Как идёт загрузка» свёрнуто, пока человек сам не развернул на этом сайте (запоминается по сайту)
   const OPEN_KEY = 'semDirectOpen', site = f => (f || '').split('_')[0];
   const openSaved = f => { try { return !!JSON.parse(localStorage.getItem(OPEN_KEY) || '{}')[site(f)]; } catch (e) { return false; } };
   const openSave = (f, on) => { try { const d = JSON.parse(localStorage.getItem(OPEN_KEY) || '{}'); if (on) d[site(f)] = 1; else delete d[site(f)];

@@ -64,7 +64,7 @@ def later_crawl(out_dir):
     if not m:
         return None
     parent = os.path.dirname(out_dir)
-    # проверка в архиве («отчёты/архив») - новее может быть в «отчёты», и наоборот
+    # проверка в архиве («reports/archive») - новее может быть в «reports», и наоборот
     from seocrawler.window.reports_list import ARCHIVE
     dirs = {parent, os.path.dirname(parent) if os.path.basename(parent) == os.path.basename(ARCHIVE)
             else os.path.join(parent, os.path.basename(ARCHIVE))}

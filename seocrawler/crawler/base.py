@@ -52,7 +52,7 @@ class Base:
             if kind == "resource" and getattr(self, "pages_idle", False):
                 # страницы кончились (или лимит страниц): их очередь пауз свободна - картинки идут через обе, сайт
                 # получает не больше запросов, чем во время обхода страниц, а хвост из картинок проходит вдвое
-                # быстрее (lancentre.ru 28.10.2026: 3,3 тыс. картинок после страниц - 14 мин по ~5 в секунду)
+                # быстрее (lancentre.ru: 3,3 тыс. картинок после страниц - 14 мин по ~5 в секунду)
                 return min((self.res_limiter, self.limiter), key=lambda x: x.next_at)
             return self.res_limiter if kind == "resource" else self.limiter
         host = U.host_of(url)

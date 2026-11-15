@@ -144,7 +144,7 @@ def run(ctx, issues, base, sections_rows=None):
         if not keys:
             continue
         # пример - самый короткий адрес, при равной длине - первый по алфавиту: раньше среди равных выбор зависел от
-        # порядка во множестве и менялся от сборки к сборке (проверка кода 01.11.2026)
+        # порядка во множестве и менялся от сборки к сборке
         b = block(_name(k, [schema.get(u) for u in urls], names), _pattern(k), urls, keys,
                   min(urls, key=lambda u: (len(u), u)))
         if b:

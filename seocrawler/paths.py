@@ -1,19 +1,34 @@
 """Где лежат файлы программы. Ваши рабочие и личные файлы (доступы, настройки, очередь, уведомления, журнал,
-словари, решения семантики, списки сайтов) - в папке «данные» рядом с программой, а не в её корне (28.10.2026:
-корень был завален двумя десятками файлов). Отчёты - по-прежнему в «отчёты».
+словари, решения семантики, списки сайтов) - в папке «data» рядом с программой, отчёты - в «reports».
 
-Старые файлы из корня переносит в «данные» окно программы при запуске (app.py → migrate), до того как прочитает
-их: файл, который уже лежит в «данные», не заменяется, папки сливаются по файлам. Проверка сайта (crawl.py) сама
-ничего не переносит: её может запустить окно на старом коде, которое продолжит писать в корень. Пока файла в
-«данные» нет, data() отдаёт его старое место в корне. Автотесты подменяют папку через CLAYLER_DATA_DIR."""
+Раньше эти папки назывались «data» и «reports», а ещё раньше личные файлы лежали прямо в корне. Всё старое
+переносит окно программы при запуске (app.py → migrate), до того как прочитает файлы: папка переименовывается
+целиком, а если новая уже есть - сливается по файлам; файл, который уже лежит на новом месте, не заменяется.
+Проверка сайта (crawl.py) сама ничего не переносит: пока новой папки нет, она работает со старой.
+Автотесты подменяют папки через CLAYLER_DATA_DIR и CLAYLER_REPORTS."""
 import glob
 import os
 import shutil
 
 APP = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))     # папка программы
-DATA = os.environ.get("CLAYLER_DATA_DIR") or os.path.join(APP, "данные")
+# старое русское имя папки → новое (переносит migrate_folders)
+RENAMED = {"данные": "data", "отчёты": "reports"}
 
-# что лежало в корне программы: старое имя → новое имя в «данные»
+
+def _pick(new: str, old: str) -> str:
+    """Новая папка, если она есть или старой нет; иначе старая (перенос ещё не делался или не удался)."""
+    return old if not os.path.exists(new) and os.path.isdir(old) else new
+
+
+DATA = os.environ.get("CLAYLER_DATA_DIR") or _pick(os.path.join(APP, "data"), os.path.join(APP, "данные"))
+
+
+def reports_dir() -> str:
+    """Папка проверок: «reports» рядом с программой (или старая «reports», пока не перенесена)."""
+    return os.environ.get("CLAYLER_REPORTS") or _pick(os.path.join(APP, "reports"), os.path.join(APP, "отчёты"))
+
+
+# что лежало в корне программы: старое имя → новое имя в «data»
 MOVED = {
     "доступы.json": "доступы.json", "настройки.json": "настройки.json", "бренд.json": "бренд.json",
     "наблюдение.json": "наблюдение.json", "очередь.json": "очередь.json",
@@ -29,7 +44,7 @@ _OLD = {new: old for old, new in MOVED.items()}
 
 
 def data(*parts):
-    """Путь внутри папки «данные». Ещё не перенесено (окно на новом коде не запускалось) - старое место в корне."""
+    """Путь внутри папки «data». Ещё не перенесено (окно на новом коде не запускалось) - старое место в корне."""
     p = os.path.join(DATA, *parts)
     if os.environ.get("CLAYLER_DATA_DIR") or os.path.exists(p) or not parts or parts[0] not in _OLD:
         return p
@@ -38,8 +53,8 @@ def data(*parts):
 
 
 def _move(src, dst):
-    """Файл - если в «данные» его ещё нет; папка - по файлам: «данные/списки сайтов» уже есть из git, а свои списки
-    из старой «очередь» должны тоже переехать (проверка кода 28.10.2026)."""
+    """Файл - если на новом месте его ещё нет; папка - по файлам: «data/списки сайтов» уже есть из git, а свои
+    списки из старой «очередь» должны тоже переехать. Новой папки нет - старая переименовывается целиком."""
     if not os.path.exists(src):
         return
     try:
@@ -57,8 +72,24 @@ def _move(src, dst):
         pass
 
 
+def migrate_folders() -> None:
+    """Переименовать старые папки «data» → «data», «reports» → «reports» и «reports/archive» → «reports/archive».
+    Не вышло (файл открыт другой программой) - программа работает со старой папкой и попробует в следующий раз."""
+    global DATA
+    for old, new in RENAMED.items():
+        env = "CLAYLER_DATA_DIR" if new == "data" else "CLAYLER_REPORTS"
+        if os.environ.get(env):   # автотесты подменили папку - настоящую не трогаем
+            continue
+        _move(os.path.join(APP, old), os.path.join(APP, new))
+    reports = reports_dir()
+    _move(os.path.join(reports, "архив"), os.path.join(reports, "archive"))
+    DATA = os.environ.get("CLAYLER_DATA_DIR") or _pick(os.path.join(APP, "data"), os.path.join(APP, "данные"))
+
+
 def migrate():
-    """Перенести старые файлы из корня программы в «данные» (уже перенесённое не трогается). Зовёт только app.py."""
+    """Перенести старые папки и старые файлы из корня программы в «data» (уже перенесённое не трогается).
+    Зовёт только app.py."""
+    migrate_folders()
     if os.environ.get("CLAYLER_DATA_DIR"):
         return
     os.makedirs(DATA, exist_ok=True)

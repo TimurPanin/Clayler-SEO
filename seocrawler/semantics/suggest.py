@@ -100,5 +100,5 @@ class Suggest:
         with ThreadPoolExecutor(self.threads) as ex:
             list(ex.map(one, tasks))
         self.save()
-        # в порядке заданий, а не ответов: потоки отвечают вразнобой, а от порядка зависят равные места (16.10.2026)
+        # в порядке заданий, а не ответов: потоки отвечают вразнобой, а от порядка зависят равные места
         return {t: out[t] for t in tasks if t in out}

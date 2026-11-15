@@ -1,6 +1,6 @@
 """Прокси Windows от выключенного VPN: в настройках остался адрес (127.0.0.1:2080), а прокси уже не отвечает.
 urlopen здесь в таком случае повторяет запрос напрямую. Раньше без VPN не работали подсказки и «Подключения»:
-«WinError 10061 … actively refused it» (Throne, 22.10.2026). С ревизии 22.10.2026 так же ходят все запросы
+«WinError 10061 … actively refused it» (Throne). С ревизии так же ходят все запросы
 к службам (Telegram, орфография, Букварикс, Директ, обновления поиска…), а обход сайта (fetcher.py) берёт
 прокси через live_proxies: мёртвый прокси при старте проверки не используется."""
 import re
@@ -20,7 +20,7 @@ def is_local(host):
 
 class LocalDirect(urllib.request.ProxyHandler):
     """Прокси для urllib, но свой компьютер - напрямую. Без этого запасной путь загрузчика (fetcher.opener: проверка
-    ответа 304, прокси с паролем, CLAYLER_NO_KEEPALIVE) слал 127.0.0.1 в прокси VPN и получал 502 (28.10.2026)."""
+    ответа 304, прокси с паролем, CLAYLER_NO_KEEPALIVE) слал 127.0.0.1 в прокси VPN и получал 502."""
 
     def proxy_open(self, req, proxy, type):
         if is_local(urllib.parse.urlsplit(req.full_url).hostname):

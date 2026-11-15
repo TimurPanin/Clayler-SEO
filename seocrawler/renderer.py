@@ -50,7 +50,7 @@ def available():
 class Renderer:
     # Через столько страниц браузер и Playwright запускаются заново. Playwright (1.56-1.63) на каждую открытую
     # страницу оставляет в памяти 3 служебных вызова без ответа (__waitInfo__ из goto и wait_for_load_state) со
-    # стеком вызовов и никогда их не удаляет: на thehome.ru (31.10.2026) память программы росла на 80 МБ в минуту,
+    # стеком вызовов и никогда их не удаляет: на thehome.ru память программы росла на 80 МБ в минуту,
     # через 17 часов проверка упала с MemoryError. Перезапуск выбрасывает накопленное; он занимает пару секунд.
     RECYCLE_EVERY = int(os.environ.get("CLAYLER_RENDER_RECYCLE") or 200)
 
@@ -115,7 +115,7 @@ class Renderer:
                 java_script_enabled=True, ignore_https_errors=True, service_workers="block")
         except Exception:
             # браузер запустился, а вкладки нет - закрываем его сразу, а не ждём следующей попытки или конца
-            # проверки: иначе процессы Chromium висели бы зря (проверка кода 01.11.2026)
+            # проверки: иначе процессы Chromium висели бы зря
             for close in (self.browser.close, self.pw.stop):
                 try:
                     await asyncio.wait_for(close(), 15)

@@ -20,14 +20,14 @@ from .semantics_run import run_semantics
 
 def build_safely(out_dir, open_browser, rebuild=False):
     """build_report, но памяти мало (memory.guard) или уже не хватило (MemoryError) - понятная подсказка и выход с
-    кодом 3, а не трассировка посреди записи файлов (план на ночь 05.11.2026, пункт 9). Проверка в базе цела."""
+    кодом 3, а не трассировка посреди записи файлов. Проверка в базе цела."""
     from seocrawler import memory
     try:
         build_report(out_dir, open_browser, rebuild=rebuild)
     except (memory.LowMemory, MemoryError) as e:
         free = getattr(e, "free", None)
         # трассировка держит данные сборки (база, проблемы, страницы) - отпускаем их до печати, иначе подсказка
-        # сама может упасть с MemoryError (ревью кода 05.11.2026)
+        # сама может упасть с MemoryError
         e.__traceback__ = None
         del e
         import gc

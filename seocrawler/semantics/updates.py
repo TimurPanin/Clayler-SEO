@@ -104,7 +104,7 @@ def _write(path, data):
 # ---------- общие даты: Google, базы Яндекса, встряски
 
 def _retry(fn, tries=3):
-    """Сеть оборвалась (WinError 10054 через VPN) - ещё раз через 2 и 5 секунд, а не сразу ошибка (15.10.2026)."""
+    """Сеть оборвалась (WinError 10054 через VPN) - ещё раз через 2 и 5 секунд, а не сразу ошибка."""
     for i in range(tries):
         try:
             return fn()
@@ -176,7 +176,7 @@ def refresh(force=False, log=None):
             else:
                 g["yandex_err"] = "no_yandex"
         except Exception as e:
-            # «The handshake operation timed out» (20.10.2026): связь оборвалась - повторить через час, а не через 12
+            # «The handshake operation timed out»: связь оборвалась - повторить через час, а не через 12
             g["yandex_err"] = "Даты обновления базы Яндекса не загрузились: " + str(e)[:150]
             g["yandex_at"] = now - FRESH + 3600
         changed = True

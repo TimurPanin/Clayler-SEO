@@ -28,7 +28,7 @@ from . import _canon, keys, norm, tokens
 from . import dicts as DI
 from .decisions import site_key
 
-# папка в «данные», без CLAYLER_DECISIONS_DIR: у словаря своя подмена - CLAYLER_DICT_FILE
+# папка в «data», без CLAYLER_DECISIONS_DIR: у словаря своя подмена - CLAYLER_DICT_FILE
 DIR = paths.data("решения семантики")
 FILE = os.environ.get("CLAYLER_DICT_FILE") or os.path.join(DIR, "словарь.json")
 ROOT = "common"

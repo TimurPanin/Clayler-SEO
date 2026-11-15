@@ -6,7 +6,7 @@ import webbrowser
 
 
 def run_list(a):
-    """Проверка списка адресов (--list) или переезда (--old): результат — в папке «отчёты/списки»."""
+    """Проверка списка адресов (--list) или переезда (--old): результат - в папке «reports/списки»."""
     from seocrawler import urllist
     from urllib.parse import urlsplit
     old = None

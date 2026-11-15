@@ -22,7 +22,7 @@ def _not_found_line(p):
 def _template_nf(pages, own, sample=300):
     """Строки «…не найден», которые есть и на нормальных страницах (с H1 и своим текстом): это шаблон сайта
     (скрытое окно «Товар не найден» у быстрого просмотра), а не признак пустышки. Иначе каждая короткая карточка
-    становилась бы критичной «мягкой 404» (проверка кода 04.11.2026). У удалённых товаров thehome.ru строки
+    становилась бы критичной «мягкой 404». У удалённых товаров thehome.ru строки
     «Элемент не найден» на нормальных страницах нет - они остаются. Выборка - первые sample нормальных страниц."""
     from collections import Counter
     normal = [p for p in pages if (p["h1"] or "").strip() and own.get(p["url"], (0,))[0] >= 50][:sample]
@@ -32,7 +32,7 @@ def _template_nf(pages, own, sample=300):
 
 def _groups_note(ctx, key):
     """У дублей строка списка - группа одинаковых страниц: в заголовке «4 группы, 1 905 стр.», а не «4» (на thehome.ru
-    01.11.2026 «4» стояло над группой из 1 871 страницы)."""
+    «4» стояло над группой из 1 871 страницы)."""
     from ...fmt import num, plural
     iss = ctx.issues[-1] if ctx.issues and ctx.issues[-1].key == key else None
     if iss and iss.rows:
@@ -67,7 +67,7 @@ def run(ctx):
             p["own_words"] = own[p["url"]][0]
     # Почти дубли: MinHash по своему тексту страницы, порог 90% (как у Screaming Frog)
     # near_duplicates берёт только адрес, отпечаток и полный хеш текста: копировать страницу целиком не нужно
-    # (на thehome.ru 01.11.2026 копии всех страниц - сотни МБ)
+    # (на thehome.ru копии всех страниц - сотни МБ)
     near_src = [{"url": p["url"], "minhash": own[p["url"]][1] if p["url"] in own else p.get("minhash"),
                  "content_hash": p.get("content_hash")} for p in indexable]
     by_city = defaultdict(list)
@@ -123,7 +123,7 @@ def run(ctx):
         elif p["url"] != home.get("url") and (not (p["h1"] or "").strip()
                                               or (p["url"] not in only_sitemap and own.get(p["url"], (0,))[0] < 50)):
             # удалённый товар Битрикса: код 200, меню и подвал на месте, а вместо товара строка «Элемент не найден»
-            # (thehome.ru 01.11.2026: 4 299 страниц). Фраза - отдельной строкой; без H1 или почти без своего текста:
+            # (thehome.ru: 4 299 страниц). Фраза - отдельной строкой; без H1 или почти без своего текста:
             # настоящий товар с такой фразой где-то в виджете сюда не попадёт
             nf = _not_found_line(p)
             if nf and tpl_nf is None:

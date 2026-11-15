@@ -1,4 +1,4 @@
-"""Проверка безопасности сайта (04.10.2026), дополнение к поиску служебных файлов при обходе (extra_passes.check_exposed):
+"""Проверка безопасности сайта, дополнение к поиску служебных файлов при обходе (extra_passes.check_exposed):
 - заголовки защиты на главной: HSTS, X-Content-Type-Options, защита от встраивания в чужой сайт, Referrer-Policy, CSP;
 - версии программ, которые сервер сообщает всем (Server, X-Powered-By), и устаревший PHP;
 - ещё служебные файлы: копии файлов настроек с паролем к базе, настройки доступа к серверу (sftp), .env-варианты,
@@ -15,7 +15,7 @@ import re
 from urllib.parse import urljoin, urlsplit
 from .site_tech import ENGINES
 
-VERSION = 4  # 2 - 05.10.2026: мета-теги referrer и Content-Security-Policy считаются; 3 - 30.10.2026: cookie,
+VERSION = 4  # 2 -: мета-теги referrer и Content-Security-Policy считаются; 3 -: cookie,
 # WordPress, домены скриптов, jQuery, generator
 UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
       "Chrome/126.0 Safari/537.36")
@@ -254,7 +254,7 @@ def old_libs(srcs):
 def _dns(host):
     """«ok» - имя есть в DNS; «none» - DNS точно ответил «такого имени нет»; «?» - не узнали (временный сбой DNS,
     нет сети). Раньше любой сбой считался «домена нет» - и временная ошибка DNS давала ложную критичную находку
-    (проверка кода 04.11.2026)."""
+."""
     import socket
     import time
     for i in range(2):
@@ -360,12 +360,12 @@ def summary_rows(sec, issues):
             rows.append((False, "Защищённое соединение https", "сайт открывается по http"))
         v = versions(sec.get("headers"))
         rows.append((not v, "Версии ПО на сервере", "; ".join(a for a, _ in v) if v else "не видны"))
-        if "set_cookie" in sec:   # проверки 30.10.2026
+        if "set_cookie" in sec:   # проверки
             for key, name, ok_text in (("cookie_flags", "Флаги защиты у cookie", "в порядке"),
                                        ("dead_script_domain", "Скрипты и стили с несуществующих доменов", "нет"),
                                        ("old_jquery", "Старый jQuery (до 3.5)", "не найден")):
                 if key != "cookie_flags" and sec.get("res_checked") is False and key not in by:
-                    # стили и скрипты при обходе не собирались - «нет» было бы неправдой (проверка кода 04.11.2026)
+                    # стили и скрипты при обходе не собирались - «нет» было бы неправдой
                     rows.append((None, name, "не проверялось: стили и скрипты при этой проверке не собирались"))
                     continue
                 rows.append((key not in by, name, f"проблема: {by[key].count_text}" if key in by else ok_text))

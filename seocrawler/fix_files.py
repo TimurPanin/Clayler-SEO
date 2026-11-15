@@ -1,4 +1,4 @@
-"""Готовые файлы-исправления для разработчика (04.10.2026): по итогам проверки — исправленный robots.txt,
+"""Готовые файлы-исправления для разработчика: по итогам проверки - исправленный robots.txt,
 чистый sitemap.xml, правила 301-редиректов (Apache, nginx, таблица для плагинов) и новые title / description
 таблицей для загрузки. Лежат в «для клиента/файлы для разработчика», рядом — «Прочитайте сначала.txt».
 Ничего не придумывается: каждое изменение следует из найденной проблемы, причина подписана рядом.
@@ -122,8 +122,8 @@ def _pager(u):
 def _pagination_allows(text, closed_urls, others=()):
     """Правило закрывает не только навигацию, а все адреса с «?» (Disallow: /*? - и фильтры, и сортировки): его не
     убираем, а открываем одну навигацию узким Allow для её параметра (длиннее запрета, поэтому побеждает и у Яндекса,
-    и у Google; thehome.ru 01.11.2026). Узко - в разделе, где она нашлась: «Allow: /catalog/*?PAGEN_1=». Раньше было
-    «Allow: /*?PAGEN_1=» на весь сайт - оно открывало и /search/?PAGEN_1=2, /personal/… (проверка кода 04.11.2026).
+    и у Google; thehome.ru). Узко - в разделе, где она нашлась: «Allow: /catalog/*?PAGEN_1=». Раньше было
+    «Allow: /*?PAGEN_1=» на весь сайт - оно открывало и /search/?PAGEN_1=2, /personal/….
     others - другие закрытые адреса сайта: правило, которое откроет хоть один из них (поиск, кабинет, фильтр
     «?PAGEN_1=2&sort=…»), не берём. Возвращает ([правила Allow], {открытые адреса навигации})."""
     old = _bots(text)
@@ -165,7 +165,7 @@ def robots_fix(store, issues, start, make_sitemap):
         changes.append("Файла robots.txt на сайте нет. Сделан простой файл: обходить можно всё, указан адрес sitemap.")
     lines = text.splitlines()
     # 1. Постраничная навигация, закрытая в robots.txt, из-за которой товары находятся только через sitemap
-    # или не находятся вовсе (hidden_behind_blocked, 30.10.2026)
+    # или не находятся вовсе (hidden_behind_blocked)
     beh = _rows(issues, "behind_blocked") + _rows(issues, "hidden_behind_blocked")
     rules = {}
     for r in beh:
@@ -199,7 +199,7 @@ def robots_fix(store, issues, start, make_sitemap):
         pats, opened = _pagination_allows(text, closed, others)
         if pats:
             # сколько страниц станет видно: только те, у которых хоть одна закрытая страница навигации откроется
-            # (раньше - все страницы за широким запретом, и за фильтрами тоже; проверка кода 04.11.2026)
+            # (раньше - все страницы за широким запретом, и за фильтрами тоже)
             n = len({r[0] for r in wide if any(u.strip() in opened for u in (r[1] or "").split("\n"))})
             text = _add_allow(text, pats, "# Открыта постраничная навигация (страницы 2, 3… списка) в разделах, где "
                                           f"она нашлась: без неё робот не доходит по ссылкам до {_n(n)} стр. Остальные "
@@ -275,7 +275,7 @@ SITEMAP_PROBLEMS = ("sitemap_errors", "sitemap_redirect", "sitemap_nonindex", "n
 
 def own_sitemap_ok(store, issues, sm):
     """Своя карта сайта уже такая, какую мы бы сделали: те же рабочие страницы, и проверки sitemap ничего не нашли.
-    Тогда свой sitemap.xml не кладём - разработчик заменил бы рабочую карту такой же (timurpanin.ru, 25.10.2026)."""
+    Тогда свой sitemap.xml не кладём - разработчик заменил бы рабочую карту такой же (timurpanin.ru)."""
     if any(i.key in SITEMAP_PROBLEMS for i in issues):
         return False
     own = {r[0] for r in store.db.execute("SELECT url FROM sitemap")}

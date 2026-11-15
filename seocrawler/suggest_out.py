@@ -1,4 +1,4 @@
-"""Готовые title / description / H1 и план перелинковки (02.10.2026) — вывод в отчёт, аудит, Word, Excel и CSV.
+"""Готовые title / description / H1 и план перелинковки - вывод в отчёт, аудит, Word, Excel и CSV.
 Считаются при анализе (analyze/checks/meta_suggest.py и link_plan.py) и лежат в summary["meta_suggest"],
 summary["link_plan"]. Здесь только показ."""
 import os
