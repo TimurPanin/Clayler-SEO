@@ -41,8 +41,9 @@ def run_list(a):
 
 
 def setup_js():
-    """Готовит режим JavaScript: ставит модуль playwright и скачивает браузер Chromium.
-    Возвращает True, если браузер запускается."""
+    """Готовит встроенный браузер: ставит модуль playwright и скачивает Chromium. Он нужен для проверки с JavaScript,
+    снимков страниц с обведённой ошибкой, вида на телефоне, скорости и кнопок покупки. Возвращает True, если
+    браузер запускается. Его зовут «Clayler SEO.bat» при первом запуске и окно, когда включили JavaScript."""
     import subprocess
 
     def can_launch():
@@ -61,18 +62,19 @@ def setup_js():
         r = subprocess.run([sys.executable, "-m", "pip", "install", "--quiet", "--disable-pip-version-check",
                             "playwright"])
         if r.returncode != 0:
-            print("Не получилось установить playwright. Проверка пойдёт без JavaScript.")
+            print("Не получилось установить playwright. Программа будет работать без снимков страниц"
+                  " и проверки с JavaScript.")
             return False
     ok, err = can_launch()
     if ok:
-        print("Режим JavaScript готов: браузер Chromium запускается.")
+        print("Встроенный браузер готов: снимки страниц и проверка с JavaScript работают.")
         return True
-    print("Скачиваю браузер Chromium для проверки JavaScript (один раз, около 150–200 МБ)...")
+    print("Скачиваю встроенный браузер Chromium (один раз, около 150-200 МБ)...")
     r = subprocess.run([sys.executable, "-m", "playwright", "install", "chromium"])
     ok, err = can_launch()
     if ok:
         print("Готово: браузер Chromium установлен и запускается.")
         return True
     print("Браузер не запускается: " + err)
-    print("Проверка пойдёт без JavaScript.")
+    print("Программа будет работать без снимков страниц и проверки с JavaScript.")
     return False
