@@ -564,14 +564,14 @@ def _answer(text, job):
         return last_text()
     if cmd == "/check":
         if not arg:
-            return Reply("Пришлите адрес сайта, например: gigas.su")
+            return Reply("Пришлите адрес сайта, например: vigas.su")
         url = watch.norm_url(arg)
         if not url:
             return Reply("Не понял адрес сайта.")
         return _start(url, int(words[2]) if len(words) > 2 and words[2].isdigit() else 10000)
     if cmd == "/express":
         if not arg:
-            return Reply("Пришлите адрес сайта, например: /express gigas.su")
+            return Reply("Пришлите адрес сайта, например: /express vigas.su")
         url = watch.norm_url(arg)
         if not url:
             return Reply("Не понял адрес сайта.")
@@ -624,7 +624,7 @@ def _on_button(data, job):
     if action == "sites":
         return sites_text()
     if action == "ask":
-        return Reply("Пришлите адрес сайта, например: gigas.su")
+        return Reply("Пришлите адрес сайта, например: vigas.su")
     if not host:
         return Reply("Кнопка устарела.")
     url = _site_url(host)
@@ -791,7 +791,7 @@ def _loop(job):
                 time.sleep(30)
                 continue
         # застряла ли проверка: больше 15 минут не закончился ни один адрес. Просто «нет новых страниц» —
-        # не повод: в это время могут проверяться фото и ссылки (zoozavr.ru: тревога при идущей работе)
+        # не повод: в это время могут проверяться фото и ссылки (zoo-magazin-primer.ru: тревога при идущей работе)
         try:
             st = job.status()
             if st["running"] and _opt(cur, "stuck") and _opt(cur, "enabled") and st.get("stuck", 0) > STUCK_SECONDS \

@@ -9,7 +9,7 @@ def run(ctx):
     # robots.txt своего сайта отвечает ошибкой сервера, 429 или не отвечает: программа обходит, как будто запретов нет,
     # а Google при таком ответе на время считает закрытым весь сайт (коды ответа по порядку). 404 и
     # другие 4xx - «файла нет, можно всё», это не проблема.
-    # только где сами страницы открылись: адрес с опечаткой (www..lancentre.ru) или несуществующий поддомен - не
+    # только где сами страницы открылись: адрес с опечаткой (www..yazyk-primer.ru) или несуществующий поддомен - не
     # беда robots.txt, а битая ссылка (она и так в «Битых ссылках»)
     rb_bad = [[o + "/robots.txt", v.get("status") or v.get("error") or "нет ответа"]
               for o, v in sorted((ctx.store.get_meta("robots", {}) or {}).items())
@@ -94,7 +94,7 @@ def run(ctx):
         "Не ошибка. Canonical на саму себя защищает страницу от дублей, когда к адресу добавляют метки (utm и т. п.).",
         "По желанию: добавить на все страницы canonical на их собственный адрес.",
         ["Адрес"], [[p["url"]] for p in indexable if not (p["canonical"] or p["canonical_header"])], page_col=None)
-    # страницы отдельно от файлов (CSS, JS, картинки): у rsmarket24 было «135» в проблеме и «15» в «Что не проверено»,
+    # страницы отдельно от файлов (CSS, JS, фото): у market-primer было «135» в проблеме и «15» в «Что не проверено»,
     # потому что сюда шли и 120 файлов WordPress. Страницы считаются тем же условием, что в coverage.py
     blocked_all = _q(db, "SELECT url, skip_reason, found_on, kind FROM urls WHERE state='skipped' AND internal=1 "
                          "AND kind<>'sitemap' AND skip_reason LIKE 'Закрыт в robots%'")

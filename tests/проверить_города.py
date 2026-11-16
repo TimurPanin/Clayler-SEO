@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from seocrawler import regions as R  # noqa: E402
 
-# как у talisman-online.ru: переключатель на JavaScript, ссылок на поддомены нет
+# как у gazovik-primer.ru: переключатель на JavaScript, ссылок на поддомены нет
 HTML = """<nav><a href="/news/">Новости</a><a href="/about/">О нас</a></nav>
 <div class="dropdown__inner" id="dropdown__inner_city"><p class="dropdown__title">Выберите город </p><ul>
 <li><label for="city_1" class="radio"><input type="radio" name="city" id="city_1" value="1" checked />

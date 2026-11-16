@@ -189,7 +189,7 @@ _LAT = [("shch", "щ"), ("sch", "ск"), ("sh", "ш"), ("ch", "ч"), ("zh", "ж"
 
 
 def cyr(word):
-    """Латиница → кириллица на слух («gigas» → «гигас»). Догадка: человек поправит написание в окне."""
+    """Латиница → кириллица на слух («vigas» → «вигас»). Догадка: человек поправит написание в окне."""
     s, out = re.sub(r"ce$", "s", word.lower()), ""   # «service» → «сервис»
     while s:
         for a, b in _LAT:
@@ -206,7 +206,7 @@ def _label(host):
 
 
 def guess_names(host, folder=None):
-    """Названия сайта для Вордстата: из хвоста заголовков страниц («… | ГазПрофСервис»), латиницей - из домена,
+    """Названия сайта для Вордстата: из хвоста заголовков страниц («… | ГазМастерСервис»), латиницей - из домена,
     и тот же домен кириллицей. Части через дефис («termo-ufa») - обычные слова, без дефиса они ничего не значат."""
     names = []
     if folder and os.path.exists(os.path.join(folder, "crawl.db")):
@@ -224,7 +224,7 @@ def guess_names(host, folder=None):
         names.append(lab)
         from .bukvarix import sound
         from difflib import SequenceMatcher
-        ru = cyr(lab)   # русское название из заголовков уже есть («газпрофсервис») - догадка на слух не нужна
+        ru = cyr(lab)   # русское название из заголовков уже есть («газмастерсервис») - догадка на слух не нужна
         if not any(re.search("[а-я]", n) and SequenceMatcher(None, sound(n.lower()), sound(ru)).ratio() >= 0.75 for n in names):
             names.append(ru)
     out = []

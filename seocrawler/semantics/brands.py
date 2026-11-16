@@ -34,7 +34,7 @@ LAT_STOP = {"wifi", "wi-fi", "led", "pro", "plus", "max", "mini", "home", "eco",
             "premium", "air", "gas", "water", "aqua", "power", "nova", "line", "steel", "inverter", "ip", "rs", "bt",
             "nr", "erp", "gpl", "lpg", "dhw", "ch", "kombi", "boiler", "www", "http", "https", "html", "xxl", "xl",
             # отраслевые сокращения и английские слова темы - не бренды: «Seo» (1 100), «Serm», «Programmatic Seo» в
-            # листе «Бренды» у SEO-агентства (hightime.agency)
+            # листе «Бренды» у SEO-агентства (primerline.agency)
             "seo", "smm", "serm", "orm", "ppc", "crm", "cms", "saas", "b2b", "b2c", "it", "ai", "geo", "ux", "ui",
             "api", "sem", "smo", "seo-продвижение", "programmatic", "marketing", "digital", "content", "agency",
             "landing", "ecommerce", "e-commerce", "growth", "strategy", "audit", "course", "skill", "meaning",
@@ -233,7 +233,7 @@ CACHE_FILE, CACHE_V = ".бренды сайта.json", 9   # 9: адреса б�
 HUB_MIN, HUB_SHARE, HUB_LAT = 8, 0.6, 0.5    # от стольких страниц, такая доля совпала, такая доля из них - латиницей
 HUB_SKIP = re.compile(r"/(tags?|blog|news|novosti|articles?|stati|author|users?|search|forum|help|faq|"
                       r"en|eng|english|de|fr|es|it|cn|zh|ua|kz|by|tr|ar)(/|$)", re.I)
-# разделы сайта, а не бренды: «/eng/hotel/about_hotel», «contacts», «faq» (hotelcosmos.ru) - такая папка не раздел брендов
+# разделы сайта, а не бренды: «/eng/hotel/about_hotel», «contacts», «faq» (otel-primer.ru) - такая папка не раздел брендов
 SECTION = re.compile(r"(?i)^(?:about|contacts?|faq|news|gallery|photo\w*|awards?|rules|payment\w*|delivery|offers?|"
                      r"special\w*|reviews?|blog|services?|prices?|vacanc\w*|careers?|jobs|o-nas|o-kompanii|kontakty|"
                      r"dostavka|oplata|otzyvy|uslugi|ceny|tseny|novosti|stati|aktsii|akcii|garantiya|sertifikaty|"

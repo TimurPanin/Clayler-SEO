@@ -9,7 +9,7 @@ from .access_check import TEXT as _ACCESS
 
 # (шаблон, что случилось, что сделать) - первое совпадение
 RULES = [
-    # причины из access_check.py (dog-comfort.kz): обрыв на шаге https и отказ только программам
+    # причины из access_check.py (zoo-primer.kz): обрыв на шаге https и отказ только программам
     (r"режут по дороге|сброшено на шаге https", *_ACCESS["tls_reset"]),
     (r"обрывают через раз", *_ACCESS["tls_flaky"]),
     (r"не пускает программы", *_ACCESS["bots_blocked"]),

@@ -1,5 +1,5 @@
 """Страна сайта по признакам с самого сайта (seocrawler/country.py) и флаг картинкой.
-Было: страны в отчёте не было; dog-comfort.kz (Казахстан, но og:locale ru_RU и lang ru-RU от конструктора)
+Было: страны в отчёте не было; zoo-primer.kz (Казахстан, но og:locale ru_RU и lang ru-RU от конструктора)
 легко принять за российский сайт.
 
 1) Код страны по домену и по телефону: +7 7xx и 6xx - Казахстан, остальные +7 - Россия, +375 - Беларусь…
@@ -43,7 +43,7 @@ def db_with(pages):
 
 
 def main():
-    for host, code in (("dog-comfort.kz", "KZ"), ("shop.com.kz", "KZ"), ("site.ru", "RU"), ("xn--p1ai", "RU"),
+    for host, code in (("zoo-primer.kz", "KZ"), ("shop.com.kz", "KZ"), ("site.ru", "RU"), ("xn--p1ai", "RU"),
                        ("магазин.рф", "RU"), ("site.co.uk", "GB"), ("site.by", "BY"), ("site.com", None),
                        ("startup.io", None), ("site.online", None)):
         check(C.tld_country(host)[0] == code, f"зона {host}: {C.tld_country(host)} вместо {code}")
@@ -55,7 +55,7 @@ def main():
     # конструктор поставил ru_RU, а бизнес - в Казахстане
     kz = db_with([{"lang": "ru-RU", "og": {"og:locale": "ru_RU"}, "phones": ["+77476005026"],
                    "text": "Вольер 3x2 - 450 000 ₸\nБудка 85 000 тг\nДоставка по Алматы 5 000 тенге"}] * 3)
-    c = C.detect(kz, "https://dog-comfort.kz/", {"net": {"country": "KZ", "holder": "MEGAHOST_KZ"}, "hosting": ""})
+    c = C.detect(kz, "https://zoo-primer.kz/", {"net": {"country": "KZ", "holder": "MEGAHOST_KZ"}, "hosting": ""})
     check(c and c["code"] == "KZ" and c["sure"], f"Казахстан: {c}")
     check(c and any("тенге" in w for w in c["why"]) and any(".kz" in w for w in c["why"]), f"признаки: {c and c['why']}")
     check(c and c["server"]["code"] == "KZ" and "Казахстан" in C.server_text(c["server"]), f"сервер: {c and c['server']}")
@@ -65,7 +65,7 @@ def main():
     check(c and c["code"] == "BY", f"Беларусь на .com: {c}")
     # обычный российский сайт
     ru = db_with([{"lang": "ru", "og": {"og:locale": "ru_RU"}, "phones": ["+74951234567"], "text": "Цена 1 990 ₽"}])
-    c = C.detect(ru, "https://www.franmeb.ru/")
+    c = C.detect(ru, "https://www.mebel-primer.ru/")
     check(c and c["code"] == "RU" and c["sure"], f"Россия: {c}")
     # признаков нет - страны нет (флаг не рисуется)
     none = db_with([{"lang": "en", "text": "Hello world"}])
@@ -93,7 +93,7 @@ def main():
     check(">XX<" in C.flag_svg("XX"), "неизвестная страна - плашка с кодом")
 
     from seocrawler import report, site_tech
-    c = C.detect(kz, "https://dog-comfort.kz/")
+    c = C.detect(kz, "https://zoo-primer.kz/")
     sub = report._country_sub({"country": c})
     check("<svg" in sub and "Казахстан" in sub and "тенге" in sub, f"строка под заголовком отчёта: {sub[:200]}")
     t = site_tech.report_html(None, report._e, country=c)

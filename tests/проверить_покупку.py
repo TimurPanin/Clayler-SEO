@@ -75,16 +75,16 @@ check(f.get("price") == 599 and "old" not in f, f"старая цена чужо
 
 # ссылки на мессенджеры: правильные не трогаем
 for h in ("https://wa.me/79991234567", "https://api.whatsapp.com/send?phone=79991234567&text=Здравствуйте",
-          "https://t.me/gasprof_ufa", "https://t.me/+AbCdEf123", "tg://resolve?domain=gasprof", "https://wa.me/message/ABC",
-          "tg://resolve?domain=HighTimeWebinar_bot&start=dl-17", "tg://resolve?phone=79991234567",
+          "https://t.me/gasmaster_ufa", "https://t.me/+AbCdEf123", "tg://resolve?domain=gasmaster", "https://wa.me/message/ABC",
+          "tg://resolve?domain=PrimerLineWebinar_bot&start=dl-17", "tg://resolve?phone=79991234567",
           "tg://join?invite=AbCdEf", "tg://msg?text=hi", "whatsapp://send?phone=79991234567", "https://t.me/+79991234567"):
     check(shop.messenger_problem(h) is None, f"правильная ссылка признана битой: {h}")
 for h in ("https://wa.me/", "https://wa.me/7999", "https://api.whatsapp.com/send?phone=", "https://t.me/",
           "https://t.me/username", "https://t.me/ab", "tg://resolve"):
     check(shop.messenger_problem(h) is not None, f"битая ссылка не найдена: {h}")
-# имя бота без «domain=» (hightime.agency): в причине - как исправить
-pr = shop.messenger_problem("tg://resolve?HighTimeWebinar_bot&start=dl-17")
-check(pr and "domain=HighTimeWebinar_bot" in pr[1], f"tg://resolve без domain=: {pr}")
+# имя бота без «domain=» (primerline.agency): в причине - как исправить
+pr = shop.messenger_problem("tg://resolve?PrimerLineWebinar_bot&start=dl-17")
+check(pr and "domain=PrimerLineWebinar_bot" in pr[1], f"tg://resolve без domain=: {pr}")
 
 # проверки по нескольким страницам
 pages_html = {

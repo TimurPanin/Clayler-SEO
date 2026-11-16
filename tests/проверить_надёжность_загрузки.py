@@ -121,8 +121,8 @@ took = time.monotonic() - t
 check(took < 9 and r.error.startswith("Загрузка дольше 7 с"), f"жёсткий срок на открытом соединении: {took:.1f} с, {r.error!r}")
 r = f.fetch(base + "/ok")
 check(r.body == HTML and not r.error, f"после прерванного запроса загрузчик работает: {r.error!r}")
-# ссылку записали криво - пробелы и скобки в имени сайта (reestr-719.ru): ошибка адреса, а не английская ошибка связи
-for bad in ("http://xn-- 878 (https-2nja//reestr-719.ru/pp878/", "https://ex ample.ru/"):
+# ссылку записали криво - пробелы и скобки в имени сайта (reestr-primer.ru): ошибка адреса, а не английская ошибка связи
+for bad in ("http://xn-- 878 (https-2nja//reestr-primer.ru/pp878/", "https://ex ample.ru/"):
     r = f.fetch(bad)
     check(r.error.startswith("Неправильный адрес"), f"кривое имя сайта {bad!r}: {r.error!r}")
 srv.shutdown()

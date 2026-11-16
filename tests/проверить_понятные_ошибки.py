@@ -1,6 +1,6 @@
 """Никаких сырых английских ошибок и JSON в журнале окна (plain_errors.humanize, window/job.py) и «старый расчёт
 здоровья» у отчётов до 15.10.2026 (window/reports_list.py).
-Было («Обновить отчёт» dog-comfort.kz): «Page.goto: net::ERR_CONNECTION_CLOSED at …»,
+Было («Обновить отчёт» zoo-primer.kz): «Page.goto: net::ERR_CONNECTION_CLOSED at …»,
 «<urlopen error _ssl.c:1064: The handshake operation timed out>», JSON «Request had insufficient authentication
 scopes» от Google; в «Сравнить с конкурентами» у многих сайтов «здоровье 0%» по старому расчёту.
 Запуск: py -3 tests/проверить_понятные_ошибки.py (и из проверить_всё.py)."""
@@ -34,8 +34,8 @@ def main():
         ('Search Console: не получилось получить список сайтов - Google Search Console ответил 403: { "error": '
          '{ "code": 403, "message": "Request had insufficient authentication scopes.", "status": "PERMISSION_DENIED"',
          "нет доступа к Search Console"),
-        ("   https://dog-comfort.kz/aktau/: страница не открылась - Page.goto: net::ERR_CONNECTION_CLOSED at "
-         "https://dog-comfort.kz/aktau/", "соединение оборвали"),
+        ("   https://zoo-primer.kz/aktau/: страница не открылась - Page.goto: net::ERR_CONNECTION_CLOSED at "
+         "https://zoo-primer.kz/aktau/", "соединение оборвали"),
         ("Яндекс Метрика: данные не загружены - HTTP Error 401: Unauthorized", "вход истёк"),
         ("Орфография: не проверена - [WinError 10060] timed out", "нет связи"),
     ]
@@ -63,13 +63,13 @@ def main():
     from seocrawler.site_queue import _crash_line
     check(_crash_line(j.lines) == "KeyError: 'x'", "сбой программы перестал находиться по трассировке")
 
-    # маски семантики готовы - жёлтая плашка «готовы», а не красная «Маски не предложились» (gruzoperevozka23.ru)
+    # маски семантики готовы - жёлтая плашка «готовы», а не красная «Маски не предложились» (gruzy-primer.ru)
     from seocrawler.window import events
     pushed = []
     events.push = lambda kind, title, text="", *a, **k: pushed.append((kind, title, text))
     mj = J.Job()
-    mj.sites, mj.site, mj.started, mj.out_dir = [], "https://gruzoperevozka23.ru/", 0, ""
-    mj.lines = ["Предлагаю маски семантики: gruzoperevozka23.ru_2026-10-17_14-25-23",
+    mj.sites, mj.site, mj.started, mj.out_dir = [], "https://gruzy-primer.ru/", 0, ""
+    mj.lines = ["Предлагаю маски семантики: gruzy-primer.ru_2026-10-17_14-25-23",
                 "маски готовы: 18 - главная и меню 17, разделы 1, подразделов и карточек на сайте не нашлось (структура плоская)"]
     events.job_finished(mj, "masks")
     check(pushed and pushed[-1][0] == "warn" and "готовы" in pushed[-1][1] and "Подтвердить" in pushed[-1][2],

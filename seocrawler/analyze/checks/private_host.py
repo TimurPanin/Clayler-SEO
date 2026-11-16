@@ -57,7 +57,7 @@ def run(ctx):
 
     def from_own_page(r):
         """Ссылка стоит на своей странице. Иначе адрес - шаг чужого редиректа (yandex.ru/legal/… → капча): это не ваша
-        ссылка, и «не открылся» про неё не значит «битая» (nabiullin.com). Она остаётся в ручной проверке."""
+        ссылка, и «не открылся» про неё не значит «битая» (sait-primer.com). Она остаётся в ручной проверке."""
         return db.execute("SELECT 1 FROM links l JOIN urls u ON u.url=l.src WHERE l.dst=? AND u.internal=1 LIMIT 1",
                           (r["url"],)).fetchone() is not None
     ext_real = [r for r in ext if not ext_robot_block(r) and from_own_page(r)]

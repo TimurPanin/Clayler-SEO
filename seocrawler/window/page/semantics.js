@@ -30,8 +30,8 @@ const formsTag = r => r[14] && r[14].length ? ` <span class="qforms" title="То
 const hiddenRow = r => (STOP.size || PICK.size) && toks(r[0]).some(t => STOP.has(t) || PICK.has(t));
 let dirFolder = '';
 let REP = null, DATA = null, FOLDER = '', tab = 'all', intent = '', shown = PAGE_SIZE, wasRunning = false, LIST = [], prio = '';
-// номер выбора сайта: ответ, пришедший после выбора другого сайта, не рисуется (иначе на franmeb.ru было видно
-// семантику gasprof, которая грузилась при открытии страницы)
+// номер выбора сайта: ответ, пришедший после выбора другого сайта, не рисуется (иначе на mebel-primer.ru было видно
+// семантику gasmaster, которая грузилась при открытии страницы)
 let SITE_SEQ = 0;
 
 function finished(g){ return g.checks.find(c => c.finished && !c.running) || null; }

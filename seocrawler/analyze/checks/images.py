@@ -3,7 +3,7 @@ from ..common import IMG_HEAVY_KB, IMG_OLD_FORMAT_KB, IMG_VERY_HEAVY_KB, NOTE, W
 
 
 def _bad_type_why(src, ct, example):
-    """Почему «картинка» не картинка - понятным языком (thehome.ru: адрес «картинки» https://thehome.ru/ на
+    """Почему «картинка» не картинка - понятным языком (dom-primer.ru: адрес «картинки» https://dom-primer.ru/ на
     293 товарах - у картинки пустой src, браузер грузит главную)."""
     from urllib.parse import urlsplit
     sp, own = urlsplit(src), (urlsplit(example or "").hostname or "").lower()

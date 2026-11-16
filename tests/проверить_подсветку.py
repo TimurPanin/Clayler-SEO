@@ -31,14 +31,14 @@ PAGE = ('<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Cont
         '<p>' + 'Делаем мебель на заказ: кухни и шкафы, мебели много, заказ онлайн. ' * 4 + '</p>'
         '<div style="display:none"><a href="https://casino-best.example/">онлайн казино</a></div>'
         '<img src="/img/sofa.jpg"><script>throw new Error("тест-ошибка")</script>'
-        # для правок (разбор отчёта thehome.ru): ссылка на саму страницу, логотип-ссылка на главную и
+        # для правок (разбор отчёта dom-primer.ru): ссылка на саму страницу, логотип-ссылка на главную и
         # картинка с адресом главной, поиск и форма заявки, остаток шаблона, слово с русской «С»
         '<a id="self" href="/mebel">Мебель</a> <a id="logo" href="/">Логотип</a> <img id="badimg" src="/" alt="">'
         '<form id="search" role="search"><input type="search" name="q"></form>'
         '<form id="lead"><input type="tel" name="phone"><button>Оставить заявку</button></form>'
         '<p id="junk">Коллекция: Chrome#Classic#Vanda II</p>'
         '<h2 id="mixed">Унитаз Сeramicplus белый</h2>'
-        # thehome.ru: ссылка-обёртка вокруг карточки товара - у самой <a> рамка нулевой высоты
+        # dom-primer.ru: ссылка-обёртка вокруг карточки товара - у самой <a> рамка нулевой высоты
         '<a id="card" href="/product/x/"><div style="width:300px;height:120px">Карточка товара</div></a>'
         '</body></html>').encode()
 

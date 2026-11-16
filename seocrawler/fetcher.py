@@ -86,7 +86,7 @@ def _classify(exc) -> str:
         return "SSL: ошибка сертификата"
     if isinstance(r, (ssl.SSLEOFError, ssl.SSLZeroReturnError)):
         # оборвали на шаге https-рукопожатия (провайдер или защита сайта), а не ошибка настройки https:
-        # повторяется, как обычный сброс (dog-comfort.kz; причина - access_check.py)
+        # повторяется, как обычный сброс (zoo-primer.kz; причина - access_check.py)
         return "Соединение сброшено на шаге https"
     if isinstance(r, ssl.SSLError):
         return "SSL: ошибка соединения"
@@ -159,7 +159,7 @@ class Fetcher:
         if not host or ".." in host or host.startswith(".") or any(len(p) > 63 for p in host.split(".")) \
                 or not _HOST_OK.fullmatch(host):
             # ошибка в самом адресе (ntagil..site.ru; пробелы и скобки в имени сайта - ссылку записали криво,
-            # reestr-719.ru: «http://Постановление 878 (https://…)»; раньше - английская «URL can't contain control
+            # reestr-primer.ru: «http://Постановление 878 (https://…)»; раньше - английская «URL can't contain control
             # characters») — сервер тут ни при чём: не повторяем и не тормозим обход
             res.error = "Неправильный адрес: ошибка в имени сайта"
             return res
@@ -402,7 +402,7 @@ REST_MAX = 256 * 1024  # сколько недочитанного ответа 
 
 def _rest(res, conn, got):
     """Сколько байт ответа осталось дочитать, если это стоит сделать (0 — не стоит). Недочитанный ответ
-    закрывает соединение, и следующий адрес открывает новое (через VPN — заметно дольше): на torrefacto.ru
+    закрывает соединение, и следующий адрес открывает новое (через VPN - заметно дольше): на kofe-primer.ru
     так открывалось новое соединение на каждую картинку. Дочитать 200 КБ быстрее, чем подключиться заново."""
     cl = res.headers.get("content-length", "")
     if conn is None or not cl.isdigit():

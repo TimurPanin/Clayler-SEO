@@ -146,7 +146,7 @@ RELATED_PROPS = {"isSimilarTo", "isRelatedTo", "itemListElement", "isAccessoryOr
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
 SKIP = {"script", "style", "noscript", "template", "svg"}
 # Теги, на которых браузер разрывает текст (перенос строки и блоки): между словами по обе стороны - пробел.
-# «SEO-продвижение сайтов<br>в США» - «сайтов в», а не «сайтовв» (hightime.agency); строчные теги
+# «SEO-продвижение сайтов<br>в США» - «сайтов в», а не «сайтовв» (primerline.agency); строчные теги
 # (span, b, a) пробела не дают: «<span>Ко</span><span>тлы</span>» - одно слово. Один список с parser.py.
 BREAK = {"p", "div", "li", "ul", "ol", "td", "th", "tr", "table", "h1", "h2", "h3", "h4", "h5", "h6",
          "section", "article", "header", "footer", "nav", "aside", "main", "form", "dd", "dt", "dl",
@@ -207,7 +207,7 @@ def messenger_problem(href):
             q = parse_qs(sp.query, keep_blank_values=True)
             if (q.get("domain") or [""])[0] or (q.get("phone") or [""])[0]:
                 return None
-            # tg://resolve?HighTimeBot&start=… - имя без «domain=»: Telegram откроется, но чат не найдёт
+            # tg://resolve?PrimerLineBot&start=… - имя без «domain=»: Telegram откроется, но чат не найдёт
             bare = next((k for k, v in q.items() if v == [""] and k.lower() not in TG_PARAMS
                          and re.fullmatch(r"[A-Za-z][A-Za-z0-9_]{3,31}", k)), "")
             if bare:
@@ -253,7 +253,7 @@ class _Facts(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.stack = []          # [tag, flags, buf, found, номер элемента]
-        # Скорость (thehome.ru: 170 мс на страницу товара, больше половины всего разбора): сколько
+        # Скорость (dom-primer.ru: 170 мс на страницу товара, больше половины всего разбора): сколько
         # открытых элементов с каждым флагом - _ctx не перебирает весь стек; need - сколько открытых элементов
         # собирают свой текст (цена, название товара, характеристики). Нет таких - текст вложенных элементов
         # не склеивается заново на каждом уровне вложенности: он никому не нужен.

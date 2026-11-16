@@ -140,7 +140,7 @@ check("crumbs_broken" in got and got["crumbs_broken"].rows[0][4] == 3, f"тол�
 old = [page(f"{S}/catalog/k{i}/", cr, old=True) for i in range(5)] + [page(f"{S}/catalog/k9/", old=True)]
 got = run(old)
 check(set(got) == {"crumbs_missing"}, f"старая проверка: {set(got)}")
-# крошек на сайте нет вовсе, а вложенные страницы есть - «Хлебных крошек нет на сайте» (hightime.agency:
+# крошек на сайте нет вовсе, а вложенные страницы есть - «Хлебных крошек нет на сайте» (primerline.agency:
 # /cases/…, /glossary/…, отчёт молчал); плоский сайт - ничего; уже есть rich_no_crumbs - не повторяем
 got = run([page(f"{S}/catalog/k{i}/") for i in range(6)])
 check(set(got) == {"crumbs_none"} and got["crumbs_none"].rows[0][:2] == ["/catalog/", 6], f"сайт без крошек: {got}")

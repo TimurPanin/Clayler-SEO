@@ -1,5 +1,5 @@
 """Бренды из блоков логотипов и свойства товаров из адресов сайта (пример -
-lk-fabrika.ru: «Используем лучшую фурнитуру - бренды» и сетка логотипов Blum, Egger, Hettich, Boyard…; адреса
+fabrika-primer.ru: «Используем лучшую фурнитуру - бренды» и сетка логотипов Blum, Egger, Hettich, Boyard…; адреса
 /katalog/izdelie-shkaf/vid-uglovoj, /material-mdf, /style-loft). Без нейросети и без списков брендов: только
 устройство страницы.
 

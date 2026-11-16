@@ -1,5 +1,5 @@
 """Тестовый сайт, который падает посреди обхода: первые N запросов - нормальные страницы со ссылками,
-потом на всё отвечает 502 Bad Gateway (как domeo.ru). Для tests/проверить_очередь.py.
+потом на всё отвечает 502 Bad Gateway (как dveri-primer.ru). Для tests/проверить_очередь.py.
 Запуск: python tests/downsite.py 8798 [N]"""
 import sys
 import threading

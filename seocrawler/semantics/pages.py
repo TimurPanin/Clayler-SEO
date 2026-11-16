@@ -93,7 +93,7 @@ def _main_query(g, Q):
 ASK_WORDS = {"это", "такое", "что", "как", "какой", "какая", "какие", "зачем", "почему", "где", "когда", "сколько",
              "чем", "значит", "простыми", "словами"}
 # приписка title и описания для услуг: «запись» - только если люди сами ищут «записаться» (курсы, клиника); иначе
-# «заказать» - у SEO-агентства или ремонта «цены, запись» звучало странно (hightime.agency)
+# «заказать» - у SEO-агентства или ремонта «цены, запись» звучало странно (primerline.agency)
 SIGNUP_RX = re.compile(r"(?<![а-я])запис")
 BUY_WORDS_RX = re.compile(r"(?<![а-я])(купить|цен[аыу]?|стоимост|недорог|дешев|прайс|отзыв|заказать|акци|скидк)")
 
@@ -116,7 +116,7 @@ def proper(text, city_words=()):
 
 def nice_name(g, Q, city_words=()):
     """Название новой страницы для H1 и title - самый востребованный естественный запрос группы, а не её название из
-    слов («Продвижение яндекс» → «Продвижение в Яндексе», hightime.agency). Без вопросов, 2-6 слов."""
+    слов («Продвижение яндекс» → «Продвижение в Яндексе», primerline.agency). Без вопросов, 2-6 слов."""
     # без «купить», «цена», «отзывы»: их добавит хвост title («- купить, цены»), иначе «Купить кухни … - купить, цены»
     cand = [q for q in g["queries"] if not Q[q]["check"] and Q[q]["intent"] not in ("Информация", "Покупка")
             and 2 <= len(q.split()) <= 6 and not set(q.split()) & ASK_WORDS and not BUY_WORDS_RX.search(q)]
@@ -130,7 +130,7 @@ def nice_name(g, Q, city_words=()):
 
 
 def _brand_spelling(brand, rows):
-    """Название компании так, как оно написано на сайте: «hightime» → «HighTime» (из title и H1 его страниц)."""
+    """Название компании так, как оно написано на сайте: «primerline» → «PrimerLine» (из title и H1 его страниц)."""
     if not brand:
         return brand
     rx = re.compile(re.escape(brand), re.I)
@@ -293,7 +293,7 @@ def audit(sem_mod, main, comps, groups, Q, city, city_stems):
             continue
         _u, title, h1, desc, words, blob = r
         title, h1, desc = (html.unescape(x or "") for x in (title, h1, desc))
-        # одинаковые H1 (для компьютера и телефона) - один раз: «A | A» в «сейчас» ТЗ (hightime.agency)
+        # одинаковые H1 (для компьютера и телефона) - один раз: «A | A» в «сейчас» ТЗ (primerline.agency)
         h1 = " | ".join(dict.fromkeys(x.strip() for x in h1.split(" | ") if x.strip()))
         bl = _blocks(blob, template) if blob else []
         text = " ".join(bl)

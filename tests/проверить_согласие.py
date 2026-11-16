@@ -123,7 +123,7 @@ def main():
         if bool(got) == ok:
             fails.append(f"страница «{text[:30]}…»: {'документ' if ok else 'не документ'}, а получено {got}")
     # браузерный запрос не удался - документ открывается так же, как при обходе (и по редиректу), а не пишется
-    # «сервер не ответил»; не открылся никак - в тексте настоящая причина (thehome.ru)
+    # «сервер не ответил»; не открылся никак - в тексте настоящая причина (dom-primer.ru)
     from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
     import threading
 
@@ -163,7 +163,7 @@ def main():
             fails.append(f"неоткрывшийся документ без причины: {got}")
     finally:
         srv.shutdown()
-    # согласие на рассылку: слов о персональных данных мало, но заголовок - документ (hightime.agency)
+    # согласие на рассылку: слов о персональных данных мало, но заголовок - документ (primerline.agency)
     ads = ("Согласие на рекламную и информационную рассылку. Настоящим я даю согласие на получение сообщений. " * 20)
     got = op({"status": 200, "url": "https://site.ru/ads_agreement", "type": "text/html", "text": ads,
               "title": "Согласие на рекламную и информационную рассылку"}, "https://site.ru/ads_agreement", {"site.ru"})

@@ -28,7 +28,7 @@ _GA_NEED = ("googletagmanager.com/gtag/js?id=", "gtag(")
 _REQUISITES = re.compile(r"юр\.|юридическ|инн|огрн|кпп|р/с|реквизит|банк", re.I)
 # Спрятанный блок (так прячут ссылки на чужие сайты при взломе): стиль самого тега, без CSS-файлов. Сдвиг за экран -
 # от 1000 px (left:-9999px): конструкторы (Tilda) на узком экране ставят блокам left:-146px, и они видны
-# (ложные «спрятанные ссылки» на hightime.agency)
+# (ложные «спрятанные ссылки» на primerline.agency)
 _HIDDEN_STYLE = re.compile(r"display\s*:\s*none|visibility\s*:\s*hidden|font-size\s*:\s*0(?:px|pt|em|rem|%)?\s*(?:;|$|!)|"
                            r"(?:left|top|text-indent)\s*:\s*-\d{4,}|opacity\s*:\s*0(?:\.0+)?\s*(?:;|$|!)|"
                            r"(?:height|width)\s*:\s*0(?:px)?\s*;[^\"]*overflow\s*:\s*hidden", re.I)
@@ -179,7 +179,7 @@ class _Extractor(HTMLParser):
                 self._hid = True
         if tag in self.BLOCK:
             self._flush()
-            if self._hstack:   # «сайтов<br>в США» - «сайтов в», не «сайтовв» (hightime.agency)
+            if self._hstack:   # «сайтов<br>в США» - «сайтов в», не «сайтовв» (primerline.agency)
                 self._hstack[1].append(" ")
         if tag in self.tag_counts:
             self.tag_counts[tag] += 1
@@ -432,7 +432,7 @@ def counters(html_text):
     """Счётчики на странице: {"ym": [номера Метрики], "ga": [...], "gtm": [...]}. JSON-строка; "{}" — счётчиков нет."""
     out = {}
     # шаблон ищем, только если на странице есть его обязательный кусок: поиск подстроки во много раз быстрее
-    # шаблона по всей странице (33 мс на страницу товара thehome.ru в 570 КБ, а счётчиков там нет)
+    # шаблона по всей странице (33 мс на страницу товара dom-primer.ru в 570 КБ, а счётчиков там нет)
     has = lambda s: s in html_text   # noqa: E731
     ym = sorted({m for rx, s in zip(_YM, _YM_NEED) if has(s) for m in rx.findall(html_text)})
     if ym or ((has("mc.yandex.") or has("metrika/tag.js")) and _YM_ANY.search(html_text)):
@@ -580,7 +580,7 @@ def schema_info(ex):
 
 class _Both(HTMLParser):
     """Одно чтение страницы для двух разборов (_Extractor и «Что мешает покупать»): теги и текст режутся один раз и
-    отдаются обоим. Раньше каждый резал страницу сам - на странице товара thehome.ru в 570 КБ это ~60 мс лишнего
+    отдаются обоим. Раньше каждый резал страницу сам - на странице товара dom-primer.ru в 570 КБ это ~60 мс лишнего
     на каждое чтение. Разбор, упавший с ошибкой, дальше ничего не получает - как раньше, когда его
     feed прерывался исключением, а второй читал страницу до конца."""
 

@@ -92,24 +92,24 @@ def main():
     started = []
     telegram._starter = lambda u, p: started.append((u, p)) or ""
     job = FakeJob()
-    ans = telegram._answer("/check gigas.su 2000", job)
-    check(started == [("https://gigas.su/", 2000)] and "Запустил" in ans, "/check: " + ans)
+    ans = telegram._answer("/check vigas.su 2000", job)
+    check(started == [("https://vigas.su/", 2000)] and "Запустил" in ans, "/check: " + ans)
     telegram._starter = lambda u, p: "Проверка уже идёт."
-    check("Не запустил" in telegram._answer("/check gigas.su", job), "/check, когда проверка уже идёт")
+    check("Не запустил" in telegram._answer("/check vigas.su", job), "/check, когда проверка уже идёт")
     check("ничего не проверяется" in telegram._answer("/stop", job) and not job.stopped, "/stop без проверки")
     job.running = True
     telegram._answer("/stop@clayler_bot", job)
     check(job.stopped, "/stop не остановил")
-    check("Слежу" in telegram._answer("/watch gasprofservice.ru", job), "/watch")
-    check("пн 09:00" in telegram._answer("/weekly gasprofservice.ru пн 9:00", job), "/weekly")
-    s = watch.find("gasprofservice.ru")
+    check("Слежу" in telegram._answer("/watch gasmasterservis.ru", job), "/watch")
+    check("пн 09:00" in telegram._answer("/weekly gasmasterservis.ru пн 9:00", job), "/weekly")
+    s = watch.find("gasmasterservis.ru")
     check(s and s["monitor"] and s["weekly"] == {"day": 0, "time": "09:00"}, "/watch + /weekly не сохранились")
     txt = telegram._answer("/sites", job)
-    check("gasprofservice.ru" in txt and "пн 09:00" in txt, "/sites: " + txt)
-    telegram._answer("/unwatch gasprofservice.ru", job)
-    check(watch.find("gasprofservice.ru")["monitor"] is False, "/unwatch при расписании должен оставить расписание")
-    telegram._answer("/weekly gasprofservice.ru выкл", job)
-    check(watch.find("gasprofservice.ru") is None, "без мониторинга и расписания сайт должен убраться")
+    check("gasmasterservis.ru" in txt and "пн 09:00" in txt, "/sites: " + txt)
+    telegram._answer("/unwatch gasmasterservis.ru", job)
+    check(watch.find("gasmasterservis.ru")["monitor"] is False, "/unwatch при расписании должен оставить расписание")
+    telegram._answer("/weekly gasmasterservis.ru выкл", job)
+    check(watch.find("gasmasterservis.ru") is None, "без мониторинга и расписания сайт должен убраться")
     check("/check" in telegram._answer("/help", job), "/help")
 
     # кнопки

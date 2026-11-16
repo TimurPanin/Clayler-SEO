@@ -1,5 +1,5 @@
 """Автотест: адрес с параметром без «=» остаётся как на сайте (без сети).
-Сверка с Screaming Frog на lancentre.ru: «core.js?1750233058498479» программа записывала как «core.js?1750233058498479=»,
+Сверка с Screaming Frog на yazyk-primer.ru: «core.js?1750233058498479» программа записывала как «core.js?1750233058498479=»,
 то есть открывала и показывала в отчёте другой адрес. Проверяет seocrawler/urls.normalize и strip_params:
 - параметр без «=» остаётся без «=», пустой «a=» остаётся с «=», «?=123» не меняется;
 - порядок параметров по-прежнему сортируется, русские буквы кодируются, трекинговые параметры убираются.
@@ -31,7 +31,7 @@ check(normalize("https://a.ru/c/?q=Ippon&s=Найти"), "https://a.ru/c/?q=Ippo
 check(normalize("https://a.ru/?a=1&a=2"), "https://a.ru/?a=1&a=2", "повтор параметра")
 check(strip_params("https://a.ru/?utm_source=y&v&x=1"), ("https://a.ru/?v&x=1", ["utm_source"]), "трекинговый параметр")
 
-# показ адреса в отчёте - как в браузере (vsekuhni.ru: /image/catalog/%D0%91%D0%BB%D0%BE%D0%B3/...)
+# показ адреса в отчёте - как в браузере (kuhni-primer.ru: /image/catalog/%D0%91%D0%BB%D0%BE%D0%B3/...)
 IMG = "https://a.ru/image/catalog/%D0%91%D0%BB%D0%BE%D0%B3/%D1%82%D0%B0%D0%BD%D0%B4%D0%B5%D0%BC2.jpg"
 check(pretty_url(IMG), "https://a.ru/image/catalog/Блог/тандем2.jpg", "показ: русские буквы")
 check(pretty_url("https://xn--80aswg.xn--p1ai/?q=%D0%BA%D0%BE%D1%82%20%D0%B3%D0%B0%D0%B7&a=%2F"),

@@ -1,5 +1,5 @@
 """Автотест: цена по клубной карте или по акции и «экономия» (seocrawler/shop.py discount,
-analyze/checks/buy.py _discount_checks). Пример с сайта пользователя (gasprofservice): «72 990 ₽», ниже «Цена с
+analyze/checks/buy.py _discount_checks). Пример с сайта пользователя (gasmasterservis): «72 990 ₽», ниже «Цена с
 картой клуба · 69 341 ₽ · экономия 3 649 ₽» - всё сходится. Ошибки: экономия не равна разнице, цена по карте выше
 обычной, отрицательная экономия, скидка 95%, у одного товара раздела 50% при 5% у остальных, цена по карте в разметке.
 Запуск: py -3 tests/проверить_цены_по_карте.py"""
@@ -27,7 +27,7 @@ FOOT = '<footer>© 2026 Магазин <a href="/club/">Клуб клиенто�
 
 
 def card(name, price, club_block="", sprice=None, old=None, related=True):
-    """Карточка как на gasprofservice: цена, под ней строка с ценой по карте."""
+    """Карточка как на gasmasterservis: цена, под ней строка с ценой по карте."""
     sp = price.replace(" ", "") if sprice is None else sprice
     oldp = f'<span class="price-old">{old} ₽</span>' if old else ""
     rel = ('<div class="related"><h3>Похожие товары</h3><div class="item"><div class="price">50 000 ₽</div>'
@@ -76,7 +76,7 @@ pages_html = {
     # старая цена и правильная экономия - не ошибка
     "https://s.ru/kotly/b/kiturami/": card("Котёл Kiturami 24", "9 000", '<div>Экономия 1 000 ₽</div>', old="10 000"),
 }
-# пример пользователя (gasprofservice, запчасти BAXI): на странице товара 16 132 ₽, зачёркнута 15 064 ₽, по карте
+# пример пользователя (gasmasterservis, запчасти BAXI): на странице товара 16 132 ₽, зачёркнута 15 064 ₽, по карте
 # 15 325 ₽ - по карте дороже зачёркнутой; в разделе каталога «Цена 15 064 Р. по карте клуба 15 325 Р.»
 pages_html["https://s.ru/zapchasti/to/luna3/"] = card("Теплообменник Baxi Luna-3", "16 132", club("15 325", "807"),
                                                           old="15 064", related=False)
@@ -129,5 +129,5 @@ check("—" not in texts and "рограмм" not in texts, "тексты: бе�
 if fails:
     print("✗ Цены по карте и экономия:\n   " + "\n   ".join(fails))
     sys.exit(1)
-print("✓ Цены по карте и экономия: пример с gasprofservice сходится; экономия не та, цена по карте выше, "
+print("✓ Цены по карте и экономия: пример с gasmasterservis сходится; экономия не та, цена по карте выше, "
       "отрицательная, 95%, скидка не как у раздела, цена по карте в разметке")

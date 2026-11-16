@@ -16,7 +16,7 @@ import zlib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
-B = "https://kotly.ru"
+B = "https://kotly-primer.ru"
 
 
 def child(folder):
@@ -52,7 +52,7 @@ def check(ok, what):
 
 
 # ---------- выдуманный магазин котлов в Москве: много равных по оценке запросов и уточнений
-F = os.path.join(TMP, "kotly.ru_2026-10-16_10-00-00")
+F = os.path.join(TMP, "kotly-primer.ru_2026-10-16_10-00-00")
 os.makedirs(F)
 st = Store(os.path.join(F, "crawl.db"))
 st.set_meta("start", B + "/")
@@ -109,7 +109,7 @@ if all(outs):
 
 # ---------- 2. бренды и серии из названий товаров: и с конкурентом по адресу, но не в быстром сборе
 MD.seeds = lambda folder: [{"t": "газовый котел baxi eco"}]
-main = {"host": "kotly.ru", "topic": [], "own": [], "models": None}
+main = {"host": "kotly-primer.ru", "topic": [], "own": [], "models": None}
 _n, _tm, _om, models = SEM._topic_phrases(main, {}, F, False, False)
 check(models == ["газовый котел baxi eco"], f"обычный сбор: бренды и серии из названий товаров не собраны: {models}")
 _n, _tm, _om, models = SEM._topic_phrases(main, {}, F, False, True)

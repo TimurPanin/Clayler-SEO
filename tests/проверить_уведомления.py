@@ -32,17 +32,17 @@ def check(ok, what):
 SECRET = "Kj8sd7FhQw2LmZx9Pq"
 with open(os.environ["CLAYLER_ACCOUNTS_FILE"], "w", encoding="utf-8") as f:
     json.dump({"direct": {"token": "plain:" + __import__("base64").b64encode(SECRET.encode()).decode(), "login": "timur"},
-               "yandex": {"account": "timur@yandex.ru", "sites": ["franmeb.ru"]}}, f)
+               "yandex": {"account": "timur@yandex.ru", "sites": ["mebel-primer.ru"]}}, f)
 for raw, bad in [(f"Директ ответил: неверный токен {SECRET}", SECRET),
                  ("https://x.ru/cb?access_token=y0_AgAAAAB1234567890abcdefGHIJKLmnop&state=1", "y0_AgAAAAB"),
                  ("Authorization: OAuth AQAAAABBbbCCcc1234567890", "AQAAAABB"),
                  ("бот 1234567890:AAEhBP0av18bKvXzQWERTYUIOPasdfghjkl12 не ответил", "AAEhBP0av"),
                  ("password=hunter22 и дальше", "hunter22")]:
     check(bad not in applog.scrub(raw), f"секрет остался в журнале: {raw[:40]}")
-for keep in ["https://gasprofservice.ru/kupit-gazovyy-kotel-v-moskve-nedorogo-2024/", "Ключ Директа сохранён",
-             "timur@yandex.ru", "franmeb.ru"]:
+for keep in ["https://gasmasterservis.ru/kupit-gazovyy-kotel-v-moskve-nedorogo-2024/", "Ключ Директа сохранён",
+             "timur@yandex.ru", "mebel-primer.ru"]:
     check(applog.scrub(keep) == keep, f"обычный текст испорчен: {keep}")
-applog.write("action", f"Нажата кнопка «Сохранить ключ» token={SECRET}", "franmeb.ru")
+applog.write("action", f"Нажата кнопка «Сохранить ключ» token={SECRET}", "mebel-primer.ru")
 with open(applog.path(), encoding="utf-8") as f:
     check(SECRET not in f.read(), "токен попал в файл журнала")
 
@@ -61,7 +61,7 @@ check(e["title"] == "Семантика для этой проверки ещё 
 
 # ---- уведомления о законченных задачах
 REP = os.path.join(TMP, "reports")
-folder = os.path.join(REP, "franmeb.ru_2026-10-16_10-00")
+folder = os.path.join(REP, "mebel-primer.ru_2026-10-16_10-00")
 os.makedirs(folder)
 
 
@@ -69,17 +69,17 @@ class FakeJob:
     from_queue, was_stopped, site_down, competitors_report, semantics_dir = False, False, "", "", ""
 
     def __init__(self, **kw):
-        self.started, self.lines, self.sites, self.site, self.out_dir = time.time() - 5, [], ["https://franmeb.ru/"], "", ""
+        self.started, self.lines, self.sites, self.site, self.out_dir = time.time() - 5, [], ["https://mebel-primer.ru/"], "", ""
         self.__dict__.update(kw)
 
 
 with open(os.path.join(folder, "отчёт.html"), "w", encoding="utf-8") as f:
     f.write("<html></html>")
 ev = events.job_finished(FakeJob(out_dir=folder), "check")
-check(ev and ev["kind"] == "ok" and ev["title"] == "Отчёт готов: franmeb.ru" and ev["link"].startswith("/r/"),
+check(ev and ev["kind"] == "ok" and ev["title"] == "Отчёт готов: mebel-primer.ru" and ev["link"].startswith("/r/"),
       f"нет «Отчёт готов»: {ev}")
 ev = events.job_finished(FakeJob(out_dir=folder), "rebuild")
-check(ev and ev["title"] == "Отчёт обновлён: franmeb.ru", f"нет «Отчёт обновлён»: {ev}")
+check(ev and ev["title"] == "Отчёт обновлён: mebel-primer.ru", f"нет «Отчёт обновлён»: {ev}")
 # сборку остановили из-за памяти, а отчёт.html уже свежий - не «Отчёт обновлён», а ошибка
 from seocrawler import memory  # noqa: E402
 ev = events.job_finished(FakeJob(out_dir=folder, lines=memory.build_stopped_text(900).strip().split("\n")), "rebuild")
@@ -90,7 +90,7 @@ check(ev and ev["kind"] == "warn" and "неполный" in ev["title"], f"не�
 with open(os.path.join(folder, "семантика.json"), "w", encoding="utf-8") as f:
     f.write("{}")
 ev = events.job_finished(FakeJob(semantics_dir=folder), "semantics")
-check(ev and ev["kind"] == "ok" and ev["title"] == "Семантика собрана: franmeb.ru" and ev["link"].startswith("/semantics?f="),
+check(ev and ev["kind"] == "ok" and ev["title"] == "Семантика собрана: mebel-primer.ru" and ev["link"].startswith("/semantics?f="),
       f"нет «Семантика собрана»: {ev}")
 ev = events.job_finished(FakeJob(sites=["https://nosuch.ru/"], lines=["Начинаю", "Ошибка: <urlopen error [Errno 11001] getaddrinfo failed>"]),
                          "check")

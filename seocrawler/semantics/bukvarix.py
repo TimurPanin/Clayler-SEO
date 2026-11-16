@@ -118,7 +118,7 @@ def parse_text(text):
 
 
 def from_name(name):
-    """«msk_gasprofservice.ru.csv» → («gasprofservice.ru», «msk»); не похоже - (None, None)."""
+    """«msk_gasmasterservis.ru.csv» → («gasmasterservis.ru», «msk»); не похоже - (None, None)."""
     b = re.sub(r"\.(csv|tsv|txt)$", "", os.path.basename(name or "").lower())
     b = re.sub(r"\s*\(\d+\)$", "", b)   # «… (1).csv» - второй раз скачанный файл
     m = re.match(r"([a-z]+)_(.+)$", b)
@@ -200,14 +200,14 @@ def listing(host):
 # ---------- разбор: по группам семантики
 
 def _brand(domain):
-    """Название из домена - звучанием латиницей: «gasprofservice». Части через дефис («termo-ufa») не берутся:
+    """Название из домена - звучанием латиницей: «gasmasterservis». Части через дефис («termo-ufa») не берутся:
     это обычные слова («термо»), запросы с ними - не про конкурента."""
     label = domain.split(".")[0].replace("-", "")
     return {sound(label)} if len(label) > 3 else set()
 
 
 def _has(toks, names):
-    """Есть ли в запросе название: по звучанию с допуском («газпрофсервис» ~ «gasprofservice», «гигаз» ~ «gigas»)."""
+    """Есть ли в запросе название: по звучанию с допуском («газмастерсервис» ~ «gasmasterservis», «вигаз» ~ «vigas»)."""
     from difflib import SequenceMatcher
     for t in toks:
         if len(t) < 4:

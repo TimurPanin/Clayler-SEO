@@ -282,7 +282,7 @@ def enrich(data, folder):
         if r:
             g["real"] = r
         # запрос из одного слова не входит в спрос группы из нескольких слов - как плашки частотности (direct.progress):
-        # «консультация» (3 028, про врачей) давала «Консультации по стратегии роста» 3 365 (hightime.agency)
+        # «консультация» (3 028, про врачей) давала «Консультации по стратегии роста» 3 365 (primerline.agency)
         multi = len(g["name"].split()) > 1
         f = sum((r[11] if len(r) > 11 else 0) or 0 for r in g.get("q") or []
                 if not r[7] and not (multi and len(r[0].split()) == 1))

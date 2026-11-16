@@ -397,7 +397,7 @@ def history_view():
 
 def _crash_line(lines):
     """Последняя строка трассировки Python («KeyError: 'x'») — сама ошибка. Раньше в причину попадала первая
-    строка «Traceback (most recent call last):», и по breez.ru (08.10, упал за 6 с) понять ничего было нельзя."""
+    строка «Traceback (most recent call last):», и по klimat-primer (08.10, упал за 6 с) понять ничего было нельзя."""
     lines = list(lines)
     at = max((i for i, ln in enumerate(lines) if ln.startswith("Traceback")), default=-1)
     if at < 0:
@@ -450,7 +450,7 @@ def _outcome(job):
         st, err = first
         why = f"сайт ответил кодом {st}" if st and st >= 400 else (f"ошибка: {err[:120]}" if err else "")
         if err and err.startswith("Соединение сброшено") and robots_ok:
-            # kamnevedy.ru 09.10: robots.txt открылся, главная - сброс за 0,13 с, через сутки открывается
+            # kamen-primer.ru 09.10: robots.txt открылся, главная - сброс за 0,13 с, через сутки открывается
             why = ("robots.txt открылся, а главную сайт не отдал - соединение сброшено даже через минуту. "
                    "Похоже на защиту сайта от частых запросов или на блокировку адреса VPN, попробуйте позже")
         from .access_check import short

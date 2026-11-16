@@ -43,7 +43,7 @@ function urlish(s){return /^(https?:|tg:|whatsapp:|viber:|mailto:|tel:|\/\/|\/)/
 var ATTR=['href','src','data-src','data-lazy-src','data-original','action','poster'];
 function byUrl(s){
   // проблема про картинку (img_…): только картинки - иначе адрес «картинки» https://site.ru/ (пустой src) обводил
-  // логотип и «Главная» в крошках (thehome.ru 01.11.2026)
+  // логотип и «Главная» в крошках (dom-primer.ru 01.11.2026)
   var want=abs(s), out=[], sel=/^img_/.test(KEY||'')?'img,source,picture':'a,img,source,iframe,video,audio,form,picture,link,script';
   document.querySelectorAll(sel).forEach(function(el){
     if(el.closest('#clayler-show'))return;   // своя плашка («Открыть настоящую страницу» ведёт на тот же адрес)
@@ -96,7 +96,7 @@ function reveal(el){  // спрятанное стилем (взлом пряч�
   return hid;
 }
 // Рамка там, где элемент ВИДНО (05.11.2026): раньше обводили сам элемент (outline), а у ссылки-обёртки вокруг
-// карточки товара (<a> строчная, внутри блоки) своя рамка нулевой высоты - «обведено: 1», а рамки нет (thehome.ru,
+// карточки товара (<a> строчная, внутри блоки) своя рамка нулевой высоты - «обведено: 1», а рамки нет (dom-primer.ru,
 // битая ссылка на странице каталога). Теперь - по содержимому: текст по самим словам, обёртка - по тому, что внутри,
 // картинка и поле - по себе. Рамка - отдельный слой поверх страницы и переставляется сама при изменении ширины
 // окна и разметки (иначе съезжала, когда окно сужали или открывали инструменты разработчика)
@@ -221,7 +221,7 @@ function subsFor(){
   return out;
 }
 // Формы (согласие на обработку данных): нужная форма - по её названию из строки отчёта («Оставить заявку») или та,
-// где просят телефон или почту; поиск по сайту не обводим (thehome.ru 01.11.2026 обвело два поля поиска)
+// где просят телефон или почту; поиск по сайту не обводим (dom-primer.ru 01.11.2026 обвело два поля поиска)
 function pickForms(){
   var names=F.map(function(s){return norm(s.replace(/[«»"]/g,''))}).filter(function(s){return s.length>=4&&!/^(на странице|в виджете)/.test(s)});
   var all=[].filter.call(document.querySelectorAll('form'),function(f){return !f.closest('#clayler-show')});
@@ -551,7 +551,7 @@ def code_lines(doc, key):
                      f"<body>: всё, что ниже (canonical, meta robots, стили), уже не в <head>", "lines": lines}
 
 
-_SUGGEST = {}   # путь к заголовки.csv → (время изменения, {адрес: строка}); у thehome.ru 57 тыс. строк - читаем один раз
+_SUGGEST = {}   # путь к заголовки.csv → (время изменения, {адрес: строка}); у dom-primer.ru 57 тыс. строк - читаем один раз
 
 
 def suggest_row(url):

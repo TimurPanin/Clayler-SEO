@@ -18,7 +18,7 @@ def says_none(text: str) -> bool:
 
 def is_html_page(text: str) -> bool:
     """Вместо файла (robots.txt, sitemap) пришла обычная страница: код 200 ещё не значит, что это тот файл
-    (nabiullin.com: на любой адрес - главная, и её HTML попал в готовый robots.txt для разработчика)."""
+    (sait-primer.com: на любой адрес - главная, и её HTML попал в готовый robots.txt для разработчика)."""
     head = (text or "").lstrip("﻿ \r\n\t")[:300].lower()
     return head.startswith(("<!doctype", "<html", "<head", "<body")) or "<html" in head
 

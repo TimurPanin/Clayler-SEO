@@ -26,7 +26,7 @@ def row(q, score=5):
 
 
 def heat():
-    return {"host": "www.teplo-dom.ru", "groups": [
+    return {"host": "www.teplo-sad.ru", "groups": [
         {"name": "Бойлеры косвенного нагрева", "q": [row("бойлер косвенного нагрева", 20), row("бойлер косвенного нагрева купить"),
                                                      row("бойлер косвенного нагрева 100 литров")]},
         {"name": "Водонагреватели", "q": [row("водонагреватель косвенного нагрева", 8), row("водонагреватели электрические"),
@@ -82,7 +82,7 @@ d = heat()
 pairs = {(p["a"], p["b"]) for p in S.suggest(d)}
 check(("наладка", "ремонт") not in pairs and ("ремонт", "наладка") not in pairs,
       f"без доказательства (одно место в запросе) пара не предлагается: {pairs}")
-tc = {"host": "teplo-dom.ru", "groups": [{"name": "Термопары", "q": [row(q) for q in (
+tc = {"host": "teplo-sad.ru", "groups": [{"name": "Термопары", "q": [row(q) for q in (
     "термопара ха купить", "термопара ха цена", "термопара хромель алюмель купить", "термопара хромель алюмель цена",
     "ру уфа купить", "рено уфа купить", "ру уфа цена", "рено уфа цена")]}]}
 pairs = {(p["a"], p["b"], p["why"]) for p in S.suggest(tc)}
@@ -99,12 +99,12 @@ check(not any("радиатор" in l and "батарея =" in l.replace("ба�
 with open(os.environ["CLAYLER_DICT_FILE"], encoding="utf-8") as f:
     st = json.load(f)
 check("батарея|радиатор" in st["no"]["heat"], "«нет» запомнено")
-check(D.meta(st, "heat", "syn", next(l for l in lines if "наладка" in l))["src"] == "пара с сайта teplo-dom.ru", "откуда пара")
-D.set_site("teplo-dom.ru", "tech")
+check(D.meta(st, "heat", "syn", next(l for l in lines if "наладка" in l))["src"] == "пара с сайта teplo-sad.ru", "откуда пара")
+D.set_site("teplo-sad.ru", "tech")
 check(S.niche_of(heat()) == ("tech", True), "ниша, выбранная вручную (без www)")
-D.set_site("teplo-dom.ru", "car")
+D.set_site("teplo-sad.ru", "car")
 check(S.niche_of(heat()) == ("car", True), "другая ниша вручную")
-D.set_site("teplo-dom.ru", None)
+D.set_site("teplo-sad.ru", None)
 check(S.niche_of(heat()) == ("heat", False), "снова сама по запросам")
 check(S.tidy(["циркуляционный насос", "циркуляционник"]) == "циркуляционник = циркуляционный насос", "первым - одно слово")
 v = S.view(S.apply(heat()))
@@ -122,16 +122,16 @@ D.add("common", "syn", "дешевый = бюджетный")
 D.add(boil, "syn", "котел = котлоагрегат")
 D.add(boil, "junk", "майнкрафт")
 D.add("heat", "brand", "Navien = навиен")
-D.set_site("teplo-dom.ru", boil)
+D.set_site("teplo-sad.ru", boil)
 ls = D.lines(heat())
 check("котел = котлоагрегат" in ls and any("водонагреватель = бойлер" in x for x in ls) and "дешевый = бюджетный" in ls,
       "подтема видит свои, ниши и «Общего»")
-D.set_site("teplo-dom.ru", water)
+D.set_site("teplo-sad.ru", water)
 ls = D.lines(heat())
 check("котел = котлоагрегат" not in ls and any("водонагреватель = бойлер" in x for x in ls), "соседняя подтема не видит чужие")
-check(D.junk_for("teplo-dom.ru") == [], "мусорные слова соседней подтемы не действуют")
-D.set_site("teplo-dom.ru", boil)
-check(D.junk_for("teplo-dom.ru") == ["майнкрафт"], f"мусорные слова темы: {D.junk_for('teplo-dom.ru')}")
+check(D.junk_for("teplo-sad.ru") == [], "мусорные слова соседней подтемы не действуют")
+D.set_site("teplo-sad.ru", boil)
+check(D.junk_for("teplo-sad.ru") == ["майнкрафт"], f"мусорные слова темы: {D.junk_for('teplo-sad.ru')}")
 check(D.lines(heat(), ("brand",), root=False) == ["Navien = навиен"], "бренды ниши")
 check("дешевый = бюджетный" in DI.load()["synonyms"], "«Общий» - прежний словарь синонимов")
 D.add(boil, "syn", "котел = котлы отопления")

@@ -201,7 +201,7 @@ def job_finished(job, what):
         return error(_last_error(job.lines), host, "Семантика не собралась")
     if what == "masks":
         # итог - по строке «маски готовы: …» (semantics/masks.py): раньше у задачи не было папки, и готовые маски
-        # показывались красным «Маски не предложились: маски готовы: 18…» (gruzoperevozka23.ru)
+        # показывались красным «Маски не предложились: маски готовы: 18…» (gruzy-primer.ru)
         done = next((ln.strip() for ln in reversed(job.lines) if ln.strip().startswith("маски готовы:")), "")
         if done or (folder and os.path.isdir(folder)):
             return push("warn", f"Маски семантики готовы: {host}",

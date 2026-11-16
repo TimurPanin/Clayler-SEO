@@ -155,7 +155,7 @@ def seeds(folder):
     out += [(f"{b} {s}", "бренд + серия", n, ex) for b, s, n, ex in p["series"][:MAX_SERIES]]
     seen, res = set(), []
     for ph, src, n, ex in out:
-        # «носителем. средний» - кусок из двух предложений названия (курсы talisman), а не бренд и серия
+        # «носителем. средний» - кусок из двух предложений названия (курсы gazovik), а не бренд и серия
         if re.search(r"[.,;:!?]\s", ph):
             continue
         if ph not in seen:

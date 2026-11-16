@@ -87,7 +87,7 @@ def keys(tok):
             if len(t) >= 4:
                 out.add("~" + sound(st))
                 out.add("~" + sound(t))
-            elif len(t) == 3:   # «сео» = «seo», «смм» = «smm» (hightime.agency): буква в букву латиницей,
+            elif len(t) == 3:   # «сео» = «seo», «смм» = «smm» (primerline.agency): буква в букву латиницей,
                 # а не по звучанию - звучание склеивало «час» и «касса», «суд» и «зуд»
                 out.add("".join(TRANSLIT.get(c, c) for c in t))
         else:
@@ -126,7 +126,7 @@ def core(q, drop=frozenset()):
 def _canon(k):
     plain = [x for x in k if not x.startswith("~")]
     # есть латинская форма - она: «seo» и «сео» (keys: «seo» буква в букву) - одна группа, а не «Seo продвижение
-    # сайтов» и «Сео продвижения сайтов» рядом (hightime.agency)
+    # сайтов» и «Сео продвижения сайтов» рядом (primerline.agency)
     lat = [x for x in plain if re.fullmatch(r"[a-z0-9\-]+", x)]
     if lat:
         return min(lat, key=lambda x: (len(x), x))
@@ -460,7 +460,7 @@ def _suggest_tasks(main, seeds, niche, topic_masks, models, city_word, new, deep
         if city_word and (new or main["host"] in e["sites"]):
             tasks.append(("yandex", ph + " " + city_word))
         # «шкафы-купе на заказ» (так названо на сайте) - подсказки и без «на заказ»: иначе общий спрос «шкаф купе»
-        # не собирается вовсе (lk-fabrika)
+        # не собирается вовсе (fabrika-primer)
         if main["host"] in e["sites"] and ph.endswith(" на заказ") and e["lv"] <= 2 and len(ph.split()) >= 3:
             tasks += [("yandex", ph[:-len(" на заказ")]), ("google", ph[:-len(" на заказ")])]
         if deep and main["host"] in e["sites"] and e["lv"] <= 2:   # подразделы и карточки - без «+ буква»
@@ -712,7 +712,7 @@ def _assign_queries(Q, glist, other, city_stems, cities, my_city, own, vocab, to
                 if g["phrases"] & r["seeds"]:
                     hit = sum(1 for k in g["core"] if any(k & x for x in qc))
                     # совпасть должно не только общее слово: «мебель на заказ» из подсказок к «шкафы-купе на заказ»
-                    # совпадала одним «заказ» и уводила 130 общих запросов в шкафы-купе (lk-fabrika)
+                    # совпадала одним «заказ» и уводила 130 общих запросов в шкафы-купе (fabrika-primer)
                     real = sum(1 for k in g["core"] if not k & SHARED_STEMS and any(k & x for x in qc))
                     if hit * 2 >= len(g["core"]) and real:
                         best = g
@@ -726,15 +726,15 @@ def _assign_queries(Q, glist, other, city_stems, cities, my_city, own, vocab, to
             r["intent"] = "Покупка"
         r["intent"] = refine_intent(q, r["intent"], own)
         # «под ключ» - обычное коммерческое уточнение, а не слово «про другое» («seo продвижение сайтов под ключ» у
-        # hightime.agency уходило в «Без группы»: слова «ключ» нет на сайте)
+        # primerline.agency уходило в «Без группы»: слова «ключ» нет на сайте)
         turnkey = "ключ" if re.search(r"(?<![а-я])под ключ(?![а-я])", q) else None
         extra = [t for t in r["extra"].split() if not re.search(r"\d", t) and not INFO_RX.search(t)
                  and t not in NEUTRAL and t != turnkey]
         # «про нас» человека («топ», «раскрутка») - не «возможно, про другое»: раньше слово спасало запрос только от
-        # «Отсеяно», а пометка оставалась, и запрос лежал в «Без группы» (hightime.agency)
+        # «Отсеяно», а пометка оставалась, и запрос лежал в «Без группы» (primerline.agency)
         odd = [t for t in extra if not keys(t) & known]
         # слова нет ни в тексте страниц сайтов, ни в заголовках: запрос про другое - в отсеянное (
-        # gasprof: «группа безопасности для самогонного аппарата»); настоящие запросы из Вебмастера и Search
+        # gasmaster: «группа безопасности для самогонного аппарата»); настоящие запросы из Вебмастера и Search
         # Console и запросы с показами из файлов не трогаем
         # латиница (марки и модели: «royal thermo insignia») - только пометка: это может быть марка, которой нет на сайте
         # маленький сайт (мало текста) - только пометка: там и обычных слов («женские») может не быть
@@ -762,7 +762,7 @@ def _assign_queries(Q, glist, other, city_stems, cities, my_city, own, vocab, to
 def _reextra(Q, qs, gcore, city_stems):
     """Уточнение запроса - относительно его новой группы, а не «Без группы», где оно было почти всем запросом:
     иначе «продвижение» в группе «Seo продвижение сайтов» считалось уточнением, и в дереве сайта у каждой новой
-    группы был фильтр-двойник «/seo-prodvizhenie-saytov/prodvizhenie/» (hightime.agency)."""
+    группы был фильтр-двойник «/seo-prodvizhenie-saytov/prodvizhenie/» (primerline.agency)."""
     gw = set().union(*gcore) if gcore else set()
     for q in qs:
         Q[q]["extra"] = " ".join(x for x in tokens(q) if not keys(x) & (gw | MODIFIER_STEMS | city_stems) and len(x) > 1)
@@ -809,7 +809,7 @@ def _niche_groups(Q, glist, other, niche, topic_masks, own_masks, main, new, cit
             _reextra(Q, qs, gcore, city_stems)
             other["queries"] = [q for q in other["queries"] if q not in set(qs)]
         # чистые запросы «тема + одно слово» без своей группы - в группу главной, а не в «Без группы»: там лежали
-        # «продвижение сайтов услуги», «… агентство», «… за результат» (hightime.agency). Запросы с
+        # «продвижение сайтов услуги», «… агентство», «… за результат» (primerline.agency). Запросы с
         # пометкой «возможно, про другое» сюда не попадают (в buckets их нет)
         for t, qs in fold.items():
             hg = next((g for g in glist if g["main"] == [home] and g["name"].lower() == t), None)
@@ -847,9 +847,9 @@ def _with_pages(glist, main, main_pages, Q, city_stems, dropped):
         g["score"] = sum(sorted((Q[q]["score"] for q in g["queries"] if not Q[q]["check"]), reverse=True)[:10])
     glist = [g for g in glist if g["queries"]]
     # своя страница не из меню, которую никто не ищет: в группе одна фраза - её же название, подсказок нет (карточки
-    # «Кантри-кухня в шалфейно-зелёном» у lk-fabrika - 93 такие группы из 216) - не группа
+    # «Кантри-кухня в шалфейно-зелёном» у fabrika-primer - 93 такие группы из 216) - не группа
     # пункт меню, по которому ищут только его название («seo-продвижение сайтов в германии»): страница есть, группа
-    # остаётся, но «Продвигать эту страницу» - неправда, спроса не видно (hightime.agency)
+    # остаётся, но «Продвигать эту страницу» - неправда, спроса не видно (primerline.agency)
     for g in glist:
         if g["main"] and g.get("level", 9) < 2 and len(g["queries"]) == 1 and Q[g["queries"][0]]["src"] <= {"раздел сайта"}:
             g["no_demand"] = True

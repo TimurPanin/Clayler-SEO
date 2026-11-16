@@ -24,7 +24,7 @@ SPAM = [
 SPAM_RX = [(name, re.compile(rx, re.I)) for name, rx in SPAM]
 OWN_TOPIC_SHARE = 0.03    # слово есть в title или H1 у такой доли страниц сайта - это тема сайта, а не взлом
 # Служебные ссылки виджетов карт («API», «Условия»): их вставляет сам виджет, и они бывают скрыты
-# (nabiullin.com: tech.yandex.ru/maps - 13 строк «так выглядит взлом»). Не про конкретный сайт, а про
+# (sait-primer.com: tech.yandex.ru/maps - 13 строк «так выглядит взлом»). Не про конкретный сайт, а про
 # сервисы.
 MAP_WIDGET = re.compile(r"https?://(?:[\w-]+\.)*"
                         r"(?:yandex\.[a-z]+/(?:legal/)?maps\w*|google\.[a-z.]+/maps|2gis\.[a-z]+)(?:[/?#]|$)", re.I)
@@ -36,7 +36,7 @@ def _what(text):
 
 def _own_url_rx(start):
     """Адрес самого проверяемого сайта внутри чужой ссылки (кнопки «Поделиться»: vk.com/share.php?url=<страница
-    сайта>, connect.ok.ru/offer?url=…, t.me/share?url=…). Его слова - не про чужой сайт: на thehome.ru
+    сайта>, connect.ok.ru/offer?url=…, t.me/share?url=…). Его слова - не про чужой сайт: на dom-primer.ru
     товар «Штора Ridder Sex on the Beach» дал ложные «ссылки на сайты для взрослых» в кнопках «Поделиться»."""
     host = U.host_of(start or "")
     host = host[4:] if host.startswith("www.") else host

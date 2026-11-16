@@ -48,7 +48,7 @@ PAGES = {
     "/": ALT("/", [("ru", "/"), ("en", "/en/"), ("de", "/de/"), ("ua", "/ua/"), ("fr", f"http://localhost:{PORT}/fr/")])
          + '<a href="/cat/">Каталог</a><a href="/filter/red/">Фильтр</a><a href="/cat/?sort=price">Сорт</a>'
          '<a href="/promo/">Акция</a>',
-    "/fr/": ALT("/fr/", [("fr", "/fr/")]),   # другой домен, открывается: не «сломана» (oidbearing.ru)
+    "/fr/": ALT("/fr/", [("fr", "/fr/")]),   # другой домен, открывается: не «сломана» (podshipnik-primer.ru)
     "/promo/": '<link rel="canonical" href="/">' + ALT("/promo/", [("ru", "/")]),   # склеена canonical: не проверяем
     "/en/": ALT("/en/", [("en", "/en/"), ("ru", "/")]),           # взаимно
     "/de/": ALT("/de/", [("de", "/de/")]),                        # нет обратной на /

@@ -136,7 +136,7 @@ dd = {"site": S, "groups": [{"name": "Консультация по страте
 plan.enrich(dd, "")
 check([g.get("freq") for g in dd["groups"]] == [5, 700], f"спрос группы: {[g.get('freq') for g in dd['groups']]}")
 
-# слова вопроса - не тема страницы: «Технический аудит: такое. Цены…» (hightime.agency)
+# слова вопроса - не тема страницы: «Технический аудит: такое. Цены…» (primerline.agency)
 from seocrawler.semantics import pages as PG, keys as _keys  # noqa: E402
 Qh = {q: {"check": "", "extra": x, "score": 5} for q, x in (
     ("что такое технический аудит", "что такое"), ("технический аудит это", "это"),
@@ -154,7 +154,7 @@ check(PG.nice_name({"name": "Продвижение сайтов топ", "queri
       f"H1 новой страницы: {PG.nice_name({'name': 'x', 'queries': list(Qn)}, Qn)}")
 check(PG.proper("seo продвижение в яндексе в уфе", {"уфе"}) == "SEO продвижение в Яндексе в Уфе",
       f"большие буквы: {PG.proper('seo продвижение в яндексе в уфе', {'уфе'})}")
-check(PG._brand_spelling("hightime", {"u": ("u", "Агентство HighTime", "HighTime.agency")}) == "HighTime",
+check(PG._brand_spelling("primerline", {"u": ("u", "Агентство PrimerLine", "PrimerLine.agency")}) == "PrimerLine",
       "название компании - как на сайте")
 from seocrawler.semantics import brands as BR  # noqa: E402
 check({"seo", "serm", "programmatic", "ppc"} <= BR.LAT_STOP, "отраслевые сокращения - не бренды")

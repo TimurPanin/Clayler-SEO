@@ -484,7 +484,7 @@ class Job:
             report=own["report"] if own["state"] != "run" else "", rebuild=False, kind="crawl", result="", semantics="",
             runs=[{k: r.get(k) for k in keep} for r in runs],
             # плитки ваших цифр - из строки прогресса вашего сайта: в общем журнале после вашего сайта пишут
-            # конкуренты, и окно показывало их картинки, ссылки и очередь как ваши (woodhousedog.kz 16.10)
+            # конкуренты, и окно показывало их картинки, ссылки и очередь как ваши (budka-primer.kz 16.10)
             prog_line=self.subs[0].prog_line(), own_done=own["state"] != "run")
         return out
 
@@ -566,7 +566,7 @@ class Job:
             unit = "pages"
         if not running and site_pages and prog:
             # итог проверки, а не последняя строка обхода: она пишется раз в несколько секунд, последние страницы
-            # (и страницы после обхода) в неё не попадают - vsekuhni.ru: в окне 2 061, в отчёте 2 064
+            # (и страницы после обхода) в неё не попадают - kuhni-primer.ru: в окне 2 061, в отчёте 2 064
             prog = [site_pages[0][1], prog[1]]
         return {"running": running, "unit": unit, "result": result, "site": site, "log": lines[-60:], "step": step, "progress": prog,
                 "elapsed": round((self.finished or time.time()) - self.started) if self.started else 0,

@@ -22,7 +22,7 @@ def row(q, score, shows=0, check_="", freq=0, place=0):
     return [q, "", "Общий", score, 3, 0, shows, check_, place, "", 0, freq, 0, 0]
 
 
-data = {"host": "teplo-dom.ru", "city": None, "total": 9, "groups": [
+data = {"host": "teplo-sad.ru", "city": None, "total": 9, "groups": [
     {"name": "Газовые котлы", "q": [row("газовые котлы", 20, shows=10, place=7.5), row("газовый котёл", 15),
                                      row("котел газовый", 12, shows=5, place=4.2), row("газовые котлы купить", 9),
                                      row("онлайн-котлы", 3)]},
