@@ -5,6 +5,15 @@ from urllib.parse import urlsplit, unquote
 
 
 CLOSED_LIKE = "Закрыт в robots%"   # urls.skip_reason адреса, закрытого в robots.txt (условие LIKE)
+# «none» в meta robots и X-Robots-Tag - это «noindex, nofollow». Но «max-image-preview:none» (и с пробелом после
+# двоеточия) - только про вид сниппета: страница с ним открыта для поиска. Такие пары «max-…: значение» убираем
+_MAX_RX = re.compile(r"max-[a-z-]+\s*:\s*[^\s,;]*", re.I)
+_NONE_RX = re.compile(r"\bnone\b", re.I)
+
+
+def says_none(text: str) -> bool:
+    """В правилах для роботов (meta robots, X-Robots-Tag) есть «none» как запрет, а не значение max-image-preview."""
+    return bool(_NONE_RX.search(_MAX_RX.sub(" ", text or "")))
 
 
 def is_html_page(text: str) -> bool:
@@ -37,7 +46,9 @@ class Robots:
         groups = []  # [(agents, rules, delay)]
         cur_agents, cur_rules, cur_delay = [], [], None
         last_was_agent = False
-        for line in text.splitlines():
+        # BOM (невидимый знак в начале файла из Блокнота): без этого первая строка «User-agent» не узнавалась,
+        # и все запреты файла терялись
+        for line in text.lstrip("\ufeff").splitlines():
             line = line.split("#", 1)[0].strip()
             if ":" not in line:
                 continue
@@ -100,10 +111,13 @@ class Robots:
     def allowed(self, url: str):
         """Возвращает (разрешено, правило_которое_сработало)."""
         p = urlsplit(url)
-        path = unquote(p.path or "/") + (("?" + p.query) if p.query else "")
+        # правило сравнивается с путём вместе с параметрами (как у Google и Яндекса): «Disallow: /catalog/$» не
+        # закрывает «/catalog/?page=2». Два вида пути: с русскими буквами и как в адресе (%D0%BA…)
+        query = ("?" + p.query) if p.query else ""
+        path, raw = unquote(p.path or "/") + query, (p.path or "/") + query
         best = None  # (длина, allow, pat)
         for allow, pat, rx in self.rules:
-            if rx.match(path) or rx.match(p.path or "/"):
+            if rx.match(path) or rx.match(raw):
                 key = (len(pat), allow)
                 if best is None or key > (best[0], best[1]):
                     best = (len(pat), allow, pat)

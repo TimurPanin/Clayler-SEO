@@ -29,6 +29,7 @@ BIG_JPG = b"\xff\xd8\xff" + b"0" * (3500 * 1024)
 OG_PNG = (b"\x89PNG\r\n\x1a\n" + (13).to_bytes(4, "big") + b"IHDR" + (100).to_bytes(4, "big") + (100).to_bytes(4, "big")
           + b"\x08\x02\x00\x00\x00" + b"\x00" * 4 + b"0" * 200)
 YM = '<script>ym(11111111, "init", {});</script>'
+LANG_RU = ' lang="ru"'
 
 
 def page(title, body="", head="", desc=DESC, h1=None, lang=True):
@@ -36,7 +37,7 @@ def page(title, body="", head="", desc=DESC, h1=None, lang=True):
     d = f'<meta name="description" content="{desc}">' if desc is not None else ""
     head += '<script src="/app.js"></script>'
     h = h1 if h1 is not None else f"<h1>{title or 'Страница'}</h1>"
-    return (f'<!doctype html><html{" lang=\"ru\"" if lang else ""}><head><meta charset="utf-8">{t}{d}{head}</head>'
+    return (f'<!doctype html><html{LANG_RU if lang else ""}><head><meta charset="utf-8">{t}{d}{head}</head>'
             f'<body>{h}{NAV}{body}<p>{TEXT}</p> <a href="tel:+73472000000">+7 (347) 200-00-00</a>{YM}</body></html>')
 
 

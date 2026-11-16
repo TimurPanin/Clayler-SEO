@@ -304,7 +304,8 @@ def run(mode):
             errors += check_js(path, text)
         if is_code(path):
             errors += check_dash(path, added) + check_file_size(path, text, old)
-    if mode == "commit":
+    # записи решений и обзор ведутся только в рабочей копии автора: в открытой копии на GitHub папки notes/ нет
+    if mode == "commit" and os.path.isdir(os.path.join(ROOT, "notes")):
         errors += check_records(paths) + check_essence(paths) + check_map(paths)
     return errors
 

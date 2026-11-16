@@ -14,6 +14,14 @@ if not defined PY (
   pause
   exit /b
 )
+%PY% -c "import sys; sys.exit(sys.version_info < (3, 10))" >nul 2>nul
+if errorlevel 1 (
+  echo Нужен Python 3.10 или новее, а установлен:
+  %PY% --version
+  echo Скачайте свежий с https://www.python.org/downloads/ и запустите этот файл снова.
+  pause
+  exit /b
+)
 
 rem Модули: truststore - проверка HTTPS-сертификатов как в браузере, openpyxl - отчёт в Excel. Ставятся один раз.
 %PY% -c "import truststore, openpyxl" >nul 2>nul

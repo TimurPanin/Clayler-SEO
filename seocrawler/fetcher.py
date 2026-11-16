@@ -139,10 +139,13 @@ class Fetcher:
         self._local = threading.local()   # у каждого потока свои открытые соединения
         self._bypass = {}
 
-    def fetch(self, url: str, read_body: bool = True, any_type: bool = False, peek: int = 0) -> Response:
+    def fetch(self, url: str, read_body: bool = True, any_type: bool = False, peek: int = 0,
+              max_bytes: int = 0) -> Response:
         """read_body — читать тело HTML; any_type — читать тело любого типа (robots.txt, sitemap);
         peek — для картинок, стилей, скриптов: сколько первых байт прочитать (по ним узнаём размеры картинки).
-        Если сервер не сообщил размер файла, файл докачивается целиком, чтобы узнать вес."""
+        Если сервер не сообщил размер файла, файл докачивается целиком, чтобы узнать вес.
+        max_bytes - свой предел размера тела для этого запроса (sitemap), 0 - общий (self.max_bytes)."""
+        limit = max_bytes or self.max_bytes
         headers = {
             "User-Agent": self.user_agent,
             "Accept": "text/html,application/xhtml+xml,*/*;q=0.8",
@@ -183,9 +186,9 @@ class Fetcher:
             full = False   # тело читаем целиком - битое сжатие тогда видно, а не тихая пустая страница
             if want and 200 <= res.status < 300 or (want and res.status >= 400):
                 full = True
-                data, late = _read(raw, self.max_bytes + 1, deadline)
-                if len(data) > self.max_bytes:
-                    data, res.truncated = data[: self.max_bytes], True
+                data, late = _read(raw, limit + 1, deadline)
+                if len(data) > limit:
+                    data, res.truncated = data[:limit], True
                 if late:
                     # медленный сервер: не ждём бесконечно, адрес попадёт в отчёт как «не ответил»
                     res.error = f"Загрузка дольше {self.total_timeout:.0f} с - прервана"

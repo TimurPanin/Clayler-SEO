@@ -1,9 +1,13 @@
 """Sitemap: чтение карт сайта и проверка адресов из них."""
-import gzip
 import xml.etree.ElementTree as ET
 from .. import urls as U
+from ..fetcher import _unpack
 from ..robots import sitemap_gone
 from .common import _n
+
+SITEMAP_URLS = 200_000   # больше адресов из sitemap не берём (память и время); если упёрлись - пишем в журнал
+SITEMAP_FILES = 500      # и не больше стольких файлов sitemap
+SITEMAP_MAX = 50_000_000   # по стандарту sitemap - до 50 МБ без сжатия; общий предел страницы (5 МБ) его обрезал
 
 
 class SitemapsMixin:
@@ -21,7 +25,7 @@ class SitemapsMixin:
         if not robots.sitemaps:
             self.log("   В robots.txt sitemap не указан, пробую " + todo[0])
         seen, found, gone = set(), [], 0   # gone - файлов, которых нет (404, 410)
-        while (todo or (spare and not found)) and len(found) < 200000 and len(seen) < 500:
+        while (todo or (spare and not found)) and len(found) < SITEMAP_URLS and len(seen) < SITEMAP_FILES:
             if not todo:
                 todo.append(spare.pop(0))
                 self.log("   Пробую " + todo[0])
@@ -30,22 +34,29 @@ class SitemapsMixin:
                 continue
             seen.add(sm)
             self.limiter.wait()
-            r = self.fetcher.fetch(sm, any_type=True)
+            r = self.fetcher.fetch(sm, any_type=True, max_bytes=SITEMAP_MAX)
             if r.error.startswith("SSL: ошибка сертификата"):
-                r = self.insecure.fetch(sm, any_type=True)
+                r = self.insecure.fetch(sm, any_type=True, max_bytes=SITEMAP_MAX)
             body = r.body
             if r.status != 200 or not body:
                 self.log(f"   {sm}: не открылся ({r.status or r.error})")
                 gone += sitemap_gone(r.status, b"")
                 continue
+            truncated = r.truncated
             if body[:2] == b"\x1f\x8b":
-                try:
-                    body = gzip.decompress(body)
-                except Exception:
+                # .xml.gz: распаковка с тем же пределом, что и у файла без сжатия (раньше без предела и молча)
+                body, problem = _unpack(body, "gzip", SITEMAP_MAX)
+                if problem == "broken":
+                    self.log(f"   {sm}: сжатый файл испорчен или оборван - прочитать не удалось")
                     continue
+                truncated = truncated or problem == "big"
             try:
                 root = ET.fromstring(body)
             except ET.ParseError:
+                if truncated:   # обрезанный файл - не «не XML»: так и говорим, а не «sitemap не найден»
+                    self.log(f"   {sm}: файл больше {SITEMAP_MAX // 1_000_000} МБ или загрузка оборвалась - "
+                             "прочитать не удалось, адреса из него в проверку не попали")
+                    continue
                 self.log(f"   {sm}: это не XML-файл, пропускаю")
                 gone += sitemap_gone(200, body)   # вместо файла обычная страница: файла нет
                 continue
@@ -55,6 +66,9 @@ class SitemapsMixin:
                 todo += locs
             else:
                 found += locs
+        if todo and (len(found) >= SITEMAP_URLS or len(seen) >= SITEMAP_FILES):   # раньше обрезалось молча
+            self.log(f"   В sitemap больше {_n(SITEMAP_URLS)} адресов или {SITEMAP_FILES} файлов: взята только "
+                     f"часть, остальные {len(todo)} файлов не прочитаны")
         rows = []
         for raw in found:
             n = U.normalize(raw)

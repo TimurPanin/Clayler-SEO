@@ -24,9 +24,14 @@ def is_tracking_param(name: str) -> bool:
     return n in TRACKING_PARAMS or n.startswith(TRACKING_PREFIXES)
 
 
+_KEEP_RX = re.compile(r"(%(?:25|2F|3F|23))", re.I)
+
+
 def _requote(part: str, safe: str) -> str:
-    # %D0%BA и «к» — одно и то же: раскодируем и кодируем обратно единообразно
-    return quote(unquote(part), safe=safe)
+    # %D0%BA и «к» — одно и то же: раскодируем и кодируем обратно единообразно. Кроме знаков, которые в раскрытом виде
+    # значат другое: %25 (сам «%»), %2F («/» внутри имени), %3F («?») и %23 («#») - «/skidka-100%25/» превращался
+    # в «/skidka-100%/», сервер отвечал 404, и в отчёт шла битая ссылка, которой на сайте нет
+    return "".join(p.upper() if i % 2 else quote(unquote(p), safe=safe) for i, p in enumerate(_KEEP_RX.split(part)))
 
 
 def is_relative(raw: str) -> bool:

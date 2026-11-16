@@ -1,4 +1,11 @@
 #!/bin/sh
 # Clayler SEO: проверка перед коммитом - tests/проверка_правки.py (правила: notes/КАК_ПИСАТЬ_КОД.md).
 # Обходить через --no-verify нельзя. Включается один раз: git config core.hooksPath .githooks
-exec py -3 "tests/проверка_правки.py" --коммит
+# Windows - «py -3», Mac и Linux - «python3», иначе «python»
+for PY in "py -3" python3 python; do
+  if $PY -c "" >/dev/null 2>&1; then
+    exec $PY "tests/проверка_правки.py" --коммит
+  fi
+done
+echo "Проверка перед коммитом: Python не найден" >&2
+exit 1

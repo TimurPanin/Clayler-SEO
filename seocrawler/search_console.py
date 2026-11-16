@@ -200,7 +200,7 @@ def report_html(g, esc):
         (f"{ok} из {len(g.get('inspect') or [])}" if g.get("inspect") else "-",
          "важных страниц в индексе Google (выборочная проверка)")))
     rows = "".join(f'<tr><td>{esc(q["q"])}</td><td>{num(q["shows"])}</td><td>{num(q["clicks"])}</td>'
-                   f'<td>{"-" if q.get("pos") is None else f"{q["pos"]:.1f}"}</td></tr>'
+                   f'<td>{"-" if q.get("pos") is None else format(q["pos"], ".1f")}</td></tr>'
                    for q in sorted(g.get("queries") or [], key=lambda q: -q["clicks"])[:50])
     table = (f'<div class="card"><h3>Популярные запросы в Google</h3><div class="tw" style="margin:0"><table><thead><tr>'
              f'<th>Запрос</th><th>Показы</th><th>Клики</th><th>Средняя позиция</th></tr></thead><tbody>{rows}'

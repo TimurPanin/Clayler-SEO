@@ -9,6 +9,7 @@ from .. import calltrack as CT
 from ..parser import parse_html
 from ..imgsize import image_info
 from ..fetcher import Response
+from ..robots import says_none
 from .common import retry_after
 
 STOPPED = "Проверка остановлена"   # ответ work() после «Стоп»: главный цикл его уже не ждёт
@@ -250,7 +251,7 @@ class PageMixin:
             row["after_break"] = ", ".join(rp.get("after_break") or [])
             bot = "yandex" if self.cfg.robots_for.startswith("yandex") else "googlebot"
             robots_meta = " ".join(c for n, c in p["robots"] if n in ("robots", bot))
-            nofollow_page = ("nofollow" in robots_meta or "none" in robots_meta) and not self.cfg.follow_nofollow
+            nofollow_page = ("nofollow" in robots_meta or says_none(robots_meta)) and not self.cfg.follow_nofollow
             # JavaScript-редирект: после выполнения скриптов браузер оказался на другом адресе
             if js_row.get("js_redirect"):
                 row["redirect_type"] = "JavaScript"
@@ -312,7 +313,7 @@ class PageMixin:
                 row["indexable"], row["indexability"] = None, ""
             elif not r.is_html:
                 row["indexable"], row["indexability"] = 1, "Не HTML"
-            elif "noindex" in robots_all or re.search(r"\bnone\b", robots_all) or \
+            elif "noindex" in robots_all or says_none(robots_all) or \
                     "noindex" in (js_row.get("raw_robots") or "").lower():
                 # noindex в исходном HTML Google видит до JavaScript и дальше страницу не рендерит
                 row["indexable"], row["indexability"] = 0, "noindex"

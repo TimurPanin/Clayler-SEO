@@ -60,11 +60,12 @@ def run(ctx):
     parts = _health_parts(issues, per_issue, site_level, base)
     # Сколько прибавит здоровье, если исправить только эту проблему: страницы, у которых она — единственная;
     # у проблемы всего сайта - её доля в штрафе
+    from collections import Counter
+    hits = Counter(u for us in per_issue.values() for u in us)   # у скольких проблем эта страница
     for iss in issues:
         if id(iss) in per_issue and base:
-            others = set().union(*(v for k, v in per_issue.items() if k != id(iss)))
-            only = per_issue[id(iss)] - others
-            iss.gain = round(100 * len(only) / len(base), 1)
+            only = sum(1 for u in per_issue[id(iss)] if hits[u] == 1)
+            iss.gain = round(100 * only / len(base), 1)
         if id(iss) in site_level:
             iss.gain = round((getattr(iss, "gain", 0) or 0) + min(site_level[id(iss)], penalty), 1)
 

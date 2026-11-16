@@ -303,7 +303,7 @@ def html_block(d, client=False):
         tr = "".join(f'<tr><td class="u">{esc(r["url"])}</td><td>{f(r.get("y_shows"))}</td><td>{f(r.get("y_clicks"))}</td>'
                      f'<td>{pos(r.get("y_pos"))}</td><td>{f(r.get("g_shows"))}</td><td>{f(r.get("g_clicks"))}</td>'
                      f'<td>{pos(r.get("g_pos"))}</td><td>{f(r.get("visits"))}</td>'
-                     f'<td>{"-" if r.get("bounce") is None else f"{r["bounce"]:.0f}%"}</td>'
+                     f'<td>{"-" if r.get("bounce") is None else format(r["bounce"], ".0f") + "%"}</td>'
                      f'<td>{esc("; ".join(r.get("facts") or [])) or "-"}</td></tr>' for r in rs)
         parts.append('<div class="card"><h3>Страницы из поиска</h3><p class="mut">Показы и клики в месяц: Яндекс '
                      '(Вебмастер, за 2 недели), Google (Search Console, за 28 дней); визиты и отказы из поиска - '

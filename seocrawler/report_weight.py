@@ -25,6 +25,15 @@ def _pct(x):
     return f"{x:g}".replace(".", ",") + "%"
 
 
+def _times(x, num, plural):
+    """«в 12 раз», «в 2,5 раза» или «-», если страница сильнее средней меньше чем в полтора раза."""
+    if x < 1.5:
+        return "-"
+    if x >= 10:
+        return f"в {num(round(x))} {plural(round(x), 'раз', 'раза', 'раз')}"
+    return "в " + str(x).replace(".", ",") + " раза"
+
+
 def templates_html(summary):
     t = summary.get("templates")
     if not t or not t.get("templates"):
@@ -79,8 +88,7 @@ def weight_html(summary):
                    '<th>Больше средней страницы</th></tr></thead><tbody>'
                    + "".join(f'<tr><td><a href="{e(s["url"])}" target="_blank">{e(s.get("path") or s["url"])}</a>'
                              + (f'<br><span class="mut">{e(s["title"])}</span>' if s["title"] else "") + '</td>'
-                             f'<td>{_pct(s["share"])}</td><td>{(f'в {_num(round(s["x_avg"]))} {_pl(round(s["x_avg"]), "раз", "раза", "раз")}' if s["x_avg"] >= 10
-                                  else "в " + str(s["x_avg"]).replace(".", ",") + " раза") if s["x_avg"] >= 1.5 else "-"}</td></tr>'
+                             f'<td>{_pct(s["share"])}</td><td>{_times(s["x_avg"], _num, _pl)}</td></tr>'
                              for s in w["service"])
                    + '</tbody></table></div><p class="mut" style="margin:6px 0 0;font-size:13px">Что сделать: оставьте '
                    'в подвале одну ссылку на страницу «Документы» или «Правовая информация», а уже с неё - на политику, '

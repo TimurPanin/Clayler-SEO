@@ -47,7 +47,7 @@ def check(folder, sections):
     # 1. ИИ-роботы в robots.txt
     probe = [site] + [s["url"] for s in sorted(sections, key=lambda s: -s["links"])[:3]]
     closed = [f"{name} ({who})" for name, who in AI_BOTS
-              if not all(Robots(rtext, name).allowed(u) for u in probe)]
+              if not all(Robots(rtext, name).allowed(u)[0] for u in probe)]
     out.append({"name": "ИИ-роботы пускают на сайт", "ok": not closed,
                 "text": "robots.txt никого из ИИ-роботов не закрывает" if not closed else
                 "robots.txt закрывает: " + ", ".join(closed),

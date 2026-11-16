@@ -60,8 +60,11 @@ _DEAD = {}   # {(хост, порт): (когда проверяли, мёртв
 def _dead(purl):
     """Прокси на этом компьютере (127.0.0.1, localhost) отказывает в подключении: VPN выключен.
     Чужие адреса не проверяем: там отказ может быть временным, а соединение - долгим."""
-    sp = urllib.parse.urlsplit(purl if "://" in purl else "http://" + purl)
-    host, port = (sp.hostname or "").lower(), sp.port or 80
+    try:
+        sp = urllib.parse.urlsplit(purl if "://" in purl else "http://" + purl)
+        host, port = (sp.hostname or "").lower(), sp.port or 80
+    except ValueError:
+        return False   # не адрес прокси (переменная вида ..._NO_PROXY со списком) - не наше дело
     if not is_local(host):
         return False
     t, dead = _DEAD.get((host, port), (0, False))
